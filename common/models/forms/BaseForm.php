@@ -25,41 +25,41 @@ class BaseForm extends Model {
 
 			$name = $property->name;
 
-	    	if ($property->class == $refclass->name) {
+	    	if ( $property->class == $refclass->name ) {
 
 				$attribArr[ $name ] = $this->$name;
 			}	
 	  	}
-		
+
 		return $attribArr;
 	}
 	
 	public function processFormSubmit( $form ) {
 
-		$date		= DateUtil::getMysqlDate();
+		$date				= DateUtil::getMysqlDate();
 
 		// Save Form
-		$formSubmit	= new FormSubmit();
-		
-		$formSubmit->setFormId( $form->getId() );
-		$formSubmit->setSubmittedOn( $date );
+		$formSubmit			= new FormSubmit();
+
+		$formSubmit->parentId 		= $form->id;
+		$formSubmit->submittedOn	= $date;
 
 		$formSubmit->save();
-		
+
 		// Get Form Submit Id
-		$formSubmitId	= $formSubmit->getId();
-		
-		// Save Form Fields		
+		$formSubmitId	= $formSubmit->id;
+
+		// Save Form Fields
 		$attrib 		= $this->getClassAttributesArr();
-		
+
 		foreach ( $attrib as $key => $value ) {
 
 			$formSubmitField	= new FormSubmitField();
-			
-			$formSubmitField->setFormSubmitId( $formSubmitId );
-			$formSubmitField->setName( $key );
-			$formSubmitField->setValue( $value );
-			
+
+			$formSubmitField->parentId 	= $formSubmitId;
+			$formSubmitField->name		= $key;
+			$formSubmitField->value		= $value;
+
 			$formSubmitField->save();
 		}
 	}

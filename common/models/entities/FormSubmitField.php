@@ -13,46 +13,14 @@ class FormSubmitField extends ActiveRecord {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getId() {
-
-		return $this->form_submit_field_id;
-	}
-
-	public function getFormSubmitId() {
-
-		return $this->form_submit_field_parent;
-	}
-
 	public function getFormSubmit() {
 
-		return $this->hasOne( FormSubmit::className(), [ 'form_submit_id' => 'form_submit_field_parent' ] );
+		return $this->hasOne( FormSubmit::className(), [ 'id' => 'parentId' ] );
 	}
 
-	public function setFormSubmitId( $formSubmitId ) {
+	public function getFormSubmitWithAlias() {
 
-		$this->form_submit_field_parent = $formSubmitId;
-	}
-
-	public function getName() {
-
-		return $this->form_submit_field_name;
-	}
-
-	public function setName( $name ) {
-
-		$this->form_submit_field_name = $name;
-	}
-
-	public function getValue() {
-
-		return $this->form_submit_field_value;
-	}
-
-	public function setValue( $value ) {
-
-		$this->form_submit_field_value = $value;
+		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM_SUBMIT . ' frmSubmit' );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -64,7 +32,7 @@ class FormSubmitField extends ActiveRecord {
 
 	public static function findByFormSubmitId( $formSubmitId ) {
 
-		return FormField::find()->joinWith( 'formSubmit' )->where( 'form_submit_id=:id', [ ':id' => $formSubmitId ] )->all();
+		return FormField::find()->joinWith( 'formSubmitWithAlias' )->where( 'frmSubmit.id=:id', [ ':id' => $formSubmitId ] )->all();
 	}
 }
 

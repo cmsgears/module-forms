@@ -17,7 +17,7 @@ use cmsgears\forms\frontend\services\FormService;
 
 use cmsgears\core\frontend\controllers\BaseController;
 
-use cmsgears\core\common\utilities\MessageUtil;
+use cmsgears\forms\common\components\MessageDbForms;
 
 class SiteController extends BaseController {
 
@@ -53,7 +53,7 @@ class SiteController extends BaseController {
 		$model = new ContactForm();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post( "ContactForm" ), "" ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post( "Contact" ), "" ) && $model->validate() ) {
 
 			// Save Model
 			if( FormService::processContactForm( $model ) ) {
@@ -62,7 +62,7 @@ class SiteController extends BaseController {
 				Yii::$app->cmgFormsMailer->sendContactMail( $this->getCoreProperties(), $this->getMailProperties(), $model );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( "success", MessageUtil::getMessage( CoreGlobal::MESSAGE_CONTACT ) );
+				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessage->getMessage( MessageDbForms::MESSAGE_CONTACT ) );
 
 				// Refresh the Page
 	        	return $this->refresh();
@@ -80,7 +80,7 @@ class SiteController extends BaseController {
 		$model = new FeedbackForm();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post( "FeedbackForm" ), "" ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post( "Feedback" ), "" ) && $model->validate() ) {
 
 			// Save Model
 			if( FormService::processFeedbackForm( $model ) ) {
@@ -89,7 +89,7 @@ class SiteController extends BaseController {
 				Yii::$app->cmgFormsMailer->sendFeedbackMail( $this->getCoreProperties(), $this->getMailProperties(), $model );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( "success", MessageUtil::getMessage( CoreGlobal::MESSAGE_FEEDBACK ) );
+				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessage->getMessage( MessageDbForms::MESSAGE_FEEDBACK ) );
 
 				// Refresh the Page
 	        	return $this->refresh();

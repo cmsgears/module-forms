@@ -3,8 +3,8 @@
 --
 
 INSERT INTO `cmg_form` VALUES 
-	(1,'contact','contact form'),
-	(2,'feedback','feedback form');
+	(1,'contact','contact form','contact form'),
+	(2,'feedback','feedback form','feedback form');
 	
 --
 -- Dumping data for table `cmg_form_field`

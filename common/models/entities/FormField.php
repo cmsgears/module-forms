@@ -13,46 +13,14 @@ class FormField extends ActiveRecord {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getId() {
-
-		return $this->form_field_id;
-	}
-
-	public function getFormId() {
-
-		return $this->form_field_parent;
-	}
-
 	public function getForm() {
 
-		return $this->hasOne( Form::className(), [ 'form_id' => 'form_field_parent' ] );
+		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] );
 	}
 
-	public function setFormId( $formId ) {
+	public function getFormWithAlias() {
 
-		$this->form_field_parent = $formId;
-	}
-
-	public function getName() {
-
-		return $this->form_field_name;
-	}
-
-	public function setName( $name ) {
-
-		$this->form_field_name = $name;
-	}
-
-	public function getValue() {
-
-		return $this->form_field_value;
-	}
-
-	public function setValue( $value ) {
-
-		$this->form_field_value = $value;
+		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM . ' frm' );
 	}
 
 	// yii\base\Model
@@ -60,19 +28,19 @@ class FormField extends ActiveRecord {
 	public function rules() {
 
         return [
-            [ [ 'form_field_name' ], 'required' ],
-			[ [ 'form_field_parent', 'form_field_type', 'form_field_meta' ], 'safe' ]
+            [ [ 'name' ], 'required' ],
+			[ [ 'parentId', 'type', 'meta' ], 'safe' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'form_field_parent' => 'Form',		
-			'form_field_name' => 'Name',
-			'form_field_value' => 'Value',
-			'form_field_type' => 'type',
-			'form_field_meta' => 'Field Meta'
+			'parentId' => 'Form',
+			'name' => 'Name',
+			'value' => 'Value',
+			'type' => 'type',
+			'meta' => 'Field Meta'
 		];
 	}
 
@@ -87,22 +55,22 @@ class FormField extends ActiveRecord {
 
 	public static function findById( $id ) {
 
-		return FormField::find()->where( 'form_field_id=:id', [ ':id' => $id ] )->one();
+		return FormField::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
 	public static function findByName( $name ) {
 
-		return FormField::find()->where( 'form_field_name=:name', [ ':name' => $name ] )->all();
+		return FormField::find()->where( 'name=:name', [ ':name' => $name ] )->all();
 	}
 
 	public static function findByFormId( $formId ) {
 
-		return FormField::find()->joinWith( 'form' )->where( 'form_id=:id', [ ':id' => $formId ] )->all();
+		return FormField::find()->joinWith( 'formWithAlias' )->where( 'frm.id=:id', [ ':id' => $formId ] )->all();
 	}
 	
 	public static function findByFormIdName( $formId, $name ) {
 
-		return FormField::find()->joinWith( 'form' )->where( 'form_id=:id', [ ':id' => $formId ] )->andWhere( 'form_field_name=:name', [ ':name' => $name ] )->one();
+		return FormField::find()->joinWith( 'formWithAlias' )->where( 'frm.id=:id', [ ':id' => $formId ] )->andWhere( 'name=:name', [ ':name' => $name ] )->one();
 	}
 }
 

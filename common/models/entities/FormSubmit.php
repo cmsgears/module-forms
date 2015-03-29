@@ -12,57 +12,25 @@ use cmsgears\forms\common\utilities\MessageUtil;
 class FormSubmit extends ActiveRecord {
 
 	// Instance Methods --------------------------------------------
-	
-	// db columns
-
-	public function getId() {
-
-		return $this->form_submit_id;
-	}
-
-	public function getFormId() {
-
-		return $this->form_submit_parent;
-	}
-
-	public function setFormId( $formId ) {
-
-		$this->form_submit_parent = $formId;
-	}
 
 	public function getForm() {
 
-		return $this->hasOne( Form::className(), [ 'form_id' => 'form_submit_parent' ] );
+		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] );
 	}
 
-	public function getUserId() {
+	public function getFormWithAlias() {
 
-		return $this->form_submitted_by;
+		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM . ' frm' );
 	}
 
 	public function getUser() {
 
-		return $this->hasOne( User::className(), [ 'user_id' => 'form_submited_by' ] );
-	}
-
-	public function setUserId( $userId ) {
-
-		$this->form_submitted_by = $userId;
-	}
-
-	public function getSubmittedOn() {
-
-		return $this->form_submitted_on;
-	}
-
-	public function setSubmittedOn( $submittedOn ) {
-
-		$this->form_submitted_on = $submittedOn;
+		return $this->hasOne( User::className(), [ 'id' => 'submittedBy' ] );
 	}
 
 	public function getFields() {
 
-    	return $this->hasMany( FormSubmitField::className(), [ 'form_field_parent' => 'form_id' ] );
+    	return $this->hasMany( FormSubmitField::className(), [ 'parentId' => 'id' ] );
 	}
 
 	public function getFieldsMap() {
@@ -72,7 +40,7 @@ class FormSubmit extends ActiveRecord {
 
 		foreach ( $formFields as $formField ) {
 			
-			$formFieldsMap[ $formField->form_field_name ] =  $formField;
+			$formFieldsMap[ $formField->name ] =  $formField;
 		}
 
     	return $formFieldsMap;
