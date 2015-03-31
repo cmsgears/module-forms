@@ -53,14 +53,17 @@ class BaseForm extends Model {
 		$attrib 		= $this->getClassAttributesArr();
 
 		foreach ( $attrib as $key => $value ) {
+			
+			if( strcmp( $key, 'captcha' ) != 0 ) {
 
-			$formSubmitField	= new FormSubmitField();
-
-			$formSubmitField->parentId 	= $formSubmitId;
-			$formSubmitField->name		= $key;
-			$formSubmitField->value		= $value;
-
-			$formSubmitField->save();
+				$formSubmitField	= new FormSubmitField();
+	
+				$formSubmitField->parentId 	= $formSubmitId;
+				$formSubmitField->name		= $key;
+				$formSubmitField->value		= $value;
+	
+				$formSubmitField->save();
+			}	
 		}
 	}
 }

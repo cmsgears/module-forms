@@ -43,6 +43,16 @@ class SiteController extends BaseController {
         ];
     }
 
+    public function actions() {
+
+        return [
+            'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+        ];
+    }
+
 	// Instance Methods --------------------------------------------
 
 	// SiteController
@@ -53,7 +63,7 @@ class SiteController extends BaseController {
 		$model = new ContactForm();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post( "Contact" ), "" ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post( "ContactForm" ), "" ) && $model->validate() ) {
 
 			// Save Model
 			if( FormService::processContactForm( $model ) ) {

@@ -6,22 +6,24 @@ use cmsgears\forms\common\models\forms\BaseForm;
 
 class ContactForm extends BaseForm {
 
+	public $captcha;
 	public $name;
 	public $email;
 	public $subject;
 	public $message;
 
 	// Instance Methods --------------------------------------------
-	
+
 	// yii\base\Model
 
     public function rules() {
 
         return [
-            [ [ 'name', 'email', 'subject', 'message' ], 'required' ],
+            [ [ 'name', 'email', 'subject', 'message', 'captcha' ], 'required' ],
             [ 'name', 'alphanumspace' ],
             [ [ 'subject', 'message' ], 'alphanumpun' ],
-            [ 'email', 'email' ]
+            [ 'email', 'email' ],
+            [ 'captcha', 'captcha', 'captchaAction'=>'cmgforms/site/captcha' ]
         ];
     }
 
