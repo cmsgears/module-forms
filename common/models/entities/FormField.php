@@ -1,44 +1,53 @@
 <?php
 namespace cmsgears\forms\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\entities\CmgEntity;
 
-use cmsgears\forms\common\utilities\MessageUtil;
-
-class FormField extends ActiveRecord {
+/**
+ * FormSubmitField Entity
+ *
+ * @property integer $id
+ * @property integer $parentId
+ * @property string $name
+ * @property short $type
+ * @property string $meta
+ */
+class FormField extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	/**
+	 * @return Form
+	 */
 	public function getForm() {
 
 		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] );
 	}
 
+	/**
+	 * @return Form having alias frm
+	 */
 	public function getFormWithAlias() {
 
 		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM . ' frm' );
 	}
 
-	// yii\base\Model
+	// yii\db\ActiveRecord ----------------
 
 	public function rules() {
 
         return [
-            [ [ 'name' ], 'required' ],
-			[ [ 'parentId', 'type', 'meta' ], 'safe' ]
+            [ [ 'parentId', 'name' ], 'required' ],
+			[ [ 'id', 'type', 'meta' ], 'safe' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'parentId' => 'Form',
+			'parentId' => 'Parent Form',
 			'name' => 'Name',
-			'value' => 'Value',
 			'type' => 'type',
 			'meta' => 'Field Meta'
 		];
@@ -46,12 +55,14 @@ class FormField extends ActiveRecord {
 
 	// Static Methods ----------------------------------------------
 
+	// UserMeta ---------------------------
+
 	public static function tableName() {
 
 		return FormTables::TABLE_FORM_FIELD;
 	}
 
-	// Category
+	// FormField --------------------------
 
 	public static function findById( $id ) {
 
@@ -67,10 +78,12 @@ class FormField extends ActiveRecord {
 
 		return FormField::find()->joinWith( 'formWithAlias' )->where( 'frm.id=:id', [ ':id' => $formId ] )->all();
 	}
-	
+
 	public static function findByFormIdName( $formId, $name ) {
 
-		return FormField::find()->joinWith( 'formWithAlias' )->where( 'frm.id=:id', [ ':id' => $formId ] )->andWhere( 'name=:name', [ ':name' => $name ] )->one();
+		return self::find()->joinWith( 'formWithAlias' )->where( [ 'frm.id=:id', 'name=:name' ] )
+							->addParams( [ ':id' => $formId, ':name' => $name ] )
+							->one();
 	}
 }
 

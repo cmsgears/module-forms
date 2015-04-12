@@ -16,6 +16,10 @@ use cmsgears\core\common\utilities\DateUtil;
  */
 class BaseForm extends Model {
 
+	/**
+	 * The method collect the list of class members and their values using reflection.
+	 * return array - list of class members and their value
+	 */
 	public function getClassAttributesArr() {
 
 	  	$refclass	= new \ReflectionClass( $this );
@@ -33,13 +37,16 @@ class BaseForm extends Model {
 
 		return $attribArr;
 	}
-	
+
+	/**
+	 * The method process the submitted form and save all the form fields except captcha field.
+	 */
 	public function processFormSubmit( $form ) {
 
-		$date				= DateUtil::getMysqlDate();
+		$date			= DateUtil::getMysqlDate();
 
 		// Save Form
-		$formSubmit			= new FormSubmit();
+		$formSubmit		= new FormSubmit();
 
 		$formSubmit->parentId 		= $form->id;
 		$formSubmit->submittedOn	= $date;

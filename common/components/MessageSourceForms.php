@@ -5,7 +5,7 @@ namespace cmsgears\forms\common\components;
 use \Yii;
 use yii\base\Component;
 
-class MessageDbForms extends Component {
+class MessageSourceForms extends Component {
 
 	// Errors - Generic
 

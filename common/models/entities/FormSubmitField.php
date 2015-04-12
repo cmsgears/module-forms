@@ -1,29 +1,60 @@
 <?php
 namespace cmsgears\forms\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\entities\CmgEntity;
 
-use cmsgears\forms\common\utilities\MessageUtil;
-
-class FormSubmitField extends ActiveRecord {
+/**
+ * FormSubmitField Entity
+ *
+ * @property integer $id
+ * @property integer $parentId
+ * @property string $name
+ * @property string $value
+ */
+class FormSubmitField extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	/**
+	 * @return FormSubmit - the parent
+	 */
 	public function getFormSubmit() {
 
 		return $this->hasOne( FormSubmit::className(), [ 'id' => 'parentId' ] );
 	}
 
+	/**
+	 * @return FormSubmit - the parent having alias frmSubmit
+	 */
 	public function getFormSubmitWithAlias() {
 
-		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM_SUBMIT . ' frmSubmit' );
+		return $this->hasOne( FormSubmit::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM_SUBMIT . ' frmSubmit' );
+	}
+
+	// yii\base\Model --------------------
+
+	public function rules() {
+
+        return [
+            [ [ 'parentId', 'name' ], 'required' ],
+			[ [ 'id', 'value' ], 'safe' ],
+			[ 'name', 'length', 'min'=>1, 'max'=>100 ]
+        ];
+    }
+
+	public function attributeLabels() {
+
+		return [
+			'parentId' => 'Parent Form Submit',
+			'name' => 'Name',
+			'value' => 'Value'
+		];
 	}
 
 	// Static Methods ----------------------------------------------
+
+	// yii\db\ActiveRecord ---------------
 
 	public static function tableName() {
 
@@ -32,7 +63,7 @@ class FormSubmitField extends ActiveRecord {
 
 	public static function findByFormSubmitId( $formSubmitId ) {
 
-		return FormField::find()->joinWith( 'formSubmitWithAlias' )->where( 'frmSubmit.id=:id', [ ':id' => $formSubmitId ] )->all();
+		return self::find()->joinWith( 'formSubmitWithAlias' )->where( 'frmSubmit.id=:id', [ ':id' => $formSubmitId ] )->all();
 	}
 }
 

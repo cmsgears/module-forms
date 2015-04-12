@@ -23,7 +23,7 @@ class ContactForm extends BaseForm {
             [ 'name', 'alphanumspace' ],
             [ [ 'subject', 'message' ], 'alphanumpun' ],
             [ 'email', 'email' ],
-            [ 'captcha', 'captcha', 'captchaAction'=>'cmgforms/site/captcha' ]
+            [ 'captcha', 'captcha', 'captchaAction' => '/cmgforms/site/captcha' ]
         ];
     }
 

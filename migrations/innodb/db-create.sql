@@ -10,10 +10,10 @@ DROP TABLE IF EXISTS `cmg_form`;
 CREATE TABLE `cmg_form` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
-  `message` mediumtext DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
+  `successMessage` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -32,7 +32,7 @@ CREATE TABLE `cmg_form_field` (
   PRIMARY KEY (`id`),
   KEY `fk_form_field_1` (`parentId`),
   CONSTRAINT `fk_form_field_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_form` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +46,7 @@ CREATE TABLE `cmg_form_submit` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `parentId` bigint(20) NOT NULL,
   `submittedBy` bigint(20) DEFAULT NULL,
-  `submittedOn` datetime DEFAULT NULL,
+  `submittedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_form_submit_1` (`parentId`),
   KEY `fk_form_submit_2` (`submittedBy`),
@@ -65,7 +65,7 @@ DROP TABLE IF EXISTS `cmg_form_submit_field`;
 CREATE TABLE `cmg_form_submit_field` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `parentId` bigint(20) NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_form_submit_field_1` (`parentId`),

@@ -1,23 +1,32 @@
 <?php
 namespace cmsgears\forms\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\entities\NamedActiveRecord;
 
-use cmsgears\forms\common\utilities\MessageUtil;
-
-class Form extends ActiveRecord {
+/**
+ * Form Entity
+ *
+ * @property integer $id
+ * @property string $name
+ * @property string $description
+ * @property string $successMessage
+ */
+class Form extends NamedActiveRecord {
 
 	// Instance Methods --------------------------------------------
 
+	/**
+	 * @return array - array of FormField
+	 */
 	public function getFields() {
 
     	return $this->hasMany( FormField::className(), [ 'parentId' => 'id' ] );
 	}
 
+	/**
+	 * @return array - map of FormField having file name as key
+	 */
 	public function getFieldsMap() {
 
 		$formFields 	= $this->fields;
@@ -31,13 +40,15 @@ class Form extends ActiveRecord {
     	return $formFieldsMap;
 	}
 
-	// yii\base\Model
+	// yii\base\Model --------------------
 
 	public function rules() {
 
         return [
-            [ [ 'name', 'message' ], 'required' ],
-			[ [ 'parent', 'desc', 'type' ], 'safe' ]
+            [ [ 'name' ], 'required' ],
+			[ [ 'description', 'successMessage' ], 'safe' ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
@@ -45,10 +56,8 @@ class Form extends ActiveRecord {
 
 		return [
 			'name' => 'Name',
-			'message' => 'Success Message',
-			'parent' => 'Parent',
-			'desc' => 'Description',
-			'type' => 'type'
+			'description' => 'Description',
+			'successMessage' => 'Success Message',
 		];
 	}
 

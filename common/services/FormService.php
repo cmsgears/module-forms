@@ -4,7 +4,7 @@ namespace cmsgears\forms\common\services;
 // Yii Imports
 use \Yii;
 
-// Project Imports
+// CMG Imports
 use cmsgears\forms\common\models\entities\Form;
 
 use cmsgears\core\common\services\Service;
