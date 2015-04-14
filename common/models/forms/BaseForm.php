@@ -49,7 +49,7 @@ class BaseForm extends Model {
 		$formSubmit		= new FormSubmit();
 
 		$formSubmit->parentId 		= $form->id;
-		$formSubmit->submittedOn	= $date;
+		$formSubmit->submittedAt	= $date;
 
 		$formSubmit->save();
 
@@ -58,7 +58,7 @@ class BaseForm extends Model {
 
 		// Save Form Fields
 		$attrib 		= $this->getClassAttributesArr();
-
+		
 		foreach ( $attrib as $key => $value ) {
 			
 			if( strcmp( $key, 'captcha' ) != 0 ) {
@@ -70,8 +70,10 @@ class BaseForm extends Model {
 				$formSubmitField->value		= $value;
 	
 				$formSubmitField->save();
-			}	
+			}
 		}
+		
+		return $formSubmit;
 	}
 }
 

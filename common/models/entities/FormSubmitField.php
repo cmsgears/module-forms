@@ -39,7 +39,7 @@ class FormSubmitField extends CmgEntity {
         return [
             [ [ 'parentId', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
-			[ 'name', 'length', 'min'=>1, 'max'=>100 ]
+			[ 'name', 'string', 'min'=>1, 'max'=>100 ]
         ];
     }
 

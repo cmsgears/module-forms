@@ -2,7 +2,7 @@
 namespace cmsgears\forms\common\models\entities;
 
 // CMG Imports
-use cmsgears\core\common\models\entities\NamedActiveRecord;
+use cmsgears\core\common\models\entities\NamedCmgEntity;
 
 /**
  * Form Entity
@@ -12,7 +12,7 @@ use cmsgears\core\common\models\entities\NamedActiveRecord;
  * @property string $description
  * @property string $successMessage
  */
-class Form extends NamedActiveRecord {
+class Form extends NamedCmgEntity {
 
 	// Instance Methods --------------------------------------------
 

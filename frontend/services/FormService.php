@@ -10,9 +10,6 @@ use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\forms\common\models\entities\Form;
 
-use cmsgears\core\common\utilities\DateUtil;
-use cmsgears\core\common\utilities\MessageUtil;
-
 class FormService extends \cmsgears\forms\common\services\FormService {
 
 	// Static Methods ----------------------------------------------
@@ -24,9 +21,9 @@ class FormService extends \cmsgears\forms\common\services\FormService {
 		$form 		= Form::findByName( FormsGlobal::FORM_CONTACT );
 
 		// Save Form
-		$contactForm->processFormSubmit( $form );
+		$formSubmit = $contactForm->processFormSubmit( $form );
 
-		return true;
+		return $formSubmit;
     }
 
     public static function processFeedbackForm( $feedbackForm ) {
@@ -34,9 +31,9 @@ class FormService extends \cmsgears\forms\common\services\FormService {
 		$form 		= Form::findByName( FormsGlobal::FORM_FEEDBACK );
 
 		// Save Form
-		$feedbackForm->processFormSubmit( $form );
+		$formSubmit = $feedbackForm->processFormSubmit( $form );
 
-		return true;
+		return $formSubmit;
     }
 }
 

@@ -8,6 +8,7 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
+use cmsgears\forms\frontend\config\WebGlobalForms;
 
 use cmsgears\forms\frontend\models\forms\ContactForm;
 use cmsgears\forms\frontend\models\forms\FeedbackForm;
@@ -16,8 +17,6 @@ use cmsgears\core\frontend\services\UserService;
 use cmsgears\forms\frontend\services\FormService;
 
 use cmsgears\core\frontend\controllers\BaseController;
-
-use cmsgears\forms\common\components\MessageDbForms;
 
 class SiteController extends BaseController {
 
@@ -36,8 +35,8 @@ class SiteController extends BaseController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'contact' => ['get','post'],
-                    'feedback' => ['get','post']
+                    'contact' => [ 'get','post' ],
+                    'feedback' => [ 'get','post' ]
                 ]
             ]
         ];
@@ -72,7 +71,7 @@ class SiteController extends BaseController {
 				Yii::$app->cmgFormsMailer->sendContactMail( $this->getCoreProperties(), $this->getMailProperties(), $model );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessage->getMessage( MessageDbForms::MESSAGE_CONTACT ) );
+				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessageSource->getMessage( WebGlobalForms::MESSAGE_CONTACT ) );
 
 				// Refresh the Page
 	        	return $this->refresh();
@@ -99,7 +98,7 @@ class SiteController extends BaseController {
 				Yii::$app->cmgFormsMailer->sendFeedbackMail( $this->getCoreProperties(), $this->getMailProperties(), $model );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessage->getMessage( MessageDbForms::MESSAGE_FEEDBACK ) );
+				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessageSource->getMessage( WebGlobalForms::MESSAGE_FEEDBACK ) );
 
 				// Refresh the Page
 	        	return $this->refresh();

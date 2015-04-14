@@ -6,11 +6,12 @@ use cmsgears\forms\common\models\forms\BaseForm;
 
 class ContactForm extends BaseForm {
 
-	public $captcha;
 	public $name;
 	public $email;
 	public $subject;
 	public $message;
+
+	public $captcha;
 
 	// Instance Methods --------------------------------------------
 

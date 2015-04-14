@@ -81,9 +81,7 @@ class FormField extends CmgEntity {
 
 	public static function findByFormIdName( $formId, $name ) {
 
-		return self::find()->joinWith( 'formWithAlias' )->where( [ 'frm.id=:id', 'name=:name' ] )
-							->addParams( [ ':id' => $formId, ':name' => $name ] )
-							->one();
+		return self::find()->joinWith( 'formWithAlias' )->where( 'frm.id=:id and name=:name', [ ':id' => $formId, ':name' => $name ] )->one();
 	}
 }
 

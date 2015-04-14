@@ -69,7 +69,7 @@ class FormSubmit extends CmgEntity {
 	public function rules() {
 
         return [
-            [ [ 'parentId', 'submittedBy' ], 'required' ],
+            [ [ 'parentId' ], 'required' ],
 			[ 'id', 'safe' ],
 			[ [ 'parentId', 'submittedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
