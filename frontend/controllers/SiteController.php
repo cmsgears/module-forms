@@ -3,6 +3,7 @@ namespace cmsgears\forms\frontend\controllers;
 
 // Yii Imports
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
 // CMG Imports
@@ -32,6 +33,17 @@ class SiteController extends BaseController {
     public function behaviors() {
 
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => [ 'feedback' ],
+                'rules' => [
+                    [
+                        'actions' => [ 'feedback' ],
+                        'allow' => true,
+                        'roles' => ['@']
+                    ]
+                ]
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -84,6 +96,8 @@ class SiteController extends BaseController {
 	}
 
     public function actionFeedback() {
+		
+		$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
 
 		// Create Form Model
 		$model = new FeedbackForm();
