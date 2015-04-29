@@ -1,108 +1,87 @@
 <?php
 namespace cmsgears\forms\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\entities\CmgEntity;
 
-use cmsgears\forms\common\utilities\MessageUtil;
-
-class FormField extends ActiveRecord {
+/**
+ * FormSubmitField Entity
+ *
+ * @property integer $id
+ * @property integer $parentId
+ * @property string $name
+ * @property short $type
+ * @property string $meta
+ */
+class FormField extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getId() {
-
-		return $this->form_field_id;
-	}
-
-	public function getFormId() {
-
-		return $this->form_field_parent;
-	}
-
+	/**
+	 * @return Form
+	 */
 	public function getForm() {
 
-		return $this->hasOne( Form::className(), [ 'form_id' => 'form_field_parent' ] );
+		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] );
 	}
 
-	public function setFormId( $formId ) {
+	/**
+	 * @return Form having alias frm
+	 */
+	public function getFormWithAlias() {
 
-		$this->form_field_parent = $formId;
+		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM . ' frm' );
 	}
 
-	public function getName() {
-
-		return $this->form_field_name;
-	}
-
-	public function setName( $name ) {
-
-		$this->form_field_name = $name;
-	}
-
-	public function getValue() {
-
-		return $this->form_field_value;
-	}
-
-	public function setValue( $value ) {
-
-		$this->form_field_value = $value;
-	}
-
-	// yii\base\Model
+	// yii\db\ActiveRecord ----------------
 
 	public function rules() {
 
         return [
-            [ [ 'form_field_name' ], 'required' ],
-			[ [ 'form_field_parent', 'form_field_type', 'form_field_meta' ], 'safe' ]
+            [ [ 'parentId', 'name' ], 'required' ],
+			[ [ 'id', 'type', 'meta' ], 'safe' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'form_field_parent' => 'Form',		
-			'form_field_name' => 'Name',
-			'form_field_value' => 'Value',
-			'form_field_type' => 'type',
-			'form_field_meta' => 'Field Meta'
+			'parentId' => 'Parent Form',
+			'name' => 'Name',
+			'type' => 'type',
+			'meta' => 'Field Meta'
 		];
 	}
 
 	// Static Methods ----------------------------------------------
+
+	// UserMeta ---------------------------
 
 	public static function tableName() {
 
 		return FormTables::TABLE_FORM_FIELD;
 	}
 
-	// Category
+	// FormField --------------------------
 
 	public static function findById( $id ) {
 
-		return FormField::find()->where( 'form_field_id=:id', [ ':id' => $id ] )->one();
+		return FormField::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
 	public static function findByName( $name ) {
 
-		return FormField::find()->where( 'form_field_name=:name', [ ':name' => $name ] )->all();
+		return FormField::find()->where( 'name=:name', [ ':name' => $name ] )->all();
 	}
 
 	public static function findByFormId( $formId ) {
 
-		return FormField::find()->joinWith( 'form' )->where( 'form_id=:id', [ ':id' => $formId ] )->all();
+		return FormField::find()->joinWith( 'formWithAlias' )->where( 'frm.id=:id', [ ':id' => $formId ] )->all();
 	}
-	
+
 	public static function findByFormIdName( $formId, $name ) {
 
-		return FormField::find()->joinWith( 'form' )->where( 'form_id=:id', [ ':id' => $formId ] )->andWhere( 'form_field_name=:name', [ ':name' => $name ] )->one();
+		return self::find()->joinWith( 'formWithAlias' )->where( 'frm.id=:id and name=:name', [ ':id' => $formId, ':name' => $name ] )->one();
 	}
 }
 

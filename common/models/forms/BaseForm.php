@@ -16,6 +16,10 @@ use cmsgears\core\common\utilities\DateUtil;
  */
 class BaseForm extends Model {
 
+	/**
+	 * The method collect the list of class members and their values using reflection.
+	 * return array - list of class members and their value
+	 */
 	public function getClassAttributesArr() {
 
 	  	$refclass	= new \ReflectionClass( $this );
@@ -25,43 +29,51 @@ class BaseForm extends Model {
 
 			$name = $property->name;
 
-	    	if ($property->class == $refclass->name) {
+	    	if ( $property->class == $refclass->name ) {
 
 				$attribArr[ $name ] = $this->$name;
 			}	
 	  	}
-		
+
 		return $attribArr;
 	}
-	
+
+	/**
+	 * The method process the submitted form and save all the form fields except captcha field.
+	 */
 	public function processFormSubmit( $form ) {
 
-		$date		= DateUtil::getMysqlDate();
+		$date			= DateUtil::getMysqlDate();
 
 		// Save Form
-		$formSubmit	= new FormSubmit();
-		
-		$formSubmit->setFormId( $form->getId() );
-		$formSubmit->setSubmittedOn( $date );
+		$formSubmit		= new FormSubmit();
+
+		$formSubmit->parentId 		= $form->id;
+		$formSubmit->submittedAt	= $date;
 
 		$formSubmit->save();
-		
+
 		// Get Form Submit Id
-		$formSubmitId	= $formSubmit->getId();
-		
-		// Save Form Fields		
+		$formSubmitId	= $formSubmit->id;
+
+		// Save Form Fields
 		$attrib 		= $this->getClassAttributesArr();
 		
 		foreach ( $attrib as $key => $value ) {
+			
+			if( strcmp( $key, 'captcha' ) != 0 ) {
 
-			$formSubmitField	= new FormSubmitField();
-			
-			$formSubmitField->setFormSubmitId( $formSubmitId );
-			$formSubmitField->setName( $key );
-			$formSubmitField->setValue( $value );
-			
-			$formSubmitField->save();
+				$formSubmitField	= new FormSubmitField();
+	
+				$formSubmitField->parentId 	= $formSubmitId;
+				$formSubmitField->name		= $key;
+				$formSubmitField->value		= $value;
+	
+				$formSubmitField->save();
+			}
 		}
+		
+		return $formSubmit;
 	}
 }
 

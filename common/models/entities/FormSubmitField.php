@@ -1,61 +1,60 @@
 <?php
 namespace cmsgears\forms\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\entities\CmgEntity;
 
-use cmsgears\forms\common\utilities\MessageUtil;
-
-class FormSubmitField extends ActiveRecord {
+/**
+ * FormSubmitField Entity
+ *
+ * @property integer $id
+ * @property integer $parentId
+ * @property string $name
+ * @property string $value
+ */
+class FormSubmitField extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getId() {
-
-		return $this->form_submit_field_id;
-	}
-
-	public function getFormSubmitId() {
-
-		return $this->form_submit_field_parent;
-	}
-
+	/**
+	 * @return FormSubmit - the parent
+	 */
 	public function getFormSubmit() {
 
-		return $this->hasOne( FormSubmit::className(), [ 'form_submit_id' => 'form_submit_field_parent' ] );
+		return $this->hasOne( FormSubmit::className(), [ 'id' => 'parentId' ] );
 	}
 
-	public function setFormSubmitId( $formSubmitId ) {
+	/**
+	 * @return FormSubmit - the parent having alias frmSubmit
+	 */
+	public function getFormSubmitWithAlias() {
 
-		$this->form_submit_field_parent = $formSubmitId;
+		return $this->hasOne( FormSubmit::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM_SUBMIT . ' frmSubmit' );
 	}
 
-	public function getName() {
+	// yii\base\Model --------------------
 
-		return $this->form_submit_field_name;
-	}
+	public function rules() {
 
-	public function setName( $name ) {
+        return [
+            [ [ 'parentId', 'name' ], 'required' ],
+			[ [ 'id', 'value' ], 'safe' ],
+			[ 'name', 'string', 'min'=>1, 'max'=>100 ]
+        ];
+    }
 
-		$this->form_submit_field_name = $name;
-	}
+	public function attributeLabels() {
 
-	public function getValue() {
-
-		return $this->form_submit_field_value;
-	}
-
-	public function setValue( $value ) {
-
-		$this->form_submit_field_value = $value;
+		return [
+			'parentId' => 'Parent Form Submit',
+			'name' => 'Name',
+			'value' => 'Value'
+		];
 	}
 
 	// Static Methods ----------------------------------------------
+
+	// yii\db\ActiveRecord ---------------
 
 	public static function tableName() {
 
@@ -64,7 +63,7 @@ class FormSubmitField extends ActiveRecord {
 
 	public static function findByFormSubmitId( $formSubmitId ) {
 
-		return FormField::find()->joinWith( 'formSubmit' )->where( 'form_submit_id=:id', [ ':id' => $formSubmitId ] )->all();
+		return self::find()->joinWith( 'formSubmitWithAlias' )->where( 'frmSubmit.id=:id', [ ':id' => $formSubmitId ] )->all();
 	}
 }
 

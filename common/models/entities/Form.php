@@ -1,81 +1,63 @@
 <?php
 namespace cmsgears\forms\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\entities\NamedCmgEntity;
 
-use cmsgears\forms\common\utilities\MessageUtil;
-
-class Form extends ActiveRecord {
+/**
+ * Form Entity
+ *
+ * @property integer $id
+ * @property string $name
+ * @property string $description
+ * @property string $successMessage
+ */
+class Form extends NamedCmgEntity {
 
 	// Instance Methods --------------------------------------------
-	
-	// db columns
 
-	public function getId() {
-
-		return $this->form_id;
-	}
-
-	public function getName() {
-
-		return $this->form_name;
-	}
-
-	public function setName( $name ) {
-
-		$this->form_name = $name;
-	}
-
-	public function getMessage() {
-
-		return $this->form_message;
-	}
-
-	public function setMessage( $message ) {
-
-		$this->form_message = $message;
-	}
-
+	/**
+	 * @return array - array of FormField
+	 */
 	public function getFields() {
 
-    	return $this->hasMany( FormField::className(), [ 'form_field_parent' => 'form_id' ] );
+    	return $this->hasMany( FormField::className(), [ 'parentId' => 'id' ] );
 	}
 
+	/**
+	 * @return array - map of FormField having file name as key
+	 */
 	public function getFieldsMap() {
-		
+
 		$formFields 	= $this->fields;
 		$formFieldsMap	= array();
 
 		foreach ( $formFields as $formField ) {
-			
-			$formFieldsMap[ $formField->form_field_name ] =  $formField;
+
+			$formFieldsMap[ $formField->name ] =  $formField;
 		}
 
     	return $formFieldsMap;
 	}
 
-	// yii\base\Model
+	// yii\base\Model --------------------
 
 	public function rules() {
 
         return [
-            [ [ 'form_name', 'form_message' ], 'required' ],
-			[ [ 'form_parent', 'form_desc', 'form_type' ], 'safe' ]
+            [ [ 'name' ], 'required' ],
+			[ [ 'description', 'successMessage' ], 'safe' ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'form_name' => 'Name',
-			'form_message' => 'Success Message',
-			'form_parent' => 'Parent',
-			'form_desc' => 'Description',
-			'form_type' => 'type'
+			'name' => 'Name',
+			'description' => 'Description',
+			'successMessage' => 'Success Message',
 		];
 	}
 
@@ -90,12 +72,12 @@ class Form extends ActiveRecord {
 
 	public static function findById( $id ) {
 
-		return Form::find()->where( [ 'form_id' => $id ] )->one();
+		return Form::find()->where( [ 'id' => $id ] )->one();
 	}
 
 	public static function findByName( $name ) {
 
-		return Form::find()->where( 'form_name=:name', [ ':name' => $name ] )->one();
+		return Form::find()->where( 'name=:name', [ ':name' => $name ] )->one();
 	}
 }
 

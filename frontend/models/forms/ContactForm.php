@@ -11,17 +11,20 @@ class ContactForm extends BaseForm {
 	public $subject;
 	public $message;
 
+	public $captcha;
+
 	// Instance Methods --------------------------------------------
-	
+
 	// yii\base\Model
 
     public function rules() {
 
         return [
-            [ [ 'name', 'email', 'subject', 'message' ], 'required' ],
+            [ [ 'name', 'email', 'subject', 'message', 'captcha' ], 'required' ],
             [ 'name', 'alphanumspace' ],
             [ [ 'subject', 'message' ], 'alphanumpun' ],
-            [ 'email', 'email' ]
+            [ 'email', 'email' ],
+            [ 'captcha', 'captcha', 'captchaAction' => '/cmgforms/site/captcha' ]
         ];
     }
 

@@ -2,11 +2,12 @@
 namespace cmsgears\forms\frontend\controllers\apix;
 
 // Yii Imports
-use Yii;
+use \Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\forms\frontend\config\WebGlobalForms;
 
 use cmsgears\forms\frontend\models\forms\ContactForm;
 use cmsgears\forms\frontend\models\forms\FeedbackForm;
@@ -16,7 +17,6 @@ use cmsgears\forms\frontend\services\FormService;
 
 use cmsgears\core\frontend\controllers\BaseController;
 
-use cmsgears\core\common\utilities\MessageUtil;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class SiteController extends BaseController {
@@ -38,8 +38,7 @@ class SiteController extends BaseController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'contact' => ['post'],
-                    'feedback' => ['post']
+                    'contact' => ['post']
                 ]
             ]
         ];
@@ -53,7 +52,7 @@ class SiteController extends BaseController {
 		$contact 	= new ContactForm();
 
 		// Load and Validate Form Model
-		if( $contact->load( Yii::$app->request->post( "ContactForm" ), "" ) && $contact->validate() ) {
+		if( $contact->load( Yii::$app->request->post( "Contact" ), "" ) && $contact->validate() ) {
 
 			// Save Model
 			if( FormService::processContactForm( $contact ) ) {
@@ -62,16 +61,16 @@ class SiteController extends BaseController {
 				Yii::$app->cmgFormsMailer->sendContactMail( $this->getCoreProperties(), $this->getMailProperties(), $contact );
 
 				// Trigger Ajax Success
-				AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_CONTACT ) );
+				AjaxUtil::generateSuccess( Yii::$app->cmgFormsMessageSource->getMessage( WebGlobalForms::MESSAGE_CONTACT ) );
 			}
 		}
 		else {
-			
+
 			// Generate Errors
 			$errors = AjaxUtil::generateErrorMessage( $contact );
 
 			// Trigger Ajax Failure
-        	AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+        	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
     }
 }

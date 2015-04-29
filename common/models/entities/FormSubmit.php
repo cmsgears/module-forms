@@ -1,70 +1,56 @@
 <?php
 namespace cmsgears\forms\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\entities\CmgEntity;
 
-use cmsgears\forms\common\utilities\MessageUtil;
-
-class FormSubmit extends ActiveRecord {
+/**
+ * FormSubmitField Entity
+ *
+ * @property integer $id
+ * @property integer $parentId
+ * @property integer $submittedBy
+ * @property string $submittedAt
+ */
+class FormSubmit extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
-	
-	// db columns
 
-	public function getId() {
-
-		return $this->form_submit_id;
-	}
-
-	public function getFormId() {
-
-		return $this->form_submit_parent;
-	}
-
-	public function setFormId( $formId ) {
-
-		$this->form_submit_parent = $formId;
-	}
-
+	/**
+	 * @return Form
+	 */
 	public function getForm() {
 
-		return $this->hasOne( Form::className(), [ 'form_id' => 'form_submit_parent' ] );
+		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] );
 	}
 
-	public function getUserId() {
+	/**
+	 * @return Form - parent form with alias frm
+	 */
+	public function getFormWithAlias() {
 
-		return $this->form_submitted_by;
+		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM . ' frm' );
 	}
 
+	/**
+	 * @return User - who submitted the form
+	 */
 	public function getUser() {
 
-		return $this->hasOne( User::className(), [ 'user_id' => 'form_submited_by' ] );
+		return $this->hasOne( User::className(), [ 'id' => 'submittedBy' ] );
 	}
 
-	public function setUserId( $userId ) {
-
-		$this->form_submitted_by = $userId;
-	}
-
-	public function getSubmittedOn() {
-
-		return $this->form_submitted_on;
-	}
-
-	public function setSubmittedOn( $submittedOn ) {
-
-		$this->form_submitted_on = $submittedOn;
-	}
-
+	/**
+	 * @return array - list of FormSubmitField
+	 */
 	public function getFields() {
 
-    	return $this->hasMany( FormSubmitField::className(), [ 'form_field_parent' => 'form_id' ] );
+    	return $this->hasMany( FormSubmitField::className(), [ 'parentId' => 'id' ] );
 	}
 
+	/**
+	 * @return array - map of FormSubmitField having field name as key
+	 */
 	public function getFieldsMap() {
 		
 		$formFields 	= $this->fields;
@@ -72,13 +58,34 @@ class FormSubmit extends ActiveRecord {
 
 		foreach ( $formFields as $formField ) {
 			
-			$formFieldsMap[ $formField->form_field_name ] =  $formField;
+			$formFieldsMap[ $formField->name ] =  $formField;
 		}
 
     	return $formFieldsMap;
 	}
 
+	// yii\base\Model --------------------
+
+	public function rules() {
+
+        return [
+            [ [ 'parentId' ], 'required' ],
+			[ 'id', 'safe' ],
+			[ [ 'parentId', 'submittedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+        ];
+    }
+
+	public function attributeLabels() {
+
+		return [
+			'parentId' => 'Parent Form',
+			'submittedBy' => 'Submitted By'
+		];
+	}
+
 	// Static Methods ----------------------------------------------
+
+	// yii\db\ActiveRecord ----------------
 
 	public static function tableName() {
 
