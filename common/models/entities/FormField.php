@@ -15,6 +15,12 @@ use cmsgears\core\common\models\entities\CmgEntity;
  */
 class FormField extends CmgEntity {
 
+	const TYPE_TEXT			= 1;
+	const TYPE_TEXTAREA		= 2;
+	const TYPE_CHECKBOX		= 3;
+	const TYPE_RADIO		= 4;
+	const TYPE_SELECT		= 5;
+
 	// Instance Methods --------------------------------------------
 
 	/**
