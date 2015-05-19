@@ -51,7 +51,7 @@ CREATE TABLE `cmg_form_submit` (
   KEY `fk_form_submit_1` (`parentId`),
   KEY `fk_form_submit_2` (`submittedBy`),
   CONSTRAINT `fk_form_submit_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_form` (`id`),
-  CONSTRAINT `fk_form_submit_2` FOREIGN KEY (`submittedBy`) REFERENCES `cmg_user` (`id`)
+  CONSTRAINT `fk_form_submit_2` FOREIGN KEY (`submittedBy`) REFERENCES `cmg_core_user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
