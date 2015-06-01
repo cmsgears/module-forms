@@ -1,7 +1,12 @@
 <?php
 namespace cmsgears\forms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\entities\CmgEntity;
 
 /**
@@ -21,19 +26,14 @@ class FormSubmitField extends CmgEntity {
 	 */
 	public function getFormSubmit() {
 
-		return $this->hasOne( FormSubmit::className(), [ 'id' => 'parentId' ] );
-	}
-
-	/**
-	 * @return FormSubmit - the parent having alias frmSubmit
-	 */
-	public function getFormSubmitWithAlias() {
-
-		return $this->hasOne( FormSubmit::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM_SUBMIT . ' frmSubmit' );
+		return $this->hasOne( FormSubmit::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM_SUBMIT . ' frmsubmit' );
 	}
 
 	// yii\base\Model --------------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
@@ -43,12 +43,15 @@ class FormSubmitField extends CmgEntity {
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'parentId' => 'Parent Form Submit',
-			'name' => 'Name',
-			'value' => 'Value'
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE )
 		];
 	}
 
@@ -56,14 +59,19 @@ class FormSubmitField extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return FormTables::TABLE_FORM_SUBMIT_FIELD;
 	}
 
+	// FormSubmitField -------------------
+
 	public static function findByFormSubmitId( $formSubmitId ) {
 
-		return self::find()->joinWith( 'formSubmitWithAlias' )->where( 'frmSubmit.id=:id', [ ':id' => $formSubmitId ] )->all();
+		return self::find()->joinWith( 'formSubmit' )->where( 'frmsubmit.id=:id', [ ':id' => $formSubmitId ] )->all();
 	}
 }
 

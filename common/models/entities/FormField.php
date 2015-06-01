@@ -1,7 +1,13 @@
 <?php
 namespace cmsgears\forms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\forms\common\config\FormsGlobal;
+
 use cmsgears\core\common\models\entities\CmgEntity;
 
 /**
@@ -28,19 +34,14 @@ class FormField extends CmgEntity {
 	 */
 	public function getForm() {
 
-		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] );
-	}
-
-	/**
-	 * @return Form having alias frm
-	 */
-	public function getFormWithAlias() {
-
 		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM . ' frm' );
 	}
 
 	// yii\db\ActiveRecord ----------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
@@ -49,13 +50,16 @@ class FormField extends CmgEntity {
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'parentId' => 'Parent Form',
-			'name' => 'Name',
-			'type' => 'type',
-			'meta' => 'Field Meta'
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'meta' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_META )
 		];
 	}
 
@@ -63,6 +67,9 @@ class FormField extends CmgEntity {
 
 	// UserMeta ---------------------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return FormTables::TABLE_FORM_FIELD;
@@ -82,12 +89,12 @@ class FormField extends CmgEntity {
 
 	public static function findByFormId( $formId ) {
 
-		return FormField::find()->joinWith( 'formWithAlias' )->where( 'frm.id=:id', [ ':id' => $formId ] )->all();
+		return FormField::find()->joinWith( 'form' )->where( 'frm.id=:id', [ ':id' => $formId ] )->all();
 	}
 
 	public static function findByFormIdName( $formId, $name ) {
 
-		return self::find()->joinWith( 'formWithAlias' )->where( 'frm.id=:id and name=:name', [ ':id' => $formId, ':name' => $name ] )->one();
+		return self::find()->joinWith( 'form' )->where( 'frm.id=:id and name=:name', [ ':id' => $formId, ':name' => $name ] )->one();
 	}
 }
 

@@ -1,7 +1,13 @@
 <?php
 namespace cmsgears\forms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\forms\common\config\FormsGlobal;
+
 use cmsgears\core\common\models\entities\CmgEntity;
 
 /**
@@ -66,6 +72,9 @@ class FormSubmit extends CmgEntity {
 
 	// yii\base\Model --------------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
@@ -75,11 +84,14 @@ class FormSubmit extends CmgEntity {
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'parentId' => 'Parent Form',
-			'submittedBy' => 'Submitted By'
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'submittedBy' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_SUBMITTED_BY )
 		];
 	}
 
@@ -91,6 +103,8 @@ class FormSubmit extends CmgEntity {
 
 		return FormTables::TABLE_FORM_SUBMIT;
 	}
+
+	// FormSubmit ------------------------
 }
 
 ?>

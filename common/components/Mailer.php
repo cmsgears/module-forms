@@ -11,7 +11,7 @@ use cmsgears\forms\common\config\FormsGlobal;
 /**
  * The mail component for CMSGears forms module. It must be initialised for app using the name cmgFormsMailer. 
  */
-class MailerForms extends Component {
+class Mailer extends Component {
 
 	// Various mail views
 	const MAIL_CONTACT		= "contact";

@@ -1,5 +1,3 @@
-SET FOREIGN_KEY_CHECKS=0;
-
 --
 -- Table structure for table `cmg_form`
 --
@@ -11,7 +9,7 @@ CREATE TABLE `cmg_form` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `successMessage` varchar(255) DEFAULT NULL,
+  `message` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -30,8 +28,7 @@ CREATE TABLE `cmg_form_field` (
   `type` smallint(6) DEFAULT NULL,
   `meta` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_form_field_1` (`parentId`),
-  CONSTRAINT `fk_form_field_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_form` (`id`)
+  KEY `fk_form_field_1` (`parentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -49,9 +46,7 @@ CREATE TABLE `cmg_form_submit` (
   `submittedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_form_submit_1` (`parentId`),
-  KEY `fk_form_submit_2` (`submittedBy`),
-  CONSTRAINT `fk_form_submit_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_form` (`id`),
-  CONSTRAINT `fk_form_submit_2` FOREIGN KEY (`submittedBy`) REFERENCES `cmg_core_user` (`id`)
+  KEY `fk_form_submit_2` (`submittedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -68,10 +63,30 @@ CREATE TABLE `cmg_form_submit_field` (
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_form_submit_field_1` (`parentId`),
-  CONSTRAINT `fk_form_submit_field_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_form_submit` (`id`)
+  KEY `fk_form_submit_field_1` (`parentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
+SET FOREIGN_KEY_CHECKS=0;
+
+--
+-- Constraints for table `cmg_form_field`
+--
+ALTER TABLE `cmg_form_field`
+	ADD CONSTRAINT `fk_form_field_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_form` (`id`);
+
+--
+-- Constraints for table `cmg_form_submit`
+--
+ALTER TABLE `cmg_form_submit`
+  	ADD CONSTRAINT `fk_form_submit_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_form` (`id`),
+  	ADD CONSTRAINT `fk_form_submit_2` FOREIGN KEY (`submittedBy`) REFERENCES `cmg_core_user` (`id`);
+
+--
+-- Constraints for table `cmg_form_submit_field`
+--
+ALTER TABLE `cmg_form_submit_field`
+  	ADD CONSTRAINT `fk_form_submit_field_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_form_submit` (`id`);
 
 SET FOREIGN_KEY_CHECKS=1;

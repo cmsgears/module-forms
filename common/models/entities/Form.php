@@ -1,7 +1,12 @@
 <?php
 namespace cmsgears\forms\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\entities\NamedCmgEntity;
 
 /**
@@ -25,7 +30,7 @@ class Form extends NamedCmgEntity {
 	}
 
 	/**
-	 * @return array - map of FormField having file name as key
+	 * @return array - map of FormField having field name as key
 	 */
 	public function getFieldsMap() {
 
@@ -42,6 +47,9 @@ class Form extends NamedCmgEntity {
 
 	// yii\base\Model --------------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
@@ -52,17 +60,23 @@ class Form extends NamedCmgEntity {
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Name',
-			'description' => 'Description',
-			'successMessage' => 'Success Message',
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'message' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE )
 		];
 	}
 
 	// Static Methods ----------------------------------------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return FormTables::TABLE_FORM;
@@ -72,7 +86,7 @@ class Form extends NamedCmgEntity {
 
 	public static function findById( $id ) {
 
-		return Form::find()->where( [ 'id' => $id ] )->one();
+		return Form::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
 	public static function findByName( $name ) {
