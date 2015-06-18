@@ -74,7 +74,7 @@ class SiteController extends BaseController {
 		$model = new ContactForm();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post( "ContactForm" ), "" ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), "ContactForm" ) && $model->validate() ) {
 
 			// Save Model
 			if( FormService::processContactForm( $model ) ) {
@@ -83,7 +83,7 @@ class SiteController extends BaseController {
 				Yii::$app->cmgFormsMailer->sendContactMail( $this->getCoreProperties(), $this->getMailProperties(), $model );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessageSource->getMessage( WebGlobalForms::MESSAGE_CONTACT ) );
+				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_CONTACT ) );
 
 				// Refresh the Page
 	        	return $this->refresh();
@@ -103,7 +103,7 @@ class SiteController extends BaseController {
 		$model = new FeedbackForm();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post( "Feedback" ), "" ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), "FeedbackForm" ) && $model->validate() ) {
 
 			// Save Model
 			if( FormService::processFeedbackForm( $model ) ) {
@@ -112,7 +112,7 @@ class SiteController extends BaseController {
 				Yii::$app->cmgFormsMailer->sendFeedbackMail( $this->getCoreProperties(), $this->getMailProperties(), $model );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessageSource->getMessage( WebGlobalForms::MESSAGE_FEEDBACK ) );
+				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_FEEDBACK ) );
 
 				// Refresh the Page
 	        	return $this->refresh();

@@ -16,7 +16,7 @@ class MessageSource extends Component {
 		// Errors - Generic
 		// Messages - Generic
 		WebGlobalForms::MESSAGE_CONTACT => 'Thanks for contacting us. We will contact you within next 48 hrs.',
-		WebGlobalForms::MESSAGE_FEEDBACK => 'Thanks for providing your valuable.'
+		WebGlobalForms::MESSAGE_FEEDBACK => 'Thanks for providing your valuable feedback.'
 	];
 
 	/**

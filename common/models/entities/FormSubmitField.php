@@ -26,7 +26,7 @@ class FormSubmitField extends CmgEntity {
 	 */
 	public function getFormSubmit() {
 
-		return $this->hasOne( FormSubmit::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM_SUBMIT . ' frmsubmit' );
+		return $this->hasOne( FormSubmit::className(), [ 'id' => 'parentId' ] );
 	}
 
 	// yii\base\Model --------------------
@@ -71,7 +71,9 @@ class FormSubmitField extends CmgEntity {
 
 	public static function findByFormSubmitId( $formSubmitId ) {
 
-		return self::find()->joinWith( 'formSubmit' )->where( 'frmsubmit.id=:id', [ ':id' => $formSubmitId ] )->all();
+		$frmSubmitTable	= FormTables::TABLE_FORM_SUBMIT;
+
+		return self::find()->joinWith( 'formSubmit' )->where( "$frmSubmitTable.id=:id", [ ':id' => $formSubmitId ] )->all();
 	}
 }
 

@@ -31,14 +31,6 @@ class FormSubmit extends CmgEntity {
 	}
 
 	/**
-	 * @return Form - parent form with alias frm
-	 */
-	public function getFormWithAlias() {
-
-		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM . ' frm' );
-	}
-
-	/**
 	 * @return User - who submitted the form
 	 */
 	public function getUser() {
@@ -58,12 +50,12 @@ class FormSubmit extends CmgEntity {
 	 * @return array - map of FormSubmitField having field name as key
 	 */
 	public function getFieldsMap() {
-		
+
 		$formFields 	= $this->fields;
 		$formFieldsMap	= array();
 
 		foreach ( $formFields as $formField ) {
-			
+
 			$formFieldsMap[ $formField->name ] =  $formField;
 		}
 

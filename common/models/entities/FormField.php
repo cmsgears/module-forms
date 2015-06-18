@@ -6,7 +6,6 @@ use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\core\common\models\entities\CmgEntity;
 
@@ -22,10 +21,10 @@ use cmsgears\core\common\models\entities\CmgEntity;
 class FormField extends CmgEntity {
 
 	const TYPE_TEXT			= 1;
-	const TYPE_TEXTAREA		= 2;
-	const TYPE_CHECKBOX		= 3;
-	const TYPE_RADIO		= 4;
-	const TYPE_SELECT		= 5;
+	const TYPE_TEXTAREA		= 5;
+	const TYPE_CHECKBOX		=10;
+	const TYPE_RADIO		=15;
+	const TYPE_SELECT		=20;
 
 	// Instance Methods --------------------------------------------
 
@@ -34,7 +33,7 @@ class FormField extends CmgEntity {
 	 */
 	public function getForm() {
 
-		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] )->from( FormTables::TABLE_FORM . ' frm' );
+		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] );
 	}
 
 	// yii\db\ActiveRecord ----------------
@@ -89,12 +88,16 @@ class FormField extends CmgEntity {
 
 	public static function findByFormId( $formId ) {
 
-		return FormField::find()->joinWith( 'form' )->where( 'frm.id=:id', [ ':id' => $formId ] )->all();
+		$frmTable = FormTables::TABLE_FORM;
+
+		return FormField::find()->joinWith( 'form' )->where( "$frmTable.id=:id", [ ':id' => $formId ] )->all();
 	}
 
-	public static function findByFormIdName( $formId, $name ) {
+	public static function findByNameFormId( $name, $formId ) {
 
-		return self::find()->joinWith( 'form' )->where( 'frm.id=:id and name=:name', [ ':id' => $formId, ':name' => $name ] )->one();
+		$frmTable = FormTables::TABLE_FORM;
+
+		return self::find()->joinWith( 'form' )->where( "$frmTable.id=:id and name=:name", [ ':id' => $formId, ':name' => $name ] )->one();
 	}
 }
 
