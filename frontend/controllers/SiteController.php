@@ -19,6 +19,8 @@ use cmsgears\forms\frontend\services\FormService;
 
 use cmsgears\core\frontend\controllers\BaseController;
 
+// TODO: Automate the form submission and mail triggers using mail template.
+
 class SiteController extends BaseController {
 
 	// Constructor and Initialisation ------------------------------

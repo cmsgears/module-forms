@@ -43,7 +43,7 @@ class BaseForm extends Model {
 	 */
 	public function processFormSubmit( $form ) {
 
-		$date			= DateUtil::getMysqlDate();
+		$date			= DateUtil::getDate();
 
 		// Save Form
 		$formSubmit		= new FormSubmit();
