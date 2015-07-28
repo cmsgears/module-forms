@@ -52,7 +52,7 @@ class SiteController extends BaseController {
 		$contact 	= new ContactForm();
 
 		// Load and Validate Form Model
-		if( $contact->load( Yii::$app->request->post(), "Contact" ) && $contact->validate() ) {
+		if( $contact->load( Yii::$app->request->post(), 'Contact' ) && $contact->validate() ) {
 
 			// Save Model
 			if( FormService::processContactForm( $contact ) ) {
@@ -61,7 +61,7 @@ class SiteController extends BaseController {
 				Yii::$app->cmgFormsMailer->sendContactMail( $this->getCoreProperties(), $this->getMailProperties(), $contact );
 
 				// Trigger Ajax Success
-				AjaxUtil::generateSuccess( Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_CONTACT ) );
+				return AjaxUtil::generateSuccess( Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_CONTACT ) );
 			}
 		}
 		else {
@@ -70,7 +70,7 @@ class SiteController extends BaseController {
 			$errors = AjaxUtil::generateErrorMessage( $contact );
 
 			// Trigger Ajax Failure
-        	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
     }
 }
