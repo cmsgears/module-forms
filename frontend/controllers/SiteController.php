@@ -82,7 +82,7 @@ class SiteController extends BaseController {
 			if( FormService::processContactForm( $model ) ) {
 
 				// Send Contact Mail
-				Yii::$app->cmgFormsMailer->sendContactMail( $this->getCoreProperties(), $this->getMailProperties(), $model );
+				Yii::$app->cmgFormsMailer->sendContactMail( $model );
 
 				// Set Flash Message
 				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_CONTACT ) );
@@ -111,7 +111,7 @@ class SiteController extends BaseController {
 			if( FormService::processFeedbackForm( $model ) ) {
 
 				// Send Feedback Mail
-				Yii::$app->cmgFormsMailer->sendFeedbackMail( $this->getCoreProperties(), $this->getMailProperties(), $model );
+				Yii::$app->cmgFormsMailer->sendFeedbackMail( $model );
 
 				// Set Flash Message
 				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_FEEDBACK ) );

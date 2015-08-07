@@ -58,7 +58,7 @@ class SiteController extends BaseController {
 			if( FormService::processContactForm( $contact ) ) {
 
 				// Send Contact Mail
-				Yii::$app->cmgFormsMailer->sendContactMail( $this->getCoreProperties(), $this->getMailProperties(), $contact );
+				Yii::$app->cmgFormsMailer->sendContactMail( $contact );
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_CONTACT ) );

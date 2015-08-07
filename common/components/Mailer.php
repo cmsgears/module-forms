@@ -3,7 +3,6 @@ namespace cmsgears\forms\common\components;
 
 // Yii Imports
 use \Yii;
-use yii\base\Component;
 
 // CMG Imports
 use cmsgears\forms\common\config\FormsGlobal;
@@ -11,7 +10,7 @@ use cmsgears\forms\common\config\FormsGlobal;
 /**
  * The mail component for CMSGears forms module. It must be initialised for app using the name cmgFormsMailer. 
  */
-class Mailer extends Component {
+class Mailer extends \cmsgears\core\common\base\Mailer {
 
 	// Various mail views
 	const MAIL_CONTACT			= "contact";
@@ -23,40 +22,17 @@ class Mailer extends Component {
     public $textLayout 		= '@cmsgears/module-forms/common/mails/layouts/text';
     public $viewPath 		= '@cmsgears/module-forms/common/mails/views';
 
-	private $mailer;
+    public function sendContactMail( $contactForm ) {
+		
+		$mailProperties	= $this->mailProperties;
+		$adminEmail		= $mailProperties->getSenderEmail();
+		$adminName		= $mailProperties->getSenderName();
 
-	/**
-	 * Initialise the CMG Core Mailer.
-	 */
-    public function init() {
-
-        parent::init();
-
-        $this->mailer = Yii::$app->getMailer();
-
-        $this->mailer->htmlLayout 	= $this->htmlLayout;
-        $this->mailer->textLayout 	= $this->textLayout;
-        $this->mailer->viewPath 	= $this->viewPath;
-    }
-	
-	/**
-	 * @return core mailer
-	 */
-	public function getMailer() {
-
-		return $this->mailer;
-	}
-
-    public function sendContactMail( $coreProperties, $mailProperties, $contactForm ) {
-
-		$adminEmail	= $mailProperties->getSenderEmail();
-		$adminName	= $mailProperties->getSenderName();
-
-		$fromEmail 	= $mailProperties->getContactEmail();
-		$fromName 	= $mailProperties->getContactName();
+		$fromEmail 		= $mailProperties->getContactEmail();
+		$fromName 		= $mailProperties->getContactName();
 
 		// User Mail
-        $this->getMailer()->compose( self::MAIL_CONTACT, [ 'coreProperties' => $coreProperties, FormsGlobal::FORM_CONTACT => $contactForm ] )
+        $this->getMailer()->compose( self::MAIL_CONTACT, [ 'coreProperties' => $this->coreProperties, FormsGlobal::FORM_CONTACT => $contactForm ] )
             ->setTo( $contactForm->email )
             ->setFrom( [ $fromEmail => $fromName ] )
             ->setSubject( $contactForm->subject )
@@ -64,7 +40,7 @@ class Mailer extends Component {
             ->send();
 
 		// Admin Mail
-        $this->getMailer()->compose( self::MAIL_CONTACT_ADMIN, [ 'coreProperties' => $coreProperties, 'mailProperties' => $mailProperties, FormsGlobal::FORM_CONTACT => $contactForm ] )
+        $this->getMailer()->compose( self::MAIL_CONTACT_ADMIN, [ 'coreProperties' => $this->coreProperties, 'mailProperties' => $mailProperties, FormsGlobal::FORM_CONTACT => $contactForm ] )
             ->setTo( $fromEmail )
             ->setFrom( [ $adminEmail => $adminName ] )
             ->setSubject( $contactForm->subject )
@@ -72,14 +48,15 @@ class Mailer extends Component {
             ->send();
     }
 
-    public function sendFeedbackMail( $coreProperties, $mailProperties, $feedbackForm ) {
+    public function sendFeedbackMail( $feedbackForm ) {
 		
-		$adminEmail	= $mailProperties->getSenderEmail();
-		$fromEmail 	= $mailProperties->getContactEmail();
-		$fromName 	= $mailProperties->getContactName();
+		$mailProperties	= $this->mailProperties;
+		$adminEmail		= $mailProperties->getSenderEmail();
+		$fromEmail 		= $mailProperties->getContactEmail();
+		$fromName 		= $mailProperties->getContactName();
 
 		// User Mail
-        $this->getMailer()->compose( self::MAIL_FEEDBACK, [ 'coreProperties' => $coreProperties, FormsGlobal::FORM_FEEDBACK => $feedbackForm ] )
+        $this->getMailer()->compose( self::MAIL_FEEDBACK, [ 'coreProperties' => $this->coreProperties, FormsGlobal::FORM_FEEDBACK => $feedbackForm ] )
             ->setTo( $feedbackForm->email )
             ->setFrom( [ $fromEmail => $fromName ] )
             ->setSubject( "Re: Feedback" )
@@ -87,7 +64,7 @@ class Mailer extends Component {
             ->send();
 
 		// Admin Mail
-        $this->getMailer()->compose( self::MAIL_FEEDBACK_ADMIN, [ 'coreProperties' => $coreProperties, 'mailProperties' => $mailProperties, FormsGlobal::FORM_FEEDBACK => $feedbackForm ] )
+        $this->getMailer()->compose( self::MAIL_FEEDBACK_ADMIN, [ 'coreProperties' => $this->coreProperties, 'mailProperties' => $mailProperties, FormsGlobal::FORM_FEEDBACK => $feedbackForm ] )
             ->setTo( $fromEmail )
             ->setFrom( [ $adminEmail => $adminName ] )
             ->setSubject( "Re: Feedback" )
