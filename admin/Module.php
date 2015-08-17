@@ -4,7 +4,7 @@ namespace cmsgears\forms\admin;
 // Yii Imports
 use \Yii;
 
-class Module extends \yii\base\Module {
+class Module extends \cmsgears\core\common\base\Module {
 
     public $controllerNamespace = 'cmsgears\forms\admin\controllers';
 

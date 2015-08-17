@@ -1,9 +1,6 @@
-USE `cmgdemo`;
-
-SET FOREIGN_KEY_CHECKS=0;
-
 /* ============================= CMSGears Forms ============================================== */
 
+SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `cmg_form`;
 

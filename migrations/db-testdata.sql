@@ -1,13 +1,11 @@
-/* == Reserved Id's - 1251 to 1500 == */
-
 --
 -- Dumping data for table `cmg_form`
 --
 
 INSERT INTO `cmg_form` VALUES 
-	(1,'contact','contact form','contact form'),
-	(2,'feedback','feedback form','feedback form');
-	
+	(1,1,1,'contact','contact form','contact form','2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(2,1,1,'feedback','feedback form','feedback form','2014-10-11 14:22:54','2014-10-11 14:22:54');
+
 --
 -- Dumping data for table `cmg_form_field`
 --

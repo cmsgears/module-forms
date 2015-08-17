@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $logoUrl		= Yii::getAlias( "@web" );
-$logoUrl		= Url::to( $logoUrl. "/assets/images/logo.png", true );
+$logoUrl		= Url::to( $logoUrl. "/images/logo.png", true );
 
 $logo 			= "<img class='logo' style='height:35px;float:right; margin-top:6px; margin-right:53px' src='$logoUrl'>";
 $siteName		= $coreProperties->getSiteName();

@@ -8,15 +8,15 @@ use yii\base\Component;
 // CMG Imports
 use cmsgears\forms\frontend\config\WebGlobalForms;
 
-class MessageSourceForms extends Component {
+class MessageSource extends Component {
 
 	// Variables ---------------------------------------------------
 
-	public $errorsDb = [
+	private $messageDb = [
 		// Errors - Generic
 		// Messages - Generic
 		WebGlobalForms::MESSAGE_CONTACT => 'Thanks for contacting us. We will contact you within next 48 hrs.',
-		WebGlobalForms::MESSAGE_FEEDBACK => 'Thanks for providing your valuable.'
+		WebGlobalForms::MESSAGE_FEEDBACK => 'Thanks for providing your valuable feedback.'
 	];
 
 	/**
@@ -27,9 +27,9 @@ class MessageSourceForms extends Component {
         parent::init();
     }
 
-	public function getMessage( $messageKey ) {
+	public function getMessage( $messageKey, $params = [], $language = null ) {
 
-		return $this->errorsDb[ $messageKey ];
+		return $this->messageDb[ $messageKey ];
 	}
 }
 
