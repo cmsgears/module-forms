@@ -3,7 +3,6 @@ namespace cmsgears\forms\frontend\controllers;
 
 // Yii Imports
 use Yii;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
 // CMG Imports
@@ -29,21 +28,16 @@ class SiteController extends BaseController {
 
         parent::__construct( $id, $module, $config );
 
-		$this->layout	= WebGlobalCore::LAYOUT_PUBLIC;
+		$this->layout	= WebGlobalForms::LAYOUT_FORMS;
 	}
 
     public function behaviors() {
 
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => [ 'feedback' ],
-                'rules' => [
-                    [
-                        'actions' => [ 'feedback' ],
-                        'allow' => true,
-                        'roles' => ['@']
-                    ]
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+	                'feedback'  => [ 'permission' => CoreGlobal::PERM_USER ]
                 ]
             ],
             'verbs' => [
@@ -76,7 +70,7 @@ class SiteController extends BaseController {
 		$model = new ContactForm();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), "ContactForm" ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'ContactForm' ) && $model->validate() ) {
 
 			// Save Model
 			if( FormService::processContactForm( $model ) ) {
@@ -85,7 +79,7 @@ class SiteController extends BaseController {
 				Yii::$app->cmgFormsMailer->sendContactMail( $model );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_CONTACT ) );
+				Yii::$app->session->setFlash( 'success', Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_CONTACT ) );
 
 				// Refresh the Page
 	        	return $this->refresh();
@@ -98,14 +92,14 @@ class SiteController extends BaseController {
 	}
 
     public function actionFeedback() {
-		
-		$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
+
+		$this->layout	= WebGlobalForms::LAYOUT_FORMS_PRIVATE;
 
 		// Create Form Model
 		$model = new FeedbackForm();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), "FeedbackForm" ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'FeedbackForm' ) && $model->validate() ) {
 
 			// Save Model
 			if( FormService::processFeedbackForm( $model ) ) {
@@ -114,7 +108,7 @@ class SiteController extends BaseController {
 				Yii::$app->cmgFormsMailer->sendFeedbackMail( $model );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_FEEDBACK ) );
+				Yii::$app->session->setFlash( 'success', Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_FEEDBACK ) );
 
 				// Refresh the Page
 	        	return $this->refresh();
