@@ -9,8 +9,6 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgEntity;
-
 /**
  * FormSubmitField Entity
  *
@@ -19,7 +17,7 @@ use cmsgears\core\common\models\entities\CmgEntity;
  * @property string $name
  * @property string $value
  */
-class FormSubmitField extends CmgEntity {
+class FormSubmitField extends \cmsgears\core\common\models\entities\CmgEntity {
 
 	// Instance Methods --------------------------------------------
 

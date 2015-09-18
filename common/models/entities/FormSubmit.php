@@ -8,17 +8,16 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\core\common\models\entities\CmgEntity;
-
 /**
  * FormSubmitField Entity
  *
  * @property integer $id
- * @property integer $parentId
+ * @property integer $formId
  * @property integer $submittedBy
- * @property string $submittedAt
+ * @property datetime $submittedAt
+ * @property string $data
  */
-class FormSubmit extends CmgEntity {
+class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
@@ -27,7 +26,7 @@ class FormSubmit extends CmgEntity {
 	 */
 	public function getForm() {
 
-		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] );
+		return $this->hasOne( Form::className(), [ 'id' => 'formId' ] );
 	}
 
 	/**
@@ -43,7 +42,7 @@ class FormSubmit extends CmgEntity {
 	 */
 	public function getFields() {
 
-    	return $this->hasMany( FormSubmitField::className(), [ 'parentId' => 'id' ] );
+    	return $this->hasMany( FormSubmitField::className(), [ 'formId' => 'id' ] );
 	}
 
 	/**
@@ -70,9 +69,10 @@ class FormSubmit extends CmgEntity {
 	public function rules() {
 
         return [
-            [ [ 'parentId' ], 'required' ],
-			[ 'id', 'safe' ],
-			[ [ 'parentId', 'submittedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'formId' ], 'required' ],
+			[ [ 'id', 'data' ], 'safe' ],
+			[ [ 'formId', 'submittedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'submittedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
 
@@ -82,8 +82,9 @@ class FormSubmit extends CmgEntity {
 	public function attributeLabels() {
 
 		return [
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'submittedBy' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_SUBMITTED_BY )
+			'formId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'submittedBy' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_SUBMITTED_BY ),
+			'data' => Yii::$app->cmgFormsMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 

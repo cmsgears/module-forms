@@ -8,25 +8,35 @@ use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\models\entities\CmgEntity;
+use cmsgears\forms\common\config\FormsGlobal;
 
 /**
  * FormSubmitField Entity
  *
  * @property integer $id
- * @property integer $parentId
+ * @property integer $formId
  * @property string $name
  * @property short $type
+ * @property short $options
  * @property string $meta
  */
-class FormField extends CmgEntity {
+class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 
 	const TYPE_TEXT			= 1;
 	const TYPE_TEXTAREA		= 5;
 	const TYPE_CHECKBOX		=10;
 	const TYPE_RADIO		=15;
 	const TYPE_SELECT		=20;
+	const TYPE_RATING		=25;
+
+	public static $statusMap = [
+		self::TYPE_TEXT => 'Text Input',
+		self::TYPE_TEXTAREA => 'Textarea',
+		self::TYPE_CHECKBOX => 'Checkbox',
+		self::TYPE_RADIO => 'Radio',
+		self::TYPE_SELECT => 'Select',
+		self::TYPE_RATING => 'Rating'
+	];
 
 	// Instance Methods --------------------------------------------
 
@@ -35,7 +45,7 @@ class FormField extends CmgEntity {
 	 */
 	public function getForm() {
 
-		return $this->hasOne( Form::className(), [ 'id' => 'parentId' ] );
+		return $this->hasOne( Form::className(), [ 'id' => 'formId' ] );
 	}
 
 	// yii\db\ActiveRecord ----------------
@@ -53,8 +63,8 @@ class FormField extends CmgEntity {
 		}
 
         $rules = [
-            [ [ 'parentId', 'name' ], 'required' ],
-			[ [ 'id', 'type', 'meta' ], 'safe' ]
+            [ [ 'formId', 'name' ], 'required' ],
+			[ [ 'id', 'type', 'meta', 'options' ], 'safe' ]
         ];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
@@ -71,10 +81,11 @@ class FormField extends CmgEntity {
 	public function attributeLabels() {
 
 		return [
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'formId' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_FORM ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'meta' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_META )
+			'meta' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_META ),
+			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS )
 		];
 	}
 
@@ -91,11 +102,6 @@ class FormField extends CmgEntity {
 	}
 
 	// FormField --------------------------
-
-	public static function findById( $id ) {
-
-		return FormField::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
 
 	public static function findByName( $name ) {
 

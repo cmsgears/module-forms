@@ -12,29 +12,55 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\core\common\models\entities\NamedCmgEntity;
+use cmsgears\core\common\behaviors\AuthorBehavior;
 
+use cmsgears\core\common\models\entities\Template;
 use cmsgears\core\common\models\traits\MetaTrait;
 
 /**
  * Form Entity
  *
  * @property integer $id
+ * @property integer $templateId
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
  * @property string $description
- * @property string $message
+ * @property string $successMessage
+ * @property boolean $jsonStorage
+ * @property string $options
  * @property datetime $createdAt
  * @property datetime $modifiedAt 
  */
-class Form extends NamedCmgEntity {
+class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
 	use MetaTrait;
 
 	public $metaType	= FormsGlobal::TYPE_FORM;
 
 	// Instance Methods --------------------------------------------
+
+	public function getTemplate() {
+
+		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
+	}
+
+	public function getTemplateName() {
+
+		$template = $this->template;
+
+		if( isset( $template ) ) {
+
+			return $template->name;
+		}
+
+		return '';
+	}
+
+	public function getJsonStorageStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->jsonStorage ); 
+	}
 
 	/**
 	 * @return array - array of FormField
@@ -59,7 +85,7 @@ class Form extends NamedCmgEntity {
 
     	return $formFieldsMap;
 	}
-
+	
 	// yii\base\Component ----------------
 
     /**
@@ -69,6 +95,9 @@ class Form extends NamedCmgEntity {
 
         return [
 
+			'authorBehavior' => [
+				'class' => AuthorBehavior::className()
+			],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
@@ -94,7 +123,7 @@ class Form extends NamedCmgEntity {
 
         $rules = [
             [ [ 'name' ], 'required' ],
-			[ [ 'description', 'successMessage' ], 'safe' ],
+			[ [ 'id', 'templateId', 'description', 'successMessage', 'jsonStorage', 'options' ], 'safe' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -117,7 +146,9 @@ class Form extends NamedCmgEntity {
 		return [
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'message' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE )
+			'successMessage' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_SUCCESS ),
+			'jsonStorage' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STORE_JSON ),
+			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS )
 		];
 	}
 
@@ -131,17 +162,7 @@ class Form extends NamedCmgEntity {
 		return FormTables::TABLE_FORM;
 	}
 
-	// Category
-
-	public static function findById( $id ) {
-
-		return Form::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	public static function findByName( $name ) {
-
-		return Form::find()->where( 'name=:name', [ ':name' => $name ] )->one();
-	}
+	// Form
 }
 
 ?>
