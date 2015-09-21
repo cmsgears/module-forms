@@ -16,6 +16,7 @@ use cmsgears\forms\common\config\FormsGlobal;
  * @property integer $id
  * @property integer $formId
  * @property string $name
+ * @property string $label
  * @property short $type
  * @property short $options
  * @property string $meta
@@ -64,12 +65,12 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'label' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
             [ [ 'formId', 'name' ], 'required' ],
-			[ [ 'id', 'type', 'meta', 'options' ], 'safe' ],
+			[ [ 'id', 'label', 'type', 'meta', 'options' ], 'safe' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];

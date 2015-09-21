@@ -6,36 +6,70 @@ use cmsgears\forms\common\models\forms\BaseForm;
 
 class GenericForm extends BaseForm {
 
-	public $name;
-	public $email;
-	public $subject;
-	public $message;
+	public $fields;
 
 	public $captcha;
 
+    public function __construct( $config = [] ) {
+
+		$this->fields	= $config[ 'fields' ];
+		$fields			= $this->fields;
+
+		unset( $config[ 'fields' ] );
+
+		foreach ( $fields as $key => $field ) {
+
+			$this->__set( $key, null );
+		}
+
+		parent::__construct( $config );
+    }
+
 	// Instance Methods --------------------------------------------
+
+	// yii\base\Object
+
+	public function __set( $name, $value ) {
+
+        $setter 	= 'set' . $name;
+
+        if( method_exists( $this, $setter ) ) {
+
+            $this->$setter( $value );
+        }
+        else {
+
+            $this->$name	= $value;
+        }
+	}
 
 	// yii\base\Model
 
-    public function rules() {
+ 	public function rules() {
 
         return [
-            [ [ 'name', 'email', 'subject', 'message', 'captcha' ], 'required' ],
-            [ 'name', 'alphanumspace' ],
-            [ [ 'subject', 'message' ], 'alphanumpun' ],
-            [ 'email', 'email' ],
-            [ 'captcha', 'captcha', 'captchaAction' => '/cmgforms/site/captcha' ]
+            [ 'captcha', 'captcha', 'captchaAction' => '/cmgforms/site/captcha', 'on' => 'captcha' ]
         ];
     }
-
+ 
     public function attributeLabels() {
 
-        return [
-            'name' => 'Name',
-            'email' => 'Email',
-            'subject' => 'Subject',
-            'message' => 'Message',
-        ];
+		$fields	= $this->fields;
+		$labels	= [];
+
+		foreach ( $fields as $key => $field ) {
+
+			if( isset( $field->label ) ) {
+
+				$labels[ $key ] = $field->label;
+			}
+			else {
+
+				$labels[ $key ] = $key;
+			}
+		}
+
+        return $labels;
     }
 }
 

@@ -20,7 +20,7 @@ class FormService extends \cmsgears\core\common\services\Service {
 
 	public static function findByName( $name ) {
 
-		return Form::findById( $id );
+		return Form::findByName( $name );
 	}
 
 	// Data Provider ----

@@ -99,7 +99,7 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 	 */
 	public function getFields() {
 
-    	return $this->hasMany( FormField::className(), [ 'parentId' => 'id' ] );
+    	return $this->hasMany( FormField::className(), [ 'formId' => 'id' ] );
 	}
 
 	/**
@@ -117,7 +117,12 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
     	return $formFieldsMap;
 	}
-	
+
+	public function isPrivate() {
+
+		return $this->visibility == self::VISIBILITY_PRIVATE;
+	}
+
 	// yii\base\Component ----------------
 
     /**

@@ -38,7 +38,8 @@ DROP TABLE IF EXISTS `cmg_form_field`;
 CREATE TABLE `cmg_form_field` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `formId` bigint(20) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `label` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
   `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `meta` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,

@@ -44,27 +44,36 @@ class BaseForm extends Model {
 	public function processFormSubmit( $form ) {
 
 		$date			= DateUtil::getDate();
+		$attrib 		= $this->getClassAttributesArr();
+
+		// Unset Captcha
+		unset( $attrib->captcha );
 
 		// Save Form
 		$formSubmit		= new FormSubmit();
 
-		$formSubmit->parentId 		= $form->id;
+		$formSubmit->formId 		= $form->id;
 		$formSubmit->submittedAt	= $date;
+		$formSubmit->jsonStorage	= false;
+
+		if( $form->jsonStorage ) {
+
+			$formSubmit->jsonStorage	= true;
+			$formSubmit->data			= json_encode( $attrib );
+		}
 
 		$formSubmit->save();
 
-		// Get Form Submit Id
-		$formSubmitId	= $formSubmit->id;
+		if( !$form->jsonStorage ) {
 
-		// Save Form Fields
-		$attrib 		= $this->getClassAttributesArr();
-		
-		foreach ( $attrib as $key => $value ) {
-			
-			if( strcmp( $key, 'captcha' ) != 0 ) {
+			// Get Form Submit Id
+			$formSubmitId	= $formSubmit->id;
+	
+			// Save Form Fields
+			foreach ( $attrib as $key => $value ) {
 
 				$formSubmitField	= new FormSubmitField();
-	
+
 				$formSubmitField->parentId 	= $formSubmitId;
 				$formSubmitField->name		= $key;
 				$formSubmitField->value		= $value;
@@ -72,7 +81,7 @@ class BaseForm extends Model {
 				$formSubmitField->save();
 			}
 		}
-		
+
 		return $formSubmit;
 	}
 }

@@ -34,5 +34,5 @@ INSERT INTO `cmg_form` VALUES
 --
 
 INSERT INTO `cmg_form_field` VALUES 
-	(1,1,'name',1,NULL,NULL),(2,1,'email',1,NULL,NULL),(3,1,'subject',1,NULL,NULL),(4,1,'message',5,NULL,NULL),
-	(5,2,'name',1,NULL,NULL),(6,2,'email',1,NULL,NULL),(7,2,'rating',25,NULL,NULL),(8,2,'message',5,NULL,NULL);
+	(1,1,'name','Name',1,NULL,NULL),(2,1,'email','Email',1,NULL,NULL),(3,1,'subject','Subject',1,NULL,NULL),(4,1,'message','Message',5,NULL,NULL),
+	(5,2,'name','Name',1,NULL,NULL),(6,2,'email','Email',1,NULL,NULL),(7,2,'rating','Rating',25,NULL,NULL),(8,2,'message','Message',5,NULL,NULL);

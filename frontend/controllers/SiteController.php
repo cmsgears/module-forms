@@ -22,8 +22,6 @@ class SiteController extends \cmsgears\core\frontend\controllers\BaseController 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-
-		$this->layout	= WebGlobalForms::LAYOUT_FORMS;
 	}
 
     public function behaviors() {
@@ -44,7 +42,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\BaseController 
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
+            ]
         ];
     }
 
@@ -52,27 +50,69 @@ class SiteController extends \cmsgears\core\frontend\controllers\BaseController 
 
 	// SiteController
 
-    public function actionContact() {
-		
-		$this->layout	= WebGlobalForms::LAYOUT_FORMS_PRIVATE;
-		
-		// Create Form Model
-		$model = new ContactForm();
+    public function actionIndex( $form ) {
 
-		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), 'ContactForm' ) && $model->validate() ) {
+		$formModel 	= FormService::findByName( $form );
+		$template	= $formModel->template;
+		$formFields	= $formModel->getFieldsMap();
+ 		$model		= new GenericForm( [ 'fields' => $formFields ] );
+
+		if( $formModel->captcha ) {
+
+			$model->setScenario( 'captcha' );
+		}
+
+		if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
 
 			// Save Model
-			if( FormService::processContactForm( $model ) ) {
+			if( FormService::processForm( $form, $model ) ) {
 
-				// Send Contact Mail
-				Yii::$app->cmgFormsMailer->sendContactMail( $model );
+				// Trigger User Mail
+				if( $formModel->userMail ) {
 
-				// Set Flash Message
-				Yii::$app->session->setFlash( 'success', Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_CONTACT ) );
+					//Yii::$app->cmgFormsMailer->sendUserMail( $model );
+				}
+
+				// Trigger Admin Mail
+				if( $formModel->adminMail ) {
+
+					//Yii::$app->cmgFormsMailer->sendAdminMail( $model );
+				}
+
+				// Set success message
+				if( isset( $formModel->successMessage ) ) {
+
+					Yii::$app->session->setFlash( 'message', $formModel->successMessage );
+				}
 
 				// Refresh the Page
 	        	return $this->refresh();
+			}
+		}
+
+		if( isset( $template ) ) {
+
+			// Configure Layout
+			if( isset( $template->layout ) ) {
+
+				if( $formModel->isPrivate() ) {
+	
+					$this->layout	= "//$template->layout" . "-private";
+				}
+				else {
+	
+					$this->layout	= "//$template->layout";
+				}
+			}
+
+			$view	= $template->viewPath . "/$template->name";
+
+			if( isset( $template->layout ) && isset( $view ) ) {
+
+		        return $this->render( $view, [
+		        	'form' => $formModel,
+		        	'model' => $model
+		        ]);
 			}
 		}
 

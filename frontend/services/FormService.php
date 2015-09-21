@@ -5,9 +5,7 @@ namespace cmsgears\forms\frontend\services;
 use \Yii;
 use yii\base\Model;
 
-// Project Imports
-use cmsgears\forms\common\config\FormsGlobal;
-
+// CMG Imports
 use cmsgears\forms\common\models\entities\Form;
 
 class FormService extends \cmsgears\forms\common\services\FormService {
@@ -16,22 +14,10 @@ class FormService extends \cmsgears\forms\common\services\FormService {
 
 	// Update --------------
 
-    public static function processContactForm( $contactForm ) {
+    public static function processForm( $formName, $formModel ) {
 
-		$form 		= Form::findByName( FormsGlobal::FORM_CONTACT );
-
-		// Save Form
-		$formSubmit = $contactForm->processFormSubmit( $form );
-
-		return $formSubmit;
-    }
-
-    public static function processFeedbackForm( $feedbackForm ) {
-
-		$form 		= Form::findByName( FormsGlobal::FORM_FEEDBACK );
-
-		// Save Form
-		$formSubmit = $feedbackForm->processFormSubmit( $form );
+		$form 		= Form::findByName( $formName );
+		$formSubmit = $formModel->processFormSubmit( $form );
 
 		return $formSubmit;
     }

@@ -91,7 +91,7 @@ class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
 			'formId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'submittedBy' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_SUBMITTED_BY ),
 			'jsonStorage' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STORE_JSON ),
-			'data' => Yii::$app->cmgFormsMessage->getMessage( CoreGlobal::FIELD_DATA )
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 

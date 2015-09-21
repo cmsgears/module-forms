@@ -16,6 +16,7 @@ $this->params['sidebar-child'] 	= 'form';
 		<?php $form = ActiveForm::begin( ['id' => 'frm-field-delete', 'options' => ['class' => 'frm-split' ] ] );?>
 
 		<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
+		<?= $form->field( $model, 'label' )->textInput( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'type' )->dropDownList( $typeMap, [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'options' )->textarea( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'meta' )->textarea( [ 'readonly' => true ] ) ?>

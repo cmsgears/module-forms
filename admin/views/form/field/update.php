@@ -16,6 +16,7 @@ $this->params['sidebar-child'] 	= 'form';
 		<?php $form = ActiveForm::begin( ['id' => 'frm-field-update', 'options' => ['class' => 'frm-split' ] ] );?>
 
 		<?= $form->field( $model, 'name' ) ?>
+		<?= $form->field( $model, 'label' ) ?>
 		<?= $form->field( $model, 'type' )->dropDownList( $typeMap ) ?>
 		<?= $form->field( $model, 'options' )->textarea() ?>
 		<?= $form->field( $model, 'meta' )->textarea() ?>
