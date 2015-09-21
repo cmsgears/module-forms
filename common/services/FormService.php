@@ -5,8 +5,6 @@ namespace cmsgears\forms\common\services;
 use \Yii;
 
 // CMG Imports
-use cmsgears\forms\common\config\FormsGlobal;
-
 use cmsgears\forms\common\models\entities\Form;
 
 class FormService extends \cmsgears\core\common\services\Service {
@@ -52,7 +50,7 @@ class FormService extends \cmsgears\core\common\services\Service {
 
 		$formToUpdate		= self::findById( $form->id );
 
-		$formToUpdate->copyForUpdateFrom( $form, [ 'name', 'description', 'successMessage', 'jsonStorage', 'options' ] );
+		$formToUpdate->copyForUpdateFrom( $form, [ 'templateId', 'name', 'description', 'successMessage', 'jsonStorage', 'captcha', 'visibility', 'userMail', 'adminMail', 'options' ] );
 
 		$formToUpdate->update();
 

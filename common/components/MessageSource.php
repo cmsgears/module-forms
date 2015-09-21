@@ -6,6 +6,8 @@ use \Yii;
 use yii\base\Component;
 
 // CMG Imports
+use cmsgears\forms\common\config\FormsGlobal;
+
 use cmsgears\forms\frontend\config\WebGlobalForms;
 
 class MessageSource extends Component {
@@ -15,8 +17,11 @@ class MessageSource extends Component {
 	private $messageDb = [
 		// Model Fields ----------------------------------------------------
 		// Generic Fields
-		CoreGlobal::FIELD_FORM => 'Form',
-		CoreGlobal::FIELD_SUBMITTED_BY => 'Submitted By',
+		FormsGlobal::FIELD_FORM => 'Form',
+		FormsGlobal::FIELD_SUBMITTED_BY => 'Submitted By',
+		FormsGlobal::FIELD_CAPTCHA => 'Captcha',
+		FormsGlobal::FIELD_MAIL_USER => 'User Mail',
+		FormsGlobal::FIELD_MAIL_ADMIN => 'Admin Mail'
 	];
 
 	/**

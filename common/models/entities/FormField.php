@@ -29,7 +29,7 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 	const TYPE_SELECT		=20;
 	const TYPE_RATING		=25;
 
-	public static $statusMap = [
+	public static $typeMap = [
 		self::TYPE_TEXT => 'Text Input',
 		self::TYPE_TEXTAREA => 'Textarea',
 		self::TYPE_CHECKBOX => 'Checkbox',
@@ -48,6 +48,11 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 		return $this->hasOne( Form::className(), [ 'id' => 'formId' ] );
 	}
 
+	public function getTypeStr() {
+
+		return self::$typeMap[ $this->type ];
+	}
+
 	// yii\db\ActiveRecord ----------------
 
     /**
@@ -64,7 +69,9 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 
         $rules = [
             [ [ 'formId', 'name' ], 'required' ],
-			[ [ 'id', 'type', 'meta', 'options' ], 'safe' ]
+			[ [ 'id', 'type', 'meta', 'options' ], 'safe' ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
@@ -89,6 +96,39 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 		];
 	}
 
+	// FormField -------------------------
+
+	/**
+	 * Validates whether a province existing with the same name for same country.
+	 */
+    public function validateNameCreate( $attribute, $params ) {
+
+        if( !$this->hasErrors() ) {
+
+            if( self::isExistByNameFormId( $this->name, $this->formId ) ) {
+
+                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+            }
+        }
+    }
+
+	/**
+	 * Validates whether a province existing with the same name for same country.
+	 */
+    public function validateNameUpdate( $attribute, $params ) {
+
+        if( !$this->hasErrors() ) {
+
+			$existingField = self::findByNameFormId( $this->name, $this->formId );
+
+			if( isset( $existingField ) && $this->formId == $existingField->formId && 
+				$this->id != $existingField->id && strcmp( $existingField->name, $this->name ) == 0 ) {
+
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+			}
+        }
+    }
+
 	// Static Methods ----------------------------------------------
 
 	// UserMeta ---------------------------
@@ -103,11 +143,6 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 
 	// FormField --------------------------
 
-	public static function findByName( $name ) {
-
-		return FormField::find()->where( 'name=:name', [ ':name' => $name ] )->all();
-	}
-
 	public static function findByFormId( $formId ) {
 
 		$frmTable = FormTables::TABLE_FORM;
@@ -117,9 +152,14 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 
 	public static function findByNameFormId( $name, $formId ) {
 
-		$frmTable = FormTables::TABLE_FORM;
+		return self::find()->where( "formId=:id and name=:name", [ ':id' => $formId, ':name' => $name ] )->one();
+	}
 
-		return self::find()->joinWith( 'form' )->where( "$frmTable.id=:id and name=:name", [ ':id' => $formId, ':name' => $name ] )->one();
+	public static function isExistByNameFormId( $name, $formId ) {
+
+		$field = self::findByNameFormId( $name, $formId );
+
+		return isset( $field );
 	}
 }
 

@@ -16,6 +16,9 @@ class FormsGlobal {
 	// Generic Fields
 	const FIELD_FORM			= 'formField';
 	const FIELD_SUBMITTED_BY	= 'submittedByField';
+	const FIELD_CAPTCHA			= 'captchaField';
+	const FIELD_MAIL_USER		= 'userMailField';
+	const FIELD_MAIL_ADMIN		= 'adminMailField';
 }
 
 ?>

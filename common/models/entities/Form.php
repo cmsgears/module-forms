@@ -28,11 +28,23 @@ use cmsgears\core\common\models\traits\MetaTrait;
  * @property string $description
  * @property string $successMessage
  * @property boolean $jsonStorage
+ * @property boolean $captcha
+ * @property boolean $visibility
+ * @property boolean $userMail
+ * @property boolean $adminMail
  * @property string $options
  * @property datetime $createdAt
  * @property datetime $modifiedAt 
  */
 class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
+
+	const VISIBILITY_PUBLIC		=  0;
+	const VISIBILITY_PRIVATE	=  1;
+
+	public static $visibilityMap = [
+		self::VISIBILITY_PUBLIC => 'Public',
+		self::VISIBILITY_PRIVATE => 'Private'
+	];
 
 	use MetaTrait;
 
@@ -60,6 +72,26 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 	public function getJsonStorageStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->jsonStorage ); 
+	}
+
+	public function getCaptchaStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->captcha ); 
+	}
+
+	public function getVisibilityStr() {
+
+		return self::$visibilityMap[ $this->visibility ]; 
+	}
+
+	public function getUserMailStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->userMail ); 
+	}
+
+	public function getAdminMailStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->adminMail ); 
 	}
 
 	/**
@@ -123,7 +155,7 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
         $rules = [
             [ [ 'name' ], 'required' ],
-			[ [ 'id', 'templateId', 'description', 'successMessage', 'jsonStorage', 'options' ], 'safe' ],
+			[ [ 'id', 'templateId', 'description', 'successMessage', 'jsonStorage', 'captcha', 'visibility', 'userMail', 'adminMail', 'options' ], 'safe' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -148,6 +180,10 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'successMessage' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_SUCCESS ),
 			'jsonStorage' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STORE_JSON ),
+			'captcha' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_CAPTCHA ),
+			'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+			'userMail' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_MAIL_USER ),
+			'adminMail' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_MAIL_ADMIN ),
 			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS )
 		];
 	}

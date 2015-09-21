@@ -14,6 +14,10 @@ CREATE TABLE `cmg_form` (
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `successMessage` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `jsonStorage` tinyint(1) DEFAULT 0,
+  `captcha` tinyint(1) DEFAULT 0,
+  `visibility` tinyint(1) DEFAULT 0,
+  `userMail` tinyint(1) DEFAULT 0,
+  `adminMail` tinyint(1) DEFAULT 0,
   `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
@@ -53,6 +57,7 @@ DROP TABLE IF EXISTS `cmg_form_submit`;
 CREATE TABLE `cmg_form_submit` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `formId` bigint(20) NOT NULL,
+  `jsonStorage` tinyint(1) DEFAULT 0,
   `submittedBy` bigint(20) DEFAULT NULL,
   `submittedAt` datetime DEFAULT NULL,
   `data` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,

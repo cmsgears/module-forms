@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\forms\admin\controllers;
+namespace cmsgears\forms\admin\controllers\form;
 
 // Yii Imports
 use \Yii;
@@ -10,12 +10,12 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\forms\common\models\entities\Form;
+use cmsgears\forms\common\models\entities\FormField;
 
 use cmsgears\forms\admin\services\FormService;
-use cmsgears\core\admin\services\TemplateService;
+use cmsgears\forms\admin\services\FormFieldService;
 
-class FormController extends \cmsgears\core\admin\controllers\BaseController {
+class FieldController extends \cmsgears\core\admin\controllers\BaseController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -44,11 +44,11 @@ class FormController extends \cmsgears\core\admin\controllers\BaseController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => ['get'],
-	                'all'   => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
+	                'index'  => [ 'get' ],
+	                'all'   => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -61,62 +61,60 @@ class FormController extends \cmsgears\core\admin\controllers\BaseController {
 		$this->redirect( [ 'all' ] );
 	}
 
-	public function actionAll() {
+	public function actionAll( $formid ) {
 
-		$dataProvider = FormService::getPagination();
+		$dataProvider = FormFieldService::getPaginationByFormId( $formid );
 
 	    return $this->render( 'all', [
-	         'dataProvider' => $dataProvider
+	         'dataProvider' => $dataProvider,
+	         'formId' => $formid
 	    ]);
 	}
 
-	public function actionCreate() {
+	public function actionCreate( $formid ) {
 
-		$model		= new Form();
+		$model			= new FormField();
+		$model->formId	= $formid;
 
 		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), 'Form' ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'FormField' ) && $model->validate() ) {
 
-			if( FormService::create( $model ) ) {
+			if( FormFieldService::create( $model ) ) {
 
-				$this->redirect( [ 'all' ] );
+				$this->redirect( [ "all?formid=$formid" ] );
 			}
 		}
 
-		$templatesMap	= TemplateService::getIdNameMapByType( FormsGlobal::TYPE_FORM );
-
-    	return $this->render( 'create', [
-    		'model' => $model,
-    		'templatesMap' => $templatesMap,
-    		'visibilityMap' => Form::$visibilityMap
-    	]);
+		return $this->render( 'create', [
+			'model' => $model,
+			'formId' => $formid,
+			'typeMap' => FormField::$typeMap
+		]);
 	}
 
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model		= FormService::findById( $id );
+		$model		= FormFieldService::findById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Form' ) && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'FormField' ) && $model->validate() ) {
 
-				if( FormService::update( $model ) ) {
+				if( FormFieldService::update( $model ) ) {
 
-					$this->redirect( [ 'all' ] );
+					$this->redirect( [ "all?formid=$model->formId" ] );
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMapByType( FormsGlobal::TYPE_FORM );
-
 	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'templatesMap' => $templatesMap,
-	    		'visibilityMap' => Form::$visibilityMap
+				'model' => $model,
+				'formId' => $model->formId,
+				'typeMap' => FormField::$typeMap
 	    	]);
 		}
 		
@@ -127,25 +125,23 @@ class FormController extends \cmsgears\core\admin\controllers\BaseController {
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= FormService::findById( $id );
+		$model	= FormFieldService::findById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'Form' ) ) {
+			if( $model->load( Yii::$app->request->post(), 'FormField' ) ) {
 
-				if( FormService::delete( $model ) ) {
+				if( FormFieldService::delete( $model ) ) {
 
-					$this->redirect( [ 'all' ] );
+					$this->redirect( [ "all?formid=$model->formId" ] );
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMapByType( FormsGlobal::TYPE_FORM );
-			
 	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'templatesMap' => $templatesMap,
-	    		'visibilityMap' => Form::$visibilityMap
+				'model' => $model,
+				'formId' => $model->formId,
+				'typeMap' => FormField::$typeMap
 	    	]);
 		}
 

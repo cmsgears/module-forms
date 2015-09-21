@@ -53,6 +53,10 @@ if( !isset( $sortOrder ) ) {
 					</th>
 					<th>Template</th>
 					<th>Store Json</th>
+					<th>Captcha</th>
+					<th>Visibility</th>
+					<th>User Mail</th>
+					<th>Admin Mail</th>
 					<th>Created on
 						<span class='box-icon-sort'>
 							<span sort-order='cdate' class="icon-sort <?php if( strcmp( $sortOrder, 'cdate') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -76,17 +80,21 @@ if( !isset( $sortOrder ) ) {
 					foreach( $models as $form ) {
 
 						$id 		= $form->id;
-						$editUrl	= Html::a( $form->name, [ '/cmgforms/form/update?id=$id' ] );
+						$editUrl	= Html::a( $form->name, [ "/cmgforms/form/update?id=$id" ] );
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
 						<td><?= $form->getTemplateName() ?></td>
 						<td><?= $form->getJsonStorageStr() ?></td>
+						<td><?= $form->getCaptchaStr() ?></td>
+						<td><?= $form->getVisibilityStr() ?></td>
+						<td><?= $form->getUserMailStr() ?></td>
+						<td><?= $form->getAdminMailStr() ?></td>
 						<td><?= $form->createdAt ?></td>
 						<td><?= $form->modifiedAt ?></td>
 						<td>
-							<span class="wrap-icon-action" title="View Submits"><?= Html::a( "", ["/cmgforms/form/submit/all?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
-							<span class="wrap-icon-action" title="View Fields"><?= Html::a( "", ["/cmgforms/form/field/all?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action" title="View Submits"><?= Html::a( "", ["/cmgforms/form/submit/all?formid=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action" title="View Fields"><?= Html::a( "", ["/cmgforms/form/field/all?formid=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action" title="Update Form"><?= Html::a( "", ["/cmgforms/form/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action" title="Delete Form"><?= Html::a( "", ["/cmgforms/form/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
 						</td>

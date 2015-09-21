@@ -26,8 +26,8 @@ INSERT INTO `cmg_core_role_permission` VALUES
 --
 
 INSERT INTO `cmg_form` VALUES 
-	(1,NULL,1,1,'contact','contact form','Thanks for contacting us. We will contact you within next 48 hrs.',1,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(2,NULL,1,1,'feedback','feedback form','Thanks for providing your valuable feedback.',0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+	(1,NULL,1,1,'contact','contact form','Thanks for contacting us. We will contact you within next 48 hrs.',1,1,0,0,1,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(2,NULL,1,1,'feedback','feedback form','Thanks for providing your valuable feedback.',0,1,1,0,1,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 --
 -- Dumping data for table `cmg_form_field`

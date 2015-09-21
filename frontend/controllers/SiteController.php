@@ -6,21 +6,16 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\forms\frontend\config\WebGlobalForms;
 
-use cmsgears\forms\frontend\models\forms\ContactForm;
-use cmsgears\forms\frontend\models\forms\FeedbackForm;
+use cmsgears\forms\frontend\models\forms\GenericForm;
 
-use cmsgears\core\frontend\services\UserService;
 use cmsgears\forms\frontend\services\FormService;
-
-use cmsgears\core\frontend\controllers\BaseController;
 
 // TODO: Automate the form submission and mail triggers using mail template.
 
-class SiteController extends BaseController {
+class SiteController extends \cmsgears\core\frontend\controllers\BaseController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -34,17 +29,10 @@ class SiteController extends BaseController {
     public function behaviors() {
 
         return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'feedback'  => [ 'permission' => CoreGlobal::PERM_USER ]
-                ]
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'contact' => [ 'get','post' ],
-                    'feedback' => [ 'get','post' ]
+                    'index' => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -65,7 +53,9 @@ class SiteController extends BaseController {
 	// SiteController
 
     public function actionContact() {
-
+		
+		$this->layout	= WebGlobalForms::LAYOUT_FORMS_PRIVATE;
+		
 		// Create Form Model
 		$model = new ContactForm();
 
@@ -86,36 +76,7 @@ class SiteController extends BaseController {
 			}
 		}
 
-        return $this->render( WebGlobalCore::PAGE_CONTACT, [
-        		'model' => $model
-        	]);
-	}
-
-    public function actionFeedback() {
-
-		$this->layout	= WebGlobalForms::LAYOUT_FORMS_PRIVATE;
-
-		// Create Form Model
-		$model = new FeedbackForm();
-
-		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), 'FeedbackForm' ) && $model->validate() ) {
-
-			// Save Model
-			if( FormService::processFeedbackForm( $model ) ) {
-
-				// Send Feedback Mail
-				Yii::$app->cmgFormsMailer->sendFeedbackMail( $model );
-
-				// Set Flash Message
-				Yii::$app->session->setFlash( 'success', Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_FEEDBACK ) );
-
-				// Refresh the Page
-	        	return $this->refresh();
-			}
-		}
-
-        return $this->render( WebGlobalCore::PAGE_FEEDBACK, [
+        return $this->render( WebGlobalCore::PAGE_INDEX, [
         		'model' => $model
         	]);
 	}

@@ -1,27 +1,30 @@
 <?php
 namespace cmsgears\forms\frontend\models\forms;
 
-// CMg Imports
+// CMG Imports
 use cmsgears\forms\common\models\forms\BaseForm;
 
-class FeedbackForm extends BaseForm {
+class GenericForm extends BaseForm {
 
 	public $name;
 	public $email;
-	public $rating;
+	public $subject;
 	public $message;
 
+	public $captcha;
+
 	// Instance Methods --------------------------------------------
-	
+
 	// yii\base\Model
 
     public function rules() {
 
         return [
-            [ [ 'name', 'email', 'rating', 'message' ], 'required' ],
+            [ [ 'name', 'email', 'subject', 'message', 'captcha' ], 'required' ],
             [ 'name', 'alphanumspace' ],
-            [ [ 'message' ], 'alphanumpun' ],
-            [ 'email', 'email' ]
+            [ [ 'subject', 'message' ], 'alphanumpun' ],
+            [ 'email', 'email' ],
+            [ 'captcha', 'captcha', 'captchaAction' => '/cmgforms/site/captcha' ]
         ];
     }
 
@@ -30,7 +33,7 @@ class FeedbackForm extends BaseForm {
         return [
             'name' => 'Name',
             'email' => 'Email',
-            'rating' => 'Ratings',
+            'subject' => 'Subject',
             'message' => 'Message',
         ];
     }

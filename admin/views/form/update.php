@@ -20,6 +20,10 @@ $this->params['sidebar-child'] 	= 'form';
 		<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
 		<?= $form->field( $model, 'successMessage' )->textarea() ?>
 		<?= $form->field( $model, 'jsonStorage' )->checkbox() ?>
+		<?= $form->field( $model, 'captcha' )->checkbox() ?>
+		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
+		<?= $form->field( $model, 'userMail' )->checkbox() ?>
+		<?= $form->field( $model, 'adminMail' )->checkbox() ?>
 		<?= $form->field( $model, 'options' )->textarea() ?>
 
 		<div class="box-filler"></div>

@@ -6,9 +6,9 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\forms\common\models\entities\Form;
+use cmsgears\forms\common\models\entities\FormField;
 
-class FormService extends \cmsgears\forms\common\services\FormService {
+class FormFieldService extends \cmsgears\forms\common\services\FormFieldService {
 
 	// Static Methods ----------------------------------------------
 
@@ -23,22 +23,10 @@ class FormService extends \cmsgears\forms\common\services\FormService {
 	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
-	            ],
-	            'cdate' => [
-	                'asc' => [ 'createdAt' => SORT_ASC ],
-	                'desc' => ['createdAt' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'cdate',
-	            ],
-	            'udate' => [
-	                'asc' => [ 'updatedAt' => SORT_ASC ],
-	                'desc' => ['updatedAt' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'udate',
 	            ]
 	        ],
 	        'defaultOrder' => [
-	        	'cdate' => SORT_DESC
+	        	'name' => SORT_DESC
 	        ]
 	    ]);
 
@@ -52,7 +40,12 @@ class FormService extends \cmsgears\forms\common\services\FormService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		return self::getDataProvider( new Form(), $config );
+		return self::getDataProvider( new FormField(), $config );
+	}
+
+	public static function getPaginationByFormId( $formId ) {
+
+		return self::getPagination( [ 'conditions' => [ 'formId' => $formId ] ] );
 	}
 }
 
