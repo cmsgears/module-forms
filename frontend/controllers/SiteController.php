@@ -52,12 +52,12 @@ class SiteController extends \cmsgears\core\frontend\controllers\BaseController 
 
     public function actionIndex( $form ) {
 
-		$formModel 	= FormService::findByName( $form );
-		$template	= $formModel->template;
-		$formFields	= $formModel->getFieldsMap();
+		$form 		= FormService::findBySlug( $form );
+		$template	= $form->template;
+		$formFields	= $form->getFieldsMap();
  		$model		= new GenericForm( [ 'fields' => $formFields ] );
 
-		if( $formModel->captcha ) {
+		if( $form->captcha ) {
 
 			$model->setScenario( 'captcha' );
 		}
@@ -68,21 +68,21 @@ class SiteController extends \cmsgears\core\frontend\controllers\BaseController 
 			if( FormService::processForm( $form, $model ) ) {
 
 				// Trigger User Mail
-				if( $formModel->userMail ) {
+				if( $form->userMail ) {
 
-					//Yii::$app->cmgFormsMailer->sendUserMail( $model );
+					Yii::$app->cmgFormsMailer->sendUserMail( $form, $model );
 				}
 
 				// Trigger Admin Mail
-				if( $formModel->adminMail ) {
+				if( $form->adminMail ) {
 
-					//Yii::$app->cmgFormsMailer->sendAdminMail( $model );
+					Yii::$app->cmgFormsMailer->sendAdminMail( $form, $model );
 				}
 
 				// Set success message
-				if( isset( $formModel->successMessage ) ) {
+				if( isset( $form->successMessage ) ) {
 
-					Yii::$app->session->setFlash( 'message', $formModel->successMessage );
+					Yii::$app->session->setFlash( 'message', $form->successMessage );
 				}
 
 				// Refresh the Page
@@ -95,7 +95,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\BaseController 
 			// Configure Layout
 			if( isset( $template->layout ) ) {
 
-				if( $formModel->isPrivate() ) {
+				if( $form->isPrivate() ) {
 	
 					$this->layout	= "//$template->layout" . "-private";
 				}
@@ -110,7 +110,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\BaseController 
 			if( isset( $template->layout ) && isset( $view ) ) {
 
 		        return $this->render( $view, [
-		        	'form' => $formModel,
+		        	'form' => $form,
 		        	'model' => $model
 		        ]);
 			}

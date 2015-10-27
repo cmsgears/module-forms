@@ -43,11 +43,9 @@ class BaseForm extends Model {
 	 */
 	public function processFormSubmit( $form ) {
 
-		$date			= DateUtil::getDate();
-		$attrib 		= $this->getClassAttributesArr();
-
-		// Unset Captcha
-		unset( $attrib->captcha );
+		$date		= DateUtil::getDateTime();
+		$fields 	= $this->getClassAttributesArr();
+		$fields		= $fields[ 'fields' ];
 
 		// Save Form
 		$formSubmit		= new FormSubmit();
@@ -58,8 +56,17 @@ class BaseForm extends Model {
 
 		if( $form->jsonStorage ) {
 
+
+			$attribs					= [];
+
+			foreach ( $fields as $field ) {
+				
+				$fieldName					= $field->name;
+				$attribs[ $field->name ]	= $this->$fieldName;
+			}
+
 			$formSubmit->jsonStorage	= true;
-			$formSubmit->data			= json_encode( $attrib );
+			$formSubmit->data			= json_encode( $attribs );
 		}
 
 		$formSubmit->save();
@@ -68,16 +75,17 @@ class BaseForm extends Model {
 
 			// Get Form Submit Id
 			$formSubmitId	= $formSubmit->id;
-	
+
 			// Save Form Fields
-			foreach ( $attrib as $key => $value ) {
+			foreach ( $fields as $field ) {
 
 				$formSubmitField	= new FormSubmitField();
 
-				$formSubmitField->parentId 	= $formSubmitId;
-				$formSubmitField->name		= $key;
-				$formSubmitField->value		= $value;
-	
+				$formSubmitField->formSubmitId 	= $formSubmitId;
+				$formSubmitField->name			= $field->name;
+				$fieldName						= $field->name;
+				$formSubmitField->value			= $this->$fieldName;
+
 				$formSubmitField->save();
 			}
 		}

@@ -7,6 +7,7 @@ use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
+use yii\behaviors\SluggableBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -25,6 +26,7 @@ use cmsgears\core\common\models\traits\MetaTrait;
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
+ * @property string $slug
  * @property string $description
  * @property string $successMessage
  * @property boolean $jsonStorage
@@ -140,6 +142,12 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 				'createdAtAttribute' => 'createdAt',
  				'updatedAtAttribute' => 'modifiedAt',
  				'value' => new Expression('NOW()')
+            ],
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
             ]
         ];
     }
@@ -160,7 +168,7 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
         $rules = [
             [ [ 'name' ], 'required' ],
-			[ [ 'id', 'templateId', 'description', 'successMessage', 'jsonStorage', 'captcha', 'visibility', 'userMail', 'adminMail', 'options' ], 'safe' ],
+			[ [ 'id', 'slug', 'templateId', 'description', 'successMessage', 'jsonStorage', 'captcha', 'visibility', 'userMail', 'adminMail', 'options' ], 'safe' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -182,6 +190,7 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
 		return [
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'successMessage' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_SUCCESS ),
 			'jsonStorage' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STORE_JSON ),
@@ -204,6 +213,16 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 	}
 
 	// Form
+
+	// Read ------
+
+	/**
+	 * @return Form - by slug.
+	 */
+	public static function findBySlug( $slug ) {
+
+		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
 }
 
 ?>

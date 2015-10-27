@@ -11,13 +11,14 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
 /**
- * FormSubmitField Entity
+ * FormField Entity
  *
  * @property integer $id
  * @property integer $formId
  * @property string $name
  * @property string $label
  * @property short $type
+ * @property short $validators
  * @property short $options
  * @property string $meta
  */
@@ -65,12 +66,12 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'label' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'label', 'validators' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
             [ [ 'formId', 'name' ], 'required' ],
-			[ [ 'id', 'label', 'type', 'meta', 'options' ], 'safe' ],
+			[ [ 'id', 'label', 'type', 'validators', 'meta', 'options' ], 'safe' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
@@ -92,6 +93,7 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 			'formId' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_FORM ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'validators' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'meta' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_META ),
 			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS )
 		];

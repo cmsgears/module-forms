@@ -18,6 +18,7 @@ $this->params['sidebar-child'] 	= 'form';
 		<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'label' )->textInput( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'type' )->dropDownList( $typeMap, [ 'disabled' => true ] ) ?>
+		<?= $form->field( $model, 'validators' )->textInput( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'options' )->textarea( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'meta' )->textarea( [ 'readonly' => true ] ) ?>
 

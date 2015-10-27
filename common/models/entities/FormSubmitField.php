@@ -12,8 +12,7 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * FormSubmitField Entity
  *
- * @property integer $id
- * @property integer $parentId
+ * @property integer $formSubmitId
  * @property string $name
  * @property string $value
  */
@@ -26,7 +25,7 @@ class FormSubmitField extends \cmsgears\core\common\models\entities\CmgEntity {
 	 */
 	public function getFormSubmit() {
 
-		return $this->hasOne( FormSubmit::className(), [ 'id' => 'parentId' ] );
+		return $this->hasOne( FormSubmit::className(), [ 'id' => 'formSubmitId' ] );
 	}
 
 	// yii\base\Model --------------------
@@ -44,8 +43,7 @@ class FormSubmitField extends \cmsgears\core\common\models\entities\CmgEntity {
 		}
 
         $rules = [
-            [ [ 'parentId', 'name' ], 'required' ],
-			[ [ 'id', 'value' ], 'safe' ],
+            [ [ 'formSubmitId', 'name' ], 'required' ],
 			[ 'name', 'string', 'min'=>1, 'max'=>100 ]
         ];
 
@@ -63,7 +61,7 @@ class FormSubmitField extends \cmsgears\core\common\models\entities\CmgEntity {
 	public function attributeLabels() {
 
 		return [
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'formSubmitId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE )
 		];

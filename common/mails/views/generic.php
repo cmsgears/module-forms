@@ -7,7 +7,7 @@ $logoUrl		= Url::to( $logoUrl. "/images/logo-mail.png", true );
 
 $logo 			= "<img class='logo' style='height:35px;float:right; margin-top:6px; margin-right:53px' src='$logoUrl'>";
 $siteName		= $coreProperties->getSiteName();
-$name 			= Html::encode( $feedback->name );
+$name 			= Html::encode( $name );
 ?>
 <table cellspacing='0' cellpadding='2' border='0' align='center' width='805px' style='font-family: Calibri; color: #4f4f4f; font-size: 14px; font-weight: 400;'>
 	<tbody>
@@ -25,7 +25,7 @@ $name 			= Html::encode( $feedback->name );
 		</tr>
 		<tr>
 			<td>
-				<br/>Thanks for your valuable feedback.
+				<br/> <?=$form->successMessage?>
 			</td>
 		</tr>
 		<tr> 

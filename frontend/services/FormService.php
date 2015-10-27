@@ -14,9 +14,8 @@ class FormService extends \cmsgears\forms\common\services\FormService {
 
 	// Update --------------
 
-    public static function processForm( $formName, $formModel ) {
+    public static function processForm( $form, $formModel ) {
 
-		$form 		= Form::findByName( $formName );
 		$formSubmit = $formModel->processFormSubmit( $form );
 
 		return $formSubmit;

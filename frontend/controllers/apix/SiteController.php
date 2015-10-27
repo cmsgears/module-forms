@@ -9,17 +9,13 @@ use yii\filters\VerbFilter;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\frontend\config\WebGlobalForms;
 
-use cmsgears\forms\frontend\models\forms\ContactForm;
-use cmsgears\forms\frontend\models\forms\FeedbackForm;
+use cmsgears\forms\frontend\models\forms\GenericForm;
 
-use cmsgears\core\frontend\services\UserService;
 use cmsgears\forms\frontend\services\FormService;
-
-use cmsgears\core\frontend\controllers\BaseController;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class SiteController extends BaseController {
+class SiteController extends \cmsgears\core\frontend\controllers\BaseController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -38,7 +34,7 @@ class SiteController extends BaseController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'contact' => ['post']
+                    'index' => [ 'post' ]
                 ]
             ]
         ];
@@ -46,32 +42,51 @@ class SiteController extends BaseController {
 
 	// SiteController
 
-    public function actionContact() {
+    public function actionIndex( $form ) {
 
-		// Create Form Model
-		$contact 	= new ContactForm();
+		$formModel 	= FormService::findBySlug( $form );
+		$template	= $formModel->template;
+		$formFields	= $formModel->getFieldsMap();
+ 		$model		= new GenericForm( [ 'fields' => $formFields ] );
 
-		// Load and Validate Form Model
-		if( $contact->load( Yii::$app->request->post(), 'Contact' ) && $contact->validate() ) {
+		if( $formModel->captcha ) {
+
+			$model->setScenario( 'captcha' );
+		}
+
+		if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
 
 			// Save Model
-			if( FormService::processContactForm( $contact ) ) {
+			if( FormService::processForm( $form, $model ) ) {
 
-				// Send Contact Mail
-				Yii::$app->cmgFormsMailer->sendContactMail( $contact );
+				// Trigger User Mail
+				if( $formModel->userMail ) {
+
+					//Yii::$app->cmgFormsMailer->sendUserMail( $model );
+				}
+
+				// Trigger Admin Mail
+				if( $formModel->adminMail ) {
+
+					//Yii::$app->cmgFormsMailer->sendAdminMail( $model );
+				}
+
+				// Set success message
+				if( isset( $formModel->successMessage ) ) {
+
+					Yii::$app->session->setFlash( 'message', $formModel->successMessage );
+				}
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_CONTACT ) );
+				return AjaxUtil::generateSuccess( $formModel->successMessage );
 			}
 		}
-		else {
 
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $contact );
+		// Generate Errors
+		$errors = AjaxUtil::generateErrorMessage( $model );
 
-			// Trigger Ajax Failure
-        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-		}
+		// Trigger Ajax Failure
+    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
 }
 

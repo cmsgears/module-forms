@@ -7,12 +7,15 @@ use cmsgears\forms\common\models\forms\BaseForm;
 class GenericForm extends BaseForm {
 
 	public $fields;
+	
+	public $attribs;
 
 	public $captcha;
 
     public function __construct( $config = [] ) {
 
 		$this->fields	= $config[ 'fields' ];
+		$this->attribs	= [];
 		$fields			= $this->fields;
 
 		unset( $config[ 'fields' ] );
@@ -20,6 +23,8 @@ class GenericForm extends BaseForm {
 		foreach ( $fields as $key => $field ) {
 
 			$this->__set( $key, null );
+			
+			$this->attribs[]	= $key;
 		}
 
 		parent::__construct( $config );
@@ -46,10 +51,40 @@ class GenericForm extends BaseForm {
 	// yii\base\Model
 
  	public function rules() {
+		
+		// Prepare validators list
+		$validators		= [];
+		$fields			= $this->fields;
 
-        return [
-            [ 'captcha', 'captcha', 'captchaAction' => '/cmgforms/site/captcha', 'on' => 'captcha' ]
+		foreach ( $fields as $key => $field ) {
+
+			if( isset( $field->validators ) ) {
+				
+				$fieldValidators = preg_split( "/,/", $field->validators );
+				
+				foreach ( $fieldValidators as $validator ) {
+
+					if( !isset( $validators[ $validator ] ) ) {
+
+						$validators[ $validator ]	= [];
+					}
+
+					$validators[ $validator ][]	= $field->name;
+				}
+			}
+		}
+		
+        $rules = [
+            [ 'captcha', 'captcha', 'captchaAction' => '/cmgforms/site/captcha', 'on' => 'captcha' ],
+            [ $this->attribs, 'safe' ]
         ];
+		
+		foreach ( $validators as $key => $value ) {
+			
+			$rules[]	= [ $value, $key ];
+		}
+		
+		return $rules;
     }
  
     public function attributeLabels() {

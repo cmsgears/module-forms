@@ -18,6 +18,7 @@ $this->params['sidebar-child'] 	= 'form';
 		<?= $form->field( $model, 'name' ) ?>
 		<?= $form->field( $model, 'label' ) ?>
 		<?= $form->field( $model, 'type' )->dropDownList( $typeMap ) ?>
+		<?= $form->field( $model, 'validators' ) ?>
 		<?= $form->field( $model, 'options' )->textarea() ?>
 		<?= $form->field( $model, 'meta' )->textarea() ?>
 
