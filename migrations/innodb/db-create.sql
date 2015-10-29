@@ -14,12 +14,12 @@ CREATE TABLE `cmg_form` (
   `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `successMessage` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `jsonStorage` tinyint(1) DEFAULT 0,
-  `captcha` tinyint(1) DEFAULT 0,
-  `visibility` tinyint(1) DEFAULT 0,
-  `userMail` tinyint(1) DEFAULT 0,
-  `adminMail` tinyint(1) DEFAULT 0,
-  `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `jsonStorage` tinyint(1) DEFAULT '0',
+  `captcha` tinyint(1) DEFAULT '0',
+  `visibility` tinyint(1) DEFAULT '0',
+  `userMail` tinyint(1) DEFAULT '0',
+  `adminMail` tinyint(1) DEFAULT '0',
+  `options` mediumtext COLLATE utf8_unicode_ci,
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -42,8 +42,9 @@ CREATE TABLE `cmg_form_field` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `label` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) DEFAULT NULL,
-  `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `meta` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `validators` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `options` mediumtext COLLATE utf8_unicode_ci,
+  `meta` mediumtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `fk_form_field_1` (`formId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -59,10 +60,10 @@ DROP TABLE IF EXISTS `cmg_form_submit`;
 CREATE TABLE `cmg_form_submit` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `formId` bigint(20) NOT NULL,
-  `jsonStorage` tinyint(1) DEFAULT 0,
+  `jsonStorage` tinyint(1) DEFAULT '0',
   `submittedBy` bigint(20) DEFAULT NULL,
   `submittedAt` datetime DEFAULT NULL,
-  `data` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `data` mediumtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `fk_form_submit_1` (`formId`),
   KEY `fk_form_submit_2` (`submittedBy`)
@@ -80,7 +81,7 @@ CREATE TABLE `cmg_form_submit_field` (
   `formSubmitId` bigint(20) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  KEY `fk_form_submit_field_1` (`parentId`)
+  KEY `fk_form_submit_field_1` (`formSubmitId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
