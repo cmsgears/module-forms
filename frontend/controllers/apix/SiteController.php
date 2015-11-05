@@ -57,7 +57,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\BaseController 
 		if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
 
 			// Save Model
-			if( FormService::processForm( $form, $model ) ) {
+			if( FormService::processForm( $formModel, $model ) ) {
 
 				// Trigger User Mail
 				if( $formModel->userMail ) {
