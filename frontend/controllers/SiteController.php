@@ -95,17 +95,10 @@ class SiteController extends \cmsgears\core\frontend\controllers\BaseController 
 			// Configure Layout
 			if( isset( $template->layout ) ) {
 
-				if( $form->isPrivate() ) {
-	
-					$this->layout	= "//$template->layout" . "-private";
-				}
-				else {
-	
-					$this->layout	= "//$template->layout";
-				}
+				$this->layout	= "//$template->layout";
 			}
 
-			$view	= $template->viewPath . "/$template->name";
+			$view	= $template->viewPath . "/$template->frontendView";
 
 			if( isset( $template->layout ) && isset( $view ) ) {
 
