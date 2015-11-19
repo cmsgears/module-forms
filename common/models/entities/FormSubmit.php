@@ -105,6 +105,11 @@ class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
 	}
 
 	// FormSubmit ------------------------
+
+	public static function findWithForm() {
+
+		return self::find()->joinWith( 'form' );
+	}
 }
 
 ?>
