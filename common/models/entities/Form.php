@@ -22,6 +22,7 @@ use cmsgears\core\common\models\traits\MetaTrait;
  * Form Entity
  *
  * @property integer $id
+ * @property integer $siteId
  * @property integer $templateId
  * @property integer $createdBy
  * @property integer $modifiedBy
@@ -32,6 +33,7 @@ use cmsgears\core\common\models\traits\MetaTrait;
  * @property boolean $jsonStorage
  * @property boolean $captcha
  * @property boolean $visibility
+ * @property boolean $active
  * @property boolean $userMail
  * @property boolean $adminMail
  * @property string $options
@@ -84,6 +86,11 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 	public function getVisibilityStr() {
 
 		return self::$visibilityMap[ $this->visibility ]; 
+	}
+
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active ); 
 	}
 
 	public function getUserMailStr() {
@@ -167,11 +174,11 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		}
 
         $rules = [
-            [ [ 'name' ], 'required' ],
-			[ [ 'id', 'slug', 'templateId', 'description', 'successMessage', 'jsonStorage', 'captcha', 'visibility', 'userMail', 'adminMail', 'options' ], 'safe' ],
+            [ [ 'name', 'siteId' ], 'required' ],
+			[ [ 'id', 'slug', 'templateId', 'description', 'successMessage', 'jsonStorage', 'captcha', 'visibility', 'active', 'userMail', 'adminMail', 'options' ], 'safe' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
@@ -196,6 +203,7 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 			'jsonStorage' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STORE_JSON ),
 			'captcha' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_CAPTCHA ),
 			'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'userMail' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_MAIL_USER ),
 			'adminMail' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_MAIL_ADMIN ),
 			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS )
@@ -222,6 +230,19 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 	public static function findBySlug( $slug ) {
 
 		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
+
+	/**
+	 * @param string $name
+	 * @return Block - by name for current site
+	 */
+	public static function findByName( $name ) {
+
+		$siteId	= Yii::$app->cmgCore->siteId;
+
+		return static::find()->where( 'name=:name AND siteId=:siteId' )
+							->addParams( [ ':name' => $name, ':siteId' => $siteId ] )
+							->one();
 	}
 }
 

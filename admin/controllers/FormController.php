@@ -72,7 +72,8 @@ class FormController extends \cmsgears\core\admin\controllers\BaseController {
 
 	public function actionCreate() {
 
-		$model		= new Form();
+		$model			= new Form();
+		$model->siteId	= Yii::$app->cmgCore->siteId;
 
 		$model->setScenario( 'create' );
 

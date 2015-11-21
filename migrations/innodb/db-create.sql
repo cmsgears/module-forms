@@ -17,6 +17,7 @@ CREATE TABLE `cmg_form` (
   `jsonStorage` tinyint(1) DEFAULT '0',
   `captcha` tinyint(1) DEFAULT '0',
   `visibility` tinyint(1) DEFAULT '0',
+  `active` tinyint(1) DEFAULT '0',
   `userMail` tinyint(1) DEFAULT '0',
   `adminMail` tinyint(1) DEFAULT '0',
   `options` mediumtext COLLATE utf8_unicode_ci,

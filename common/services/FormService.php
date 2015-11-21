@@ -63,7 +63,7 @@ class FormService extends \cmsgears\core\common\services\Service {
 
 		$formToUpdate		= self::findById( $form->id );
 
-		$formToUpdate->copyForUpdateFrom( $form, [ 'templateId', 'name', 'description', 'successMessage', 'jsonStorage', 'captcha', 'visibility', 'userMail', 'adminMail', 'options' ] );
+		$formToUpdate->copyForUpdateFrom( $form, [ 'templateId', 'name', 'description', 'successMessage', 'jsonStorage', 'captcha', 'visibility', 'active', 'userMail', 'adminMail', 'options' ] );
 
 		$formToUpdate->update();
 

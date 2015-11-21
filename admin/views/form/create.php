@@ -22,6 +22,7 @@ $this->params['sidebar-child'] 	= 'form';
 		<?= $form->field( $model, 'jsonStorage' )->checkbox() ?>
 		<?= $form->field( $model, 'captcha' )->checkbox() ?>
 		<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap ) ?>
+		<?= $form->field( $model, 'active' )->checkbox() ?>
 		<?= $form->field( $model, 'userMail' )->checkbox() ?>
 		<?= $form->field( $model, 'adminMail' )->checkbox() ?>
 		<?= $form->field( $model, 'options' )->textarea() ?>
