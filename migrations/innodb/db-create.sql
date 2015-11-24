@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS `cmg_form`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_form` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `siteId` bigint(20) DEFAULT NULL,
   `templateId` bigint(20) DEFAULT NULL,
   `createdBy` bigint(20) NOT NULL,
   `modifiedBy` bigint(20) DEFAULT NULL,
@@ -24,9 +25,10 @@ CREATE TABLE `cmg_form` (
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_form_1` (`templateId`),
-  KEY `fk_form_2` (`createdBy`),
-  KEY `fk_form_3` (`modifiedBy`)
+  KEY `fk_form_1` (`siteId`),
+  KEY `fk_form_2` (`templateId`),
+  KEY `fk_form_3` (`createdBy`),
+  KEY `fk_form_4` (`modifiedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -93,9 +95,10 @@ SET FOREIGN_KEY_CHECKS=0;
 -- Constraints for table `cmg_form`
 --
 ALTER TABLE `cmg_form`
-	ADD CONSTRAINT `fk_form_1` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`),
-	ADD CONSTRAINT `fk_form_2` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
-  	ADD CONSTRAINT `fk_form_3` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+	ADD CONSTRAINT `fk_form_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
+	ADD CONSTRAINT `fk_form_2` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`),
+	ADD CONSTRAINT `fk_form_3` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_form_4` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
 
 --
 -- Constraints for table `cmg_form_field`

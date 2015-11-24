@@ -43,7 +43,7 @@ use cmsgears\core\common\models\traits\MetaTrait;
 class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
 	const VISIBILITY_PUBLIC		=  0;
-	const VISIBILITY_PRIVATE	=  1;
+	const VISIBILITY_PRIVATE	= 10;
 
 	public static $visibilityMap = [
 		self::VISIBILITY_PUBLIC => 'Public',
