@@ -42,9 +42,9 @@ class SiteController extends \cmsgears\core\frontend\controllers\BaseController 
 
 	// SiteController
 
-    public function actionIndex( $form ) {
+    public function actionIndex( $slug ) {
 
-		$formModel 	= FormService::findBySlug( $form );
+		$formModel 	= FormService::findBySlug( $slug );
 		$template	= $formModel->template;
 		$formFields	= $formModel->getFieldsMap();
  		$model		= new GenericForm( [ 'fields' => $formFields ] );
