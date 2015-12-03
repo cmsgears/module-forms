@@ -93,7 +93,7 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 			'formId' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_FORM ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'validators' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'validators' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALIDATORS ),
 			'meta' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_META ),
 			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS )
 		];
