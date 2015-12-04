@@ -13,7 +13,6 @@ use cmsgears\forms\common\config\FormsGlobal;
  *
  * @property integer $id
  * @property integer $formId
- * @property boolean $jsonStorage 
  * @property integer $submittedBy
  * @property datetime $submittedAt
  * @property string $data
@@ -36,11 +35,6 @@ class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
 	public function getUser() {
 
 		return $this->hasOne( User::className(), [ 'id' => 'submittedBy' ] );
-	}
-
-	public function getJsonStorageStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->jsonStorage ); 
 	}
 
 	/**
@@ -76,7 +70,7 @@ class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
 
         return [
             [ [ 'formId' ], 'required' ],
-			[ [ 'id', 'jsonStorage', 'data' ], 'safe' ],
+			[ [ 'id', 'data' ], 'safe' ],
 			[ [ 'formId', 'submittedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'submittedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -90,7 +84,6 @@ class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
 		return [
 			'formId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'submittedBy' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_SUBMITTED_BY ),
-			'jsonStorage' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STORE_JSON ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
@@ -109,6 +102,11 @@ class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
 	public static function findWithForm() {
 
 		return self::find()->joinWith( 'form' );
+	}
+
+	public static function findWithFormUser() {
+
+		return self::find()->joinWith( 'form' )->joinWith( 'user' );
 	}
 }
 

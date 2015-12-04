@@ -35,19 +35,17 @@ class FormSubmitField extends \cmsgears\core\common\models\entities\CmgEntity {
      */
 	public function rules() {
 
-		$trim		= [];
+		// model rules
+        $rules = [
+            [ [ 'formSubmitId', 'name' ], 'required' ],
+			[ 'name', 'string', 'min' => 1, 'max' => 100 ],
+			[ 'value' => 'safe' ]
+        ];
 
+		// trim if configured
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
-        $rules = [
-            [ [ 'formSubmitId', 'name' ], 'required' ],
-			[ 'name', 'string', 'min'=>1, 'max'=>100 ]
-        ];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

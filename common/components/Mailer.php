@@ -13,7 +13,7 @@ use cmsgears\forms\common\config\FormsGlobal;
 class Mailer extends \cmsgears\core\common\base\Mailer {
 
 	// Various mail views
-	const MAIL_GENERIC			= "generic";
+	const MAIL_GENERIC_USER		= "generic-user";
 	const MAIL_GENERIC_ADMIN	= "generic-admin";
 
     public $htmlLayout 		= '@cmsgears/module-forms/common/mails/layouts/html';
@@ -29,23 +29,25 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$name			= null;
 		$subject		= '';
 
-		// Email, Name
+		// Email
 		if( isset( $model->email ) ) {
 
 			$toEmail = $model->email;
 		}
 
+		// Name
 		if( isset( $model->name ) ) {
 
 			$name = $model->name;
 		}
 
+		// Email, Name
 		if( isset( Yii::$app->user ) ) {
 
 			$user	= Yii::$app->user->getIdentity();
 
 			if( isset( $user ) ) {
-				
+
 				if( !isset( $toEmail ) ) {
 
 					$toEmail	= $user->email;
@@ -58,8 +60,9 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 			}
 		}
 
+		// Name
 		if( !isset( $name ) && isset( $toEmail ) ) {
-	
+
 			$name	= preg_split( "/@", $toEmail );
 			$name	= $name[0];
 		}
@@ -70,13 +73,13 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 			$subject = $model->subject;
 		}
 		else {
-			
-			$subject	= "Contact";
+
+			$subject	= $form->name;
 		}
 
 		if( isset( $toEmail ) ) {
 
-	        $this->getMailer()->compose( self::MAIL_GENERIC, [ 'coreProperties' => $this->coreProperties, 'form' => $form, 'model' => $model, 'name' => $name ] )
+	        $this->getMailer()->compose( self::MAIL_GENERIC_USER, [ 'coreProperties' => $this->coreProperties, 'form' => $form, 'model' => $model, 'name' => $name ] )
 	            ->setTo( $toEmail )
 	            ->setFrom( [ $fromEmail => $fromName ] )
 	            ->setSubject( $subject )
@@ -100,8 +103,8 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 			$subject = $model->subject;
 		}
 		else {
-			
-			$subject	= "Contact";
+
+			$subject	= $form->name;
 		}
 
 		// Admin Mail

@@ -15,13 +15,11 @@ class MessageSource extends Component {
 	// Variables ---------------------------------------------------
 
 	private $messageDb = [
+
 		// Model Fields ----------------------------------------------------
+
 		// Generic Fields
-		FormsGlobal::FIELD_FORM => 'Form',
-		FormsGlobal::FIELD_SUBMITTED_BY => 'Submitted By',
-		FormsGlobal::FIELD_CAPTCHA => 'Captcha',
-		FormsGlobal::FIELD_MAIL_USER => 'User Mail',
-		FormsGlobal::FIELD_MAIL_ADMIN => 'Admin Mail'
+		FormsGlobal::FIELD_SUBMITTED_BY => 'Submitted By'
 	];
 
 	/**
