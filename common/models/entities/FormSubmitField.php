@@ -12,6 +12,7 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * FormSubmitField Entity
  *
+ * @property integer $id
  * @property integer $formSubmitId
  * @property string $name
  * @property string $value
@@ -38,8 +39,8 @@ class FormSubmitField extends \cmsgears\core\common\models\entities\CmgEntity {
 		// model rules
         $rules = [
             [ [ 'formSubmitId', 'name' ], 'required' ],
-			[ 'name', 'string', 'min' => 1, 'max' => 100 ],
-			[ 'value' => 'safe' ]
+            [ [ 'id', 'value' ], 'safe' ],
+			[ 'name', 'string', 'min' => 1, 'max' => 100 ]
         ];
 
 		// trim if configured

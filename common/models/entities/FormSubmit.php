@@ -42,7 +42,7 @@ class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
 	 */
 	public function getFields() {
 
-    	return $this->hasMany( FormSubmitField::className(), [ 'formId' => 'id' ] );
+    	return $this->hasMany( FormSubmitField::className(), [ 'formSubmitId' => 'id' ] );
 	}
 
 	/**

@@ -63,23 +63,18 @@ if( !isset( $sortOrder ) ) {
 						<td>
 							<table>
 							<?php 
-								if( $formSubmit->jsonStorage ) {
+								$formData	= json_decode( $formSubmit->data, true );
+								
+								foreach (  $formData as $key => $value ) {
 									
-									$formData	= json_decode( $formSubmit->data, true );
-									
-									foreach (  $formData as $key => $value ) {
-										
-										echo "<tr><td>$key</td><td>$value</td></tr>";
-									}
+									echo "<tr><td>$key</td><td>$value</td></tr>";
 								}
-								else {
-									
-									$formFields	= $formSubmit->fields;
 
-									foreach (  $formFields as $formField ) {
-										
-										echo "<tr><td>$formField->name</td><td>$formField->value</td></tr>";
-									}
+								$formFields	= $formSubmit->fields;
+
+								foreach (  $formFields as $formField ) {
+									
+									echo "<tr><td>$formField->name</td><td>$formField->value</td></tr>";
 								}
 							?>
 							</table>

@@ -6,16 +6,16 @@ use \Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\forms\frontend\config\WebGlobalForms;
 
-use cmsgears\forms\frontend\models\forms\GenericForm;
+use cmsgears\forms\common\models\forms\GenericForm;
 
 use cmsgears\forms\frontend\services\FormService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class SiteController extends \cmsgears\core\frontend\controllers\BaseController {
+class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -44,12 +44,12 @@ class SiteController extends \cmsgears\core\frontend\controllers\BaseController 
 
     public function actionIndex( $slug ) {
 
-		$formModel 	= FormService::findBySlug( $slug );
-		$template	= $formModel->template;
-		$formFields	= $formModel->getFieldsMap();
+		$form 		= FormService::findBySlug( $slug );
+		$template	= $form->template;
+		$formFields	= $form->getFieldsMap();
  		$model		= new GenericForm( [ 'fields' => $formFields ] );
 
-		if( $formModel->captcha ) {
+		if( $form->captcha ) {
 
 			$model->setScenario( 'captcha' );
 		}
@@ -57,28 +57,22 @@ class SiteController extends \cmsgears\core\frontend\controllers\BaseController 
 		if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
 
 			// Save Model
-			if( FormService::processForm( $formModel, $model ) ) {
+			if( FormService::processForm( $form, $model ) ) {
 
 				// Trigger User Mail
-				if( $formModel->userMail ) {
+				if( $form->userMail ) {
 
-					//Yii::$app->cmgFormsMailer->sendUserMail( $model );
+					Yii::$app->cmgFormsMailer->sendUserMail( $form, $model );
 				}
 
 				// Trigger Admin Mail
-				if( $formModel->adminMail ) {
+				if( $form->adminMail ) {
 
-					//Yii::$app->cmgFormsMailer->sendAdminMail( $model );
-				}
-
-				// Set success message
-				if( isset( $formModel->successMessage ) ) {
-
-					Yii::$app->session->setFlash( 'message', $formModel->successMessage );
+					Yii::$app->cmgFormsMailer->sendAdminMail( $form, $model );
 				}
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( $formModel->successMessage );
+				return AjaxUtil::generateSuccess( $form->successMessage );
 			}
 		}
 

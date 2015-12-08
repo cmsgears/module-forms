@@ -3,7 +3,6 @@ namespace cmsgears\forms\common\models\forms;
 
 // Yii Imports
 use \Yii;
-use yii\base\Model;
 
 // CMG Imports
 use cmsgears\forms\common\models\entities\FormSubmit;
@@ -14,29 +13,7 @@ use cmsgears\core\common\utilities\DateUtil;
 /**
  * The base class to be used by dynamic forms.
  */
-class BaseForm extends Model {
-
-	/**
-	 * The method collect the list of class members and their values using reflection.
-	 * return array - list of class members and their value
-	 */
-	public function getClassAttributesArr() {
-
-	  	$refclass	= new \ReflectionClass( $this );
-		$attribArr	= array();
-
-	  	foreach ( $refclass->getProperties() as $property ) {
-
-			$name = $property->name;
-
-	    	if ( $property->class == $refclass->name ) {
-
-				$attribArr[ $name ] = $this->$name;
-			}	
-	  	}
-
-		return $attribArr;
-	}
+class GenericForm extends \cmsgears\core\common\models\forms\GenericForm {
 
 	/**
 	 * The method process the submitted form and save all the form fields except captcha field.
@@ -44,48 +21,53 @@ class BaseForm extends Model {
 	public function processFormSubmit( $form ) {
 
 		$date		= DateUtil::getDateTime();
-		$fields 	= $this->getClassAttributesArr();
-		$fields		= $fields[ 'fields' ];
 
-		// Save Form
+		$attributes	= parent::getFormAttributes();
+
+		$fields		= $attributes[ 'fields' ];
+		$attribs	= [];
+		$user		= Yii::$app->user->getIdentity();
+
 		$formSubmit		= new FormSubmit();
 
 		$formSubmit->formId 		= $form->id;
 		$formSubmit->submittedAt	= $date;
-		$formSubmit->jsonStorage	= false;
+		
+		if( isset( $user ) ) {
+			
+			$formSubmit->submittedBy	= $user->id;	
+		}
+		
+		// Collect fields to save in json format
+		foreach ( $fields as $field ) {
+			
+			if( $field->compress ) {
 
-		if( $form->jsonStorage ) {
-
-
-			$attribs					= [];
-
-			foreach ( $fields as $field ) {
-				
 				$fieldName					= $field->name;
 				$attribs[ $field->name ]	= $this->$fieldName;
 			}
-
-			$formSubmit->jsonStorage	= true;
-			$formSubmit->data			= json_encode( $attribs );
 		}
 
+		$formSubmit->data	= json_encode( $attribs );
+		
+		// save form submit
 		$formSubmit->save();
 
-		if( !$form->jsonStorage ) {
+		// Get Form Submit Id
+		$formSubmitId	= $formSubmit->id;
 
-			// Get Form Submit Id
-			$formSubmitId	= $formSubmit->id;
-
-			// Save Form Fields
-			foreach ( $fields as $field ) {
+		// Save Form Fields
+		foreach ( $fields as $field ) {
+			
+			if( !$field->compress ) {
 
 				$formSubmitField	= new FormSubmitField();
-
+	
 				$formSubmitField->formSubmitId 	= $formSubmitId;
 				$formSubmitField->name			= $field->name;
 				$fieldName						= $field->name;
 				$formSubmitField->value			= $this->$fieldName;
-
+	
 				$formSubmitField->save();
 			}
 		}

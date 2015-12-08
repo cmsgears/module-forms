@@ -8,7 +8,7 @@ use yii\base\Model;
 // CMG Imports
 use cmsgears\forms\common\models\entities\Form;
 
-class FormService extends \cmsgears\forms\common\services\FormService {
+class FormService extends \cmsgears\core\common\services\FormService {
 
 	// Static Methods ----------------------------------------------
 

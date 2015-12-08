@@ -25,9 +25,11 @@ DROP TABLE IF EXISTS `cmg_form_submit_field`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_form_submit_field` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `formSubmitId` bigint(20) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
   KEY `fk_form_submit_field_1` (`formSubmitId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

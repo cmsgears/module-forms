@@ -9,13 +9,13 @@ use yii\filters\VerbFilter;
 use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\forms\frontend\config\WebGlobalForms;
 
-use cmsgears\forms\frontend\models\forms\GenericForm;
+use cmsgears\forms\common\models\forms\GenericForm;
 
 use cmsgears\forms\frontend\services\FormService;
 
 // TODO: Automate the form submission and mail triggers using mail template.
 
-class SiteController extends \cmsgears\core\frontend\controllers\BaseController {
+class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
