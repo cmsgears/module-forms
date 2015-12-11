@@ -6,6 +6,7 @@ use \Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\forms\frontend\config\WebGlobalForms;
 

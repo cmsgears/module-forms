@@ -32,24 +32,31 @@ class GenericForm extends \cmsgears\core\common\models\forms\GenericForm {
 
 		$formSubmit->formId 		= $form->id;
 		$formSubmit->submittedAt	= $date;
-		
+
 		if( isset( $user ) ) {
-			
+
 			$formSubmit->submittedBy	= $user->id;	
 		}
-		
+
 		// Collect fields to save in json format
 		foreach ( $fields as $field ) {
-			
+
+			$fieldName	= $field->name;
+
+			// Convert CheckBox array to csv
+			if( $field->isCheckboxGroup() ) {
+
+				$this->$fieldName	= join( ",", $this->$fieldName );
+			}
+
 			if( $field->compress ) {
 
-				$fieldName					= $field->name;
 				$attribs[ $field->name ]	= $this->$fieldName;
 			}
 		}
 
 		$formSubmit->data	= json_encode( $attribs );
-		
+
 		// save form submit
 		$formSubmit->save();
 
@@ -58,7 +65,7 @@ class GenericForm extends \cmsgears\core\common\models\forms\GenericForm {
 
 		// Save Form Fields
 		foreach ( $fields as $field ) {
-			
+
 			if( !$field->compress ) {
 
 				$formSubmitField	= new FormSubmitField();
