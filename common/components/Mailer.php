@@ -13,61 +13,105 @@ use cmsgears\forms\common\config\FormsGlobal;
 class Mailer extends \cmsgears\core\common\base\Mailer {
 
 	// Various mail views
-	const MAIL_CONTACT			= "contact";
-	const MAIL_CONTACT_ADMIN	= "contact-admin";
-	const MAIL_FEEDBACK			= "feedback";
-	const MAIL_FEEDBACK_ADMIN	= "feedback-admin";
+	const MAIL_GENERIC_USER		= "generic-user";
+	const MAIL_GENERIC_ADMIN	= "generic-admin";
 
     public $htmlLayout 		= '@cmsgears/module-forms/common/mails/layouts/html';
     public $textLayout 		= '@cmsgears/module-forms/common/mails/layouts/text';
     public $viewPath 		= '@cmsgears/module-forms/common/mails/views';
 
-    public function sendContactMail( $contactForm ) {
-		
-		$mailProperties	= $this->mailProperties;
-		$adminEmail		= $mailProperties->getSenderEmail();
-		$adminName		= $mailProperties->getSenderName();
+    public function sendUserMail( $form, $model ) {
 
+		$mailProperties	= $this->mailProperties;
 		$fromEmail 		= $mailProperties->getContactEmail();
 		$fromName 		= $mailProperties->getContactName();
+		$toEmail		= null;
+		$name			= null;
+		$subject		= '';
 
-		// User Mail
-        $this->getMailer()->compose( self::MAIL_CONTACT, [ 'coreProperties' => $this->coreProperties, FormsGlobal::FORM_CONTACT => $contactForm ] )
-            ->setTo( $contactForm->email )
-            ->setFrom( [ $fromEmail => $fromName ] )
-            ->setSubject( $contactForm->subject )
-            //->setTextBody( $contact->contact_message )
-            ->send();
+		// Email
+		if( isset( $model->email ) ) {
 
-		// Admin Mail
-        $this->getMailer()->compose( self::MAIL_CONTACT_ADMIN, [ 'coreProperties' => $this->coreProperties, 'mailProperties' => $mailProperties, FormsGlobal::FORM_CONTACT => $contactForm ] )
-            ->setTo( $fromEmail )
-            ->setFrom( [ $adminEmail => $adminName ] )
-            ->setSubject( $contactForm->subject )
-            //->setTextBody( $contact->contact_message )
-            ->send();
+			$toEmail = $model->email;
+		}
+
+		// Name
+		if( isset( $model->name ) ) {
+
+			$name = $model->name;
+		}
+
+		// Email, Name
+		if( isset( Yii::$app->user ) ) {
+
+			$user	= Yii::$app->user->getIdentity();
+
+			if( isset( $user ) ) {
+
+				if( !isset( $toEmail ) ) {
+
+					$toEmail	= $user->email;
+				}
+
+				if( !isset( $name ) ) {
+
+					$name	= $user->getName();
+				}
+			}
+		}
+
+		// Name
+		if( !isset( $name ) && isset( $toEmail ) ) {
+
+			$name	= preg_split( "/@", $toEmail );
+			$name	= $name[0];
+		}
+
+		// Subject
+		if( isset( $model->subject ) ) {
+
+			$subject = $model->subject;
+		}
+		else {
+
+			$subject	= $form->name;
+		}
+
+		if( isset( $toEmail ) ) {
+
+	        $this->getMailer()->compose( self::MAIL_GENERIC_USER, [ 'coreProperties' => $this->coreProperties, 'form' => $form, 'model' => $model, 'name' => $name ] )
+	            ->setTo( $toEmail )
+	            ->setFrom( [ $fromEmail => $fromName ] )
+	            ->setSubject( $subject )
+	            //->setTextBody( $contact->contact_message )
+	            ->send();
+		}
     }
 
-    public function sendFeedbackMail( $feedbackForm ) {
-		
-		$mailProperties	= $this->mailProperties;
-		$adminEmail		= $mailProperties->getSenderEmail();
-		$fromEmail 		= $mailProperties->getContactEmail();
-		$fromName 		= $mailProperties->getContactName();
+    public function sendAdminMail( $form, $model ) {
 
-		// User Mail
-        $this->getMailer()->compose( self::MAIL_FEEDBACK, [ 'coreProperties' => $this->coreProperties, FormsGlobal::FORM_FEEDBACK => $feedbackForm ] )
-            ->setTo( $feedbackForm->email )
-            ->setFrom( [ $fromEmail => $fromName ] )
-            ->setSubject( "Re: Feedback" )
-            //->setTextBody( $contact->contact_message )
-            ->send();
+		$mailProperties	= $this->mailProperties;
+		$fromEmail 		= $mailProperties->getSenderEmail();
+		$fromName 		= $mailProperties->getSenderName();
+
+		$adminEmail		= $mailProperties->getContactEmail();
+		$subject		= '';
+
+		// Subject
+		if( isset( $model->subject ) ) {
+
+			$subject = $model->subject;
+		}
+		else {
+
+			$subject	= $form->name;
+		}
 
 		// Admin Mail
-        $this->getMailer()->compose( self::MAIL_FEEDBACK_ADMIN, [ 'coreProperties' => $this->coreProperties, 'mailProperties' => $mailProperties, FormsGlobal::FORM_FEEDBACK => $feedbackForm ] )
-            ->setTo( $fromEmail )
-            ->setFrom( [ $adminEmail => $adminName ] )
-            ->setSubject( "Re: Feedback" )
+        $this->getMailer()->compose( self::MAIL_GENERIC_ADMIN, [ 'coreProperties' => $this->coreProperties, 'form' => $form, 'model' => $model, 'name' => $fromName ] )
+            ->setTo( $adminEmail )
+            ->setFrom( [ $fromEmail => $fromName ] )
+            ->setSubject( $subject )
             //->setTextBody( $contact->contact_message )
             ->send();
     }

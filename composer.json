@@ -3,7 +3,7 @@
 	"description": "The dynamic forms module for CMSGears. It can be used by the projects which require dynamic forms feature.",
 	"homepage": "http://www.cmsgears.org", 
 	"type": "package",
-	"keywords": [ "yii2", "cmsgears", "module", "forms" ],
+	"keywords": [ "yii", "yii2", "cmsgears", "module", "forms" ],
 	"license": "GPLv3",
 	"support": {
 		"resources": "http://www.cmsgears.org/"

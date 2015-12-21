@@ -1,15 +1,20 @@
 --
--- Dumping data for table `cmg_form`
+-- Form module roles and permissions
 --
 
-INSERT INTO `cmg_form` VALUES 
-	(1,1,1,'contact','contact form','contact form','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(2,1,1,'feedback','feedback form','feedback form','2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_role` (`createdBy`,`modifiedBy`,`name`,`slug`,`homeUrl`,`type`,`description`,`icon`,`createdAt`,`modifiedAt`) VALUES 
+	(1,1,'Form Manager','form-manager','dashboard','system','The role Form Manager is limited to manage forms from admin.',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
---
--- Dumping data for table `cmg_form_field`
---
+SELECT @rolesadmin := `id` FROM cmg_core_role WHERE slug = 'super-admin';
+SELECT @roleadmin := `id` FROM cmg_core_role WHERE slug = 'admin';
+SELECT @roleform := `id` FROM cmg_core_role WHERE slug = 'form-manager';
 
-INSERT INTO `cmg_form_field` VALUES 
-	(1,1,'name',1,NULL),(2,1,'email',1,NULL),(3,1,'subject',1,NULL),(4,1,'message',2,NULL),
-	(5,2,'name',1,NULL),(6,2,'email',1,NULL),(7,2,'rating',1,NULL),(8,2,'message',2,NULL);
+INSERT INTO `cmg_core_permission` (`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`icon`,`createdAt`,`modifiedAt`) VALUES 
+	(1,1,'Form','form','system','The permission form is to manage forms from admin.',null,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+
+SELECT @permform := `id` FROM cmg_core_permission WHERE slug = 'form';
+
+INSERT INTO `cmg_core_role_permission` VALUES 
+	(@rolesadmin,@permform),
+	(@roleadmin,@permform),
+	(@roleform,@permform);

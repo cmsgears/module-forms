@@ -1,24 +1,25 @@
 <?php
-namespace cmsgears\forms\admin\controllers;
+namespace cmsgears\forms\admin\controllers\form;
 
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-class FormController extends \cmsgears\core\admin\controllers\base\FormController {
+use cmsgears\forms\admin\services\FormService;
+use cmsgears\forms\admin\services\FormSubmitService;
+
+class SubmitController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-
-		$this->sidebar 	= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
 	}
 
 	// Instance Methods --------------------------------------------
@@ -33,52 +34,61 @@ class FormController extends \cmsgears\core\admin\controllers\base\FormControlle
                 'actions' => [
 	                'index'  => [ 'permission' => FormsGlobal::PERM_FORM ],
 	                'all'    => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'create' => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'update' => [ 'permission' => FormsGlobal::PERM_FORM ],
 	                'delete' => [ 'permission' => FormsGlobal::PERM_FORM ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'   => [ 'get' ],
+	                'index'  => [ 'get' ],
 	                'all'   => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
 	                'delete' => [ 'get', 'post' ]
                 ]
             ]
         ];
     }
 
-	// RoleController --------------------
+	// PageController --------------------
 
 	public function actionIndex() {
 
-		$this->redirect( 'all' );
+		$this->redirect( [ 'all' ] );
 	}
 
-	public function actionAll() {
+	public function actionAll( $formid ) {
 
-		// Remember return url for crud
-		Url::remember( [ 'form/all' ], 'forms' );
+		$dataProvider = FormSubmitService::getPaginationByFormId( $formid );
 
-		return parent::actionAll( CoreGlobal::TYPE_FORM );
-	}
-
-	public function actionCreate() {
-
-		return parent::actionCreate( CoreGlobal::TYPE_FORM );
-	}
-
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CoreGlobal::TYPE_FORM );
+	    return $this->render( 'all', [
+	         'dataProvider' => $dataProvider,
+	         'formId' => $formid
+	    ]);
 	}
 
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, CoreGlobal::TYPE_FORM );
+		// Find Model
+		$model	= FormSubmitService::findById( $id );
+
+		// Delete/Render if exist
+		if( isset( $model ) ) {
+
+			if( $model->load( Yii::$app->request->post(), 'FormSubmit' ) ) {
+
+				if( FormSubmitService::delete( $model ) ) {
+
+					$this->redirect( [ "all?formid=$model->formId" ] );
+				}
+			}
+
+	    	return $this->render( 'delete', [
+				'model' => $model,
+				'formId' => $model->formId
+	    	]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

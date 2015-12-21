@@ -9,17 +9,15 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgEntity;
-
 /**
  * FormSubmitField Entity
  *
  * @property integer $id
- * @property integer $parentId
+ * @property integer $formSubmitId
  * @property string $name
  * @property string $value
  */
-class FormSubmitField extends CmgEntity {
+class FormSubmitField extends \cmsgears\core\common\models\entities\CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
@@ -28,7 +26,7 @@ class FormSubmitField extends CmgEntity {
 	 */
 	public function getFormSubmit() {
 
-		return $this->hasOne( FormSubmit::className(), [ 'id' => 'parentId' ] );
+		return $this->hasOne( FormSubmit::className(), [ 'id' => 'formSubmitId' ] );
 	}
 
 	// yii\base\Model --------------------
@@ -38,20 +36,17 @@ class FormSubmitField extends CmgEntity {
      */
 	public function rules() {
 
-		$trim		= [];
+		// model rules
+        $rules = [
+            [ [ 'formSubmitId', 'name' ], 'required' ],
+            [ [ 'id', 'value' ], 'safe' ],
+			[ 'name', 'string', 'min' => 1, 'max' => 100 ]
+        ];
 
+		// trim if configured
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
-        $rules = [
-            [ [ 'parentId', 'name' ], 'required' ],
-			[ [ 'id', 'value' ], 'safe' ],
-			[ 'name', 'string', 'min'=>1, 'max'=>100 ]
-        ];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -65,7 +60,7 @@ class FormSubmitField extends CmgEntity {
 	public function attributeLabels() {
 
 		return [
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'formSubmitId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE )
 		];

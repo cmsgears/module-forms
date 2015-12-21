@@ -3,54 +3,34 @@ namespace cmsgears\forms\frontend\controllers;
 
 // Yii Imports
 use Yii;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\forms\frontend\config\WebGlobalForms;
 
-use cmsgears\forms\frontend\models\forms\ContactForm;
-use cmsgears\forms\frontend\models\forms\FeedbackForm;
+use cmsgears\forms\common\models\forms\GenericForm;
 
-use cmsgears\core\frontend\services\UserService;
 use cmsgears\forms\frontend\services\FormService;
-
-use cmsgears\core\frontend\controllers\BaseController;
 
 // TODO: Automate the form submission and mail triggers using mail template.
 
-class SiteController extends BaseController {
+class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-
-		$this->layout	= WebGlobalCore::LAYOUT_PUBLIC;
 	}
 
     public function behaviors() {
 
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => [ 'feedback' ],
-                'rules' => [
-                    [
-                        'actions' => [ 'feedback' ],
-                        'allow' => true,
-                        'roles' => ['@']
-                    ]
-                ]
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'contact' => [ 'get','post' ],
-                    'feedback' => [ 'get','post' ]
+                    'index' => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -62,7 +42,7 @@ class SiteController extends BaseController {
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
+            ]
         ];
     }
 
@@ -70,58 +50,66 @@ class SiteController extends BaseController {
 
 	// SiteController
 
-    public function actionContact() {
+    public function actionIndex( $slug ) {
 
-		// Create Form Model
-		$model = new ContactForm();
+		$form 		= FormService::findBySlug( $slug );
+		$template	= $form->template;
+		$formFields	= $form->getFieldsMap();
+ 		$model		= new GenericForm( [ 'fields' => $formFields ] );
 
-		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), "ContactForm" ) && $model->validate() ) {
+		if( $form->captcha ) {
+
+			$model->setScenario( 'captcha' );
+		}
+
+		if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
 
 			// Save Model
-			if( FormService::processContactForm( $model ) ) {
+			if( FormService::processForm( $form, $model ) ) {
 
-				// Send Contact Mail
-				Yii::$app->cmgFormsMailer->sendContactMail( $model );
+				// Trigger User Mail
+				if( $form->userMail ) {
 
-				// Set Flash Message
-				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_CONTACT ) );
+					Yii::$app->cmgFormsMailer->sendUserMail( $form, $model );
+				}
+
+				// Trigger Admin Mail
+				if( $form->adminMail ) {
+
+					Yii::$app->cmgFormsMailer->sendAdminMail( $form, $model );
+				}
+
+				// Set success message
+				if( isset( $form->successMessage ) ) {
+
+					Yii::$app->session->setFlash( 'message', $form->successMessage );
+				}
 
 				// Refresh the Page
 	        	return $this->refresh();
 			}
 		}
 
-        return $this->render( WebGlobalCore::PAGE_CONTACT, [
-        		'model' => $model
-        	]);
-	}
+		if( isset( $template ) ) {
 
-    public function actionFeedback() {
-		
-		$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
+			// Configure Layout
+			if( isset( $template->layout ) ) {
 
-		// Create Form Model
-		$model = new FeedbackForm();
+				$this->layout	= "//$template->layout";
+			}
 
-		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), "FeedbackForm" ) && $model->validate() ) {
+			$view	= $template->viewPath . "/$template->frontendView";
 
-			// Save Model
-			if( FormService::processFeedbackForm( $model ) ) {
+			if( isset( $template->layout ) && isset( $view ) ) {
 
-				// Send Feedback Mail
-				Yii::$app->cmgFormsMailer->sendFeedbackMail( $model );
-
-				// Set Flash Message
-				Yii::$app->session->setFlash( "success", Yii::$app->cmgFormsMessage->getMessage( WebGlobalForms::MESSAGE_FEEDBACK ) );
-
-				// Refresh the Page
-	        	return $this->refresh();
+		        return $this->render( $view, [
+		        	'form' => $form,
+		        	'model' => $model
+		        ]);
 			}
 		}
 
-        return $this->render( WebGlobalCore::PAGE_FEEDBACK, [
+        return $this->render( WebGlobalCore::PAGE_INDEX, [
         		'model' => $model
         	]);
 	}
