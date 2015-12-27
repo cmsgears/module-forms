@@ -1,29 +1,27 @@
 <?php
-namespace cmsgears\forms\admin\controllers\form;
+namespace cmsgears\forms\admin\controllers;
 
 // Yii Imports
 use \Yii;
-use yii\helpers\Url;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
-use yii\db\IntegrityException;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldController {
+class ConfigController extends \cmsgears\core\admin\controllers\base\FormController {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
-		$this->sidebar 		= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
+
+		$this->sidebar 	= [ 'parent' => 'sidebar-form', 'child' => 'form-config' ];
 	}
 
-	// Instance Methods ------------------
+	// Instance Methods --------------------------------------------
 
 	// yii\base\Component ----------------
 
@@ -33,6 +31,7 @@ class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldCo
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
+	                'index'  => [ 'permission' => FormsGlobal::PERM_FORM ],
 	                'all'    => [ 'permission' => FormsGlobal::PERM_FORM ],
 	                'create' => [ 'permission' => FormsGlobal::PERM_FORM ],
 	                'update' => [ 'permission' => FormsGlobal::PERM_FORM ],
@@ -42,37 +41,44 @@ class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldCo
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'all'  => [ 'get' ],
-	                'create'  => [ 'get', 'post' ],
-	                'update'  => [ 'get', 'post' ],
-	                'delete'  => [ 'get', 'post' ]
+	                'index'   => [ 'get' ],
+	                'all'   => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
                 ]
             ]
         ];
     }
 
-	// CategoryController --------------------
+	// RoleController --------------------
 
-	public function actionAll( $formid ) {
-		
-		Url::remember( [ "config/field/all?formid=$formid" ], 'fields' );
+	public function actionIndex() {
 
-		return parent::actionAll( $formid );
+		$this->redirect( 'all' );
 	}
-	
-	public function actionCreate( $formid ) {
 
-		return parent::actionCreate( $formid );
+	public function actionAll() {
+
+		// Remember return url for crud
+		Url::remember( [ 'config/all' ], 'forms' );
+
+		return parent::actionAll( CoreGlobal::TYPE_SYSTEM );
 	}
-	 
+
+	public function actionCreate() {
+
+		return parent::actionCreate( CoreGlobal::TYPE_SYSTEM );
+	}
+
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id );
+		return parent::actionUpdate( $id, CoreGlobal::TYPE_SYSTEM );
 	}
-	
+
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id );
+		return parent::actionDelete( $id, CoreGlobal::TYPE_SYSTEM );
 	}
 }
 

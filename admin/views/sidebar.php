@@ -17,6 +17,7 @@ $user	= Yii::$app->user->getIdentity();
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-form' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
 				<li class='form <?php if( strcmp( $child, 'form' ) == 0 ) echo 'active';?>'><?= Html::a( "Forms", ['/cmgforms/form/all'] ) ?></li>
+				<li class='form <?php if( strcmp( $child, 'form-config' ) == 0 ) echo 'active';?>'><?= Html::a( "Config Forms", ['/cmgforms/config/all'] ) ?></li>
 				<li class='form-template <?php if( strcmp( $child, 'form-template' ) == 0 ) echo 'active';?>'><?= Html::a( "Form Templates", ['/cmgforms/form/template/all'] ) ?></li>
 			</ul>
 		</div>

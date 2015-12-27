@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\forms\admin\controllers\form;
+namespace cmsgears\forms\admin\controllers\config;
 
 // Yii Imports
 use \Yii;
@@ -20,7 +20,7 @@ class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldCo
 
         parent::__construct( $id, $module, $config );
 		
-		$this->sidebar 		= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
+		$this->sidebar 		= [ 'parent' => 'sidebar-form', 'child' => 'form-config' ];
 	}
 
 	// Instance Methods ------------------
