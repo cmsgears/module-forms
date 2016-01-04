@@ -7,6 +7,8 @@ use \Yii;
 // CMG Imports
 use cmsgears\forms\common\models\entities\FormSubmit;
 
+use cmsgears\forms\common\services\FormSubmitFieldService;
+
 class FormSubmitService extends \cmsgears\core\common\services\Service {
 
 	// Static Methods ----------------------------------------------
@@ -34,6 +36,9 @@ class FormSubmitService extends \cmsgears\core\common\services\Service {
 	public static function delete( $formSubmit ) {
 
 		$existingFormSubmit		= self::findById( $formSubmit->id );
+
+		// Delete Dependency
+		FormSubmitFieldService::deleteByFormSubmitId( $existingFormSubmit->id );
 
 		// Delete Model
 		$existingFormSubmit->delete();

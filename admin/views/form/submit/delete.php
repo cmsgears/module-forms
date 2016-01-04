@@ -1,50 +1,49 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Delete Form Field';
-
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-form';
-$this->params['sidebar-child'] 	= 'form';
+$this->title 	= 'Delete Submit | ' . $coreProperties->getSiteTitle();
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Delete Form Submit</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-field-delete', 'options' => ['class' => 'frm-split' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Delete Submit</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-gallery' ] );?>
 
 		<?= $form->field( $model, 'submittedAt' )->textInput( [ 'readonly' => true ] ) ?>
 		
-		<table style='width:100%;'>
-		<?php 
-			if( $model->jsonStorage ) {
-				
-				$formData	= json_decode( $model->data, true );
-				
-				foreach (  $formData as $key => $value ) {
-					
-					echo "<tr><td>$key</td><td>$value</td></tr>";
-				}
-			}
-			else {
-				
-				$formFields	= $model->fields;
+		<div class="box-content">
+			<div class="info">
+				<table style='width:100%;'>
+				<?php
+					$formData	= json_decode( $model->data, true );
+		
+					foreach (  $formData as $key => $value ) {
+						
+						echo "<tr><td>$key</td><td>$value</td></tr>";
+					}
+						
+					$formFields	= $model->fields;
+		
+					foreach (  $formFields as $formField ) {
+						
+						echo "<tr><td>$formField->name</td><td>$formField->value</td></tr>";
+					}
+				?>
+				</table>
+			</div>
+		</div>
 
-				foreach (  $formFields as $formField ) {
-					
-					echo "<tr><td>$formField->name</td><td>$formField->value</td></tr>";
-				}
-			}
-		?>
-		</table>
+		<div class="clear filler-height"></div>
 
-		<div class="box-filler"></div>
-
-		<?=Html::a( 'Cancel', [ "/cmgforms/form/submit/all?formid=$formId" ], ['class' => 'btn' ] );?>
-		<input type="submit" value="Delete" />
+		<div class="align align-middle">
+			<?=Html::a( 'Cancel', [ "form/submit/all?formid=$formId" ], [ 'class' => 'btn btn-medium' ] );?>
+			<input class="btn btn-medium" type="submit" value="Delete" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

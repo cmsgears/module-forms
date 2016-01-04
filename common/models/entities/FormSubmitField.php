@@ -86,6 +86,16 @@ class FormSubmitField extends \cmsgears\core\common\models\entities\CmgEntity {
 
 		return self::find()->joinWith( 'formSubmit' )->where( "$frmSubmitTable.id=:id", [ ':id' => $formSubmitId ] )->all();
 	}
+
+	// Delete ----
+
+	/**
+	 * Delete all entries related to a form submit
+	 */
+	public static function deleteByFormSubmitId( $formSubmitId ) {
+
+		self::deleteAll( 'formSubmitId=:id', [ ':id' => $formSubmitId ] );
+	}
 }
 
 ?>

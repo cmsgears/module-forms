@@ -63,7 +63,7 @@ class ConfigController extends \cmsgears\core\admin\controllers\base\FormControl
 		// Remember return url for crud
 		Url::remember( [ 'config/all' ], 'forms' );
 
-		return parent::actionAll( CoreGlobal::TYPE_SYSTEM );
+		return parent::actionAll( CoreGlobal::TYPE_SYSTEM, false );
 	}
 
 	public function actionCreate() {

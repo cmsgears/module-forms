@@ -1,17 +1,14 @@
 <?php
+// Yii Imports
 use \Yii;
-use yii\helpers\Html; 
+use yii\helpers\Html;
 use yii\widgets\LinkPager;
 
+// CMG Imports
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | All Forms';
-$siteUrl		= $coreProperties->getSiteUrl();
-
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-form';
-$this->params['sidebar-child'] 	= 'form';
+$this->title 	= 'All Submits | ' . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -28,15 +25,27 @@ if( !isset( $sortOrder ) ) {
 	$sortOrder	= '';
 }
 ?>
-<div class="content-header clearfix">
-	<div class="header-actions"></div>
-	<div class="header-search"></div>
-</div>
-<div class="data-grid">
-	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
+<div class="header-content clearfix">
+	<div class="header-actions col15x10"></div>
+	<div class="header-search col15x5">
+		<input id="search-terms" class="field-large" type="text" name="search" value="<?= $searchTerms ?>">
+		<span class="frm-icon-element field-small">
+			<i class="cmti cmti-search"></i>
+			<button id="btn-search" class="btn btn-small">Search</button>
+		</span>
 	</div>
-	<div class="wrap-grid">
+</div>
+
+<div class="data-grid">
+	<div class="grid-header clearfix">
+		<div class="col12x6 info">
+			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
+		</div>
+		<div class="col12x6 pagination">
+			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
+		</div>
+	</div>
+	<div class="grid-content">
 		<table>
 			<thead>
 				<tr>
@@ -53,11 +62,9 @@ if( !isset( $sortOrder ) ) {
 			<tbody>
 				<?php
 
-					$slugBase	= $siteUrl;
-
 					foreach( $models as $formSubmit ) {
 
-						$id 		= $formSubmit->id;
+						$id 	= $formSubmit->id;
 				?>
 					<tr>
 						<td>
@@ -81,15 +88,19 @@ if( !isset( $sortOrder ) ) {
 						</td>
 						<td><?= $formSubmit->submittedAt ?></td>
 						<td>
-							<span class="wrap-icon-action" title="Delete Form"><?= Html::a( "", ["/cmgforms/form/submit/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
+							<span title="Delete Submit"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-o-b' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>
 			</tbody>
 		</table>
 	</div>
-	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
+	<div class="grid-header clearfix">
+		<div class="col12x6 info">
+			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
+		</div>
+		<div class="col12x6 pagination">
+			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
+		</div>
 	</div>
 </div>

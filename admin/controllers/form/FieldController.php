@@ -20,7 +20,7 @@ class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldCo
 
         parent::__construct( $id, $module, $config );
 		
-		$this->sidebar 		= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
+		$this->sidebar 	= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
 	}
 
 	// Instance Methods ------------------
@@ -55,7 +55,7 @@ class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldCo
 
 	public function actionAll( $formid ) {
 		
-		Url::remember( [ "config/field/all?formid=$formid" ], 'fields' );
+		Url::remember( [ "form/field/all?formid=$formid" ], 'fields' );
 
 		return parent::actionAll( $formid );
 	}
