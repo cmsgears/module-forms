@@ -8,6 +8,8 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
+use cmsgears\core\common\models\traits\DataTrait;
+
 /**
  * FormSubmitField Entity
  *
@@ -18,6 +20,8 @@ use cmsgears\forms\common\config\FormsGlobal;
  * @property string $data
  */
 class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
+
+	use DataTrait;
 
 	// Instance Methods --------------------------------------------
 

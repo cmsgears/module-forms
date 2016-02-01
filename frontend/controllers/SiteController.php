@@ -92,21 +92,10 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 
 		if( isset( $template ) ) {
 
-			// Configure Layout
-			if( isset( $template->layout ) ) {
-
-				$this->layout	= "//$template->layout";
-			}
-
-			$view	= $template->viewPath . "/$template->frontendView";
-
-			if( isset( $template->layout ) && isset( $view ) ) {
-
-		        return $this->render( $view, [
-		        	'form' => $form,
-		        	'model' => $model
-		        ]);
-			}
+			return Yii::$app->templateSource->renderViewPublic( $template, [
+	        	'form' => $form,
+		        'model' => $model
+	        ], $this );
 		}
 
         return $this->render( WebGlobalCore::PAGE_INDEX, [
