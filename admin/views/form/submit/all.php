@@ -87,7 +87,7 @@ if( !isset( $sortOrder ) ) {
 							</table>
 						</td>
 						<td><?= $formSubmit->submittedAt ?></td>
-						<td>
+						<td class="actions">
 							<span title="Delete Submit"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
