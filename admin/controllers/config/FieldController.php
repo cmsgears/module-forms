@@ -4,12 +4,8 @@ namespace cmsgears\forms\admin\controllers\config;
 // Yii Imports
 use \Yii;
 use yii\helpers\Url;
-use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
-use yii\db\IntegrityException;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
 class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldController {
@@ -28,51 +24,26 @@ class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldCo
 	// yii\base\Component ----------------
 
     public function behaviors() {
+		
+		$behaviors	= parent::behaviors();
+		
+		$behaviors[ 'rbac' ][ 'actions' ] = [
+								                'all'  => [ 'permission' => FormsGlobal::PERM_FORM ],
+								                'create'  => [ 'permission' => FormsGlobal::PERM_FORM ],
+								                'update'  => [ 'permission' => FormsGlobal::PERM_FORM ],
+								                'delete'  => [ 'permission' => FormsGlobal::PERM_FORM ],
+							                ];
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all'    => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'create' => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'update' => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'delete' => [ 'permission' => FormsGlobal::PERM_FORM ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'  => [ 'get' ],
-	                'create'  => [ 'get', 'post' ],
-	                'update'  => [ 'get', 'post' ],
-	                'delete'  => [ 'get', 'post' ]
-                ]
-            ]
-        ];
+		return $behaviors;
     }
 
 	// CategoryController --------------------
 
 	public function actionAll( $formid ) {
-		
+
 		Url::remember( [ "config/field/all?formid=$formid" ], 'fields' );
 
 		return parent::actionAll( $formid );
-	}
-	
-	public function actionCreate( $formid ) {
-
-		return parent::actionCreate( $formid );
-	}
-	 
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id );
-	}
-	
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id );
 	}
 }
 

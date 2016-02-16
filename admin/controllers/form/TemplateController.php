@@ -4,9 +4,6 @@ namespace cmsgears\forms\admin\controllers\form;
 // Yii Imports
 use \Yii;
 use yii\helpers\Url;
-use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
-use yii\db\IntegrityException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -20,7 +17,9 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
         parent::__construct( $id, $module, $config );
 		
-		$this->sidebar 		= [ 'parent' => 'sidebar-form', 'child' => 'form-template' ];
+		$this->sidebar 	= [ 'parent' => 'sidebar-form', 'child' => 'form-template' ];
+		
+		$this->type		= CoreGlobal::TYPE_FORM;
 	}
 
 	// Instance Methods ------------------
@@ -28,27 +27,17 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 	// yii\base\Component ----------------
 
     public function behaviors() {
-
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all'    => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'create' => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'update' => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'delete' => [ 'permission' => FormsGlobal::PERM_FORM ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'  => [ 'get' ],
-	                'create'  => [ 'get', 'post' ],
-	                'update'  => [ 'get', 'post' ],
-	                'delete'  => [ 'get', 'post' ]
-                ]
-            ]
-        ];
+		
+		$behaviors	= parent::behaviors();
+		
+		$behaviors[ 'rbac' ][ 'actions' ] = [
+								                'all'  => [ 'permission' => FormsGlobal::PERM_FORM ],
+								                'create'  => [ 'permission' => FormsGlobal::PERM_FORM ],
+								                'update'  => [ 'permission' => FormsGlobal::PERM_FORM ],
+								                'delete'  => [ 'permission' => FormsGlobal::PERM_FORM ]
+							                ];
+		
+		return $behaviors;
     }
 
 	// CategoryController --------------------
@@ -57,22 +46,7 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 		
 		Url::remember( [ 'form/template/all' ], 'templates' );
 
-		return parent::actionAll( CoreGlobal::TYPE_FORM );
-	}
-	
-	public function actionCreate() {
-
-		return parent::actionCreate( CoreGlobal::TYPE_FORM );
-	}
-	 
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CoreGlobal::TYPE_FORM );
-	}
-	
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id, CoreGlobal::TYPE_FORM );
+		return parent::actionAll();
 	}
 }
 

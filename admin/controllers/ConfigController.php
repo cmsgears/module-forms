@@ -19,6 +19,7 @@ class ConfigController extends \cmsgears\core\admin\controllers\base\FormControl
         parent::__construct( $id, $module, $config );
 
 		$this->sidebar 	= [ 'parent' => 'sidebar-form', 'child' => 'form-config' ];
+		$this->submits	= false;
 	}
 
 	// Instance Methods --------------------------------------------
@@ -31,8 +32,8 @@ class ConfigController extends \cmsgears\core\admin\controllers\base\FormControl
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'all'    => [ 'permission' => FormsGlobal::PERM_FORM ],
+	                'index' => [ 'permission' => FormsGlobal::PERM_FORM ],
+	                'all' => [ 'permission' => FormsGlobal::PERM_FORM ],
 	                'create' => [ 'permission' => FormsGlobal::PERM_FORM ],
 	                'update' => [ 'permission' => FormsGlobal::PERM_FORM ],
 	                'delete' => [ 'permission' => FormsGlobal::PERM_FORM ]
@@ -41,8 +42,8 @@ class ConfigController extends \cmsgears\core\admin\controllers\base\FormControl
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'   => [ 'get' ],
-	                'all'   => [ 'get' ],
+	                'index' => [ 'get' ],
+	                'all' => [ 'get' ],
 	                'create' => [ 'get', 'post' ],
 	                'update' => [ 'get', 'post' ],
 	                'delete' => [ 'get', 'post' ]
@@ -51,34 +52,14 @@ class ConfigController extends \cmsgears\core\admin\controllers\base\FormControl
         ];
     }
 
-	// RoleController --------------------
-
-	public function actionIndex() {
-
-		$this->redirect( 'all' );
-	}
+	// FormController --------------------
 
 	public function actionAll() {
 
 		// Remember return url for crud
 		Url::remember( [ 'config/all' ], 'forms' );
 
-		return parent::actionAll( CoreGlobal::TYPE_SYSTEM, false );
-	}
-
-	public function actionCreate() {
-
-		return parent::actionCreate( CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id, CoreGlobal::TYPE_SYSTEM );
+		return parent::actionAll();
 	}
 }
 

@@ -19,6 +19,8 @@ class FormController extends \cmsgears\core\admin\controllers\base\FormControlle
         parent::__construct( $id, $module, $config );
 
 		$this->sidebar 	= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
+
+		$this->type		= CoreGlobal::TYPE_SITE;
 	}
 
 	// Instance Methods --------------------------------------------
@@ -26,59 +28,28 @@ class FormController extends \cmsgears\core\admin\controllers\base\FormControlle
 	// yii\base\Component ----------------
 
     public function behaviors() {
-
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'all'    => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'create' => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'update' => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'delete' => [ 'permission' => FormsGlobal::PERM_FORM ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'   => [ 'get' ],
-	                'all'   => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
+		
+		$behaviors	= parent::behaviors();
+		
+		$behaviors[ 'rbac' ][ 'actions' ] = [
+								                'index'  => [ 'permission' => FormsGlobal::PERM_FORM ],
+								                'all'  => [ 'permission' => FormsGlobal::PERM_FORM ],
+								                'create'  => [ 'permission' => FormsGlobal::PERM_FORM ],
+								                'update'  => [ 'permission' => FormsGlobal::PERM_FORM ],
+								                'delete'  => [ 'permission' => FormsGlobal::PERM_FORM ]
+							                ];
+		
+		return $behaviors;
     }
 
 	// RoleController --------------------
-
-	public function actionIndex() {
-
-		$this->redirect( 'all' );
-	}
 
 	public function actionAll() {
 
 		// Remember return url for crud
 		Url::remember( [ 'form/all' ], 'forms' );
 
-		return parent::actionAll( CoreGlobal::TYPE_FORM );
-	}
-
-	public function actionCreate() {
-
-		return parent::actionCreate( CoreGlobal::TYPE_FORM );
-	}
-
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CoreGlobal::TYPE_FORM );
-	}
-
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id, CoreGlobal::TYPE_FORM );
+		return parent::actionAll();
 	}
 }
 
