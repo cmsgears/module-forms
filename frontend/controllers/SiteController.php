@@ -95,7 +95,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 			return Yii::$app->templateSource->renderViewPublic( $template, [
 	        	'form' => $form,
 		        'model' => $model
-	        ], true );
+	        ], [ 'page' => true ] );
 		}
 
         return $this->render( WebGlobalCore::PAGE_INDEX, [
