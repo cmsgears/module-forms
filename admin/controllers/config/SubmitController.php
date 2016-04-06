@@ -10,8 +10,8 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\forms\admin\services\FormService;
-use cmsgears\forms\admin\services\FormSubmitService;
+use cmsgears\forms\admin\services\entities\FormService;
+use cmsgears\forms\admin\services\resources\FormSubmitService;
 
 class SubmitController extends \cmsgears\core\admin\controllers\base\Controller {
 

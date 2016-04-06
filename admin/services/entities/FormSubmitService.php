@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\forms\admin\services;
+namespace cmsgears\forms\admin\services\entities;
 
 // Yii Imports
 use \Yii;
@@ -8,7 +8,7 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\forms\common\models\entities\FormSubmit;
 
-class FormSubmitService extends \cmsgears\forms\common\services\FormSubmitService {
+class FormSubmitService extends \cmsgears\forms\common\services\entities\FormSubmitService {
 
 	// Static Methods ----------------------------------------------
 

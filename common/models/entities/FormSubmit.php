@@ -8,10 +8,12 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
+use cmsgears\forms\common\models\base\FormTables;
+
 use cmsgears\core\common\models\traits\DataTrait;
 
 /**
- * FormSubmitField Entity
+ * FormSubmit Entity
  *
  * @property integer $id
  * @property integer $formId
@@ -19,11 +21,54 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property datetime $submittedAt
  * @property string $data
  */
-class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
+class FormSubmit extends \cmsgears\core\common\models\base\CmgEntity {
+
+	// Variables ---------------------------------------------------
+
+	// Constants/Statics --
+
+	// Public -------------
+
+	// Private/Protected --
+
+	// Traits ------------------------------------------------------
 
 	use DataTrait;
 
+	// Constructor and Initialisation ------------------------------
+
 	// Instance Methods --------------------------------------------
+
+	// yii\base\Component ----------------
+
+	// yii\base\Model --------------------
+
+    /**
+     * @inheritdoc
+     */
+	public function rules() {
+
+        return [
+            [ [ 'formId' ], 'required' ],
+			[ [ 'id', 'data' ], 'safe' ],
+			[ [ 'formId', 'submittedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'submittedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+	public function attributeLabels() {
+
+		return [
+			'formId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'submittedBy' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_SUBMITTED_BY ),
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+		];
+	}
+
+	// FormSubmit ------------------------
 
 	/**
 	 * @return Form
@@ -65,33 +110,6 @@ class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
     	return $formFieldsMap;
 	}
 
-	// yii\base\Model --------------------
-
-    /**
-     * @inheritdoc
-     */
-	public function rules() {
-
-        return [
-            [ [ 'formId' ], 'required' ],
-			[ [ 'id', 'data' ], 'safe' ],
-			[ [ 'formId', 'submittedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'submittedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-	public function attributeLabels() {
-
-		return [
-			'formId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'submittedBy' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_SUBMITTED_BY ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
-		];
-	}
-
 	// Static Methods ----------------------------------------------
 
 	// yii\db\ActiveRecord ----------------
@@ -103,6 +121,10 @@ class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
 
 	// FormSubmit ------------------------
 
+	// Create -------------
+
+	// Read ---------------
+
 	public static function findWithForm() {
 
 		return self::find()->joinWith( 'form' );
@@ -112,6 +134,10 @@ class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
 
 		return self::find()->joinWith( 'form' )->joinWith( 'user' );
 	}
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

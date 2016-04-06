@@ -10,8 +10,7 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\forms\admin\services\FormService;
-use cmsgears\forms\admin\services\FormSubmitService;
+use cmsgears\forms\admin\services\entities\FormSubmitService;
 
 class SubmitController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -20,7 +19,7 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->sidebar 	= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
 	}
 

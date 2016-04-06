@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\forms\common\models\entities;
+namespace cmsgears\forms\common\models\resources;
 
 // Yii Imports
 use \Yii;
@@ -9,6 +9,8 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\forms\common\models\base\FormTables;
+
 /**
  * FormSubmitField Entity
  *
@@ -17,17 +19,23 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $name
  * @property string $value
  */
-class FormSubmitField extends \cmsgears\core\common\models\entities\CmgEntity {
+class FormSubmitField extends \cmsgears\core\common\models\base\CmgEntity {
+
+	// Variables ---------------------------------------------------
+
+	// Constants/Statics --
+
+	// Public -------------
+
+	// Private/Protected --
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
 
 	// Instance Methods --------------------------------------------
 
-	/**
-	 * @return FormSubmit - the parent
-	 */
-	public function getFormSubmit() {
-
-		return $this->hasOne( FormSubmit::className(), [ 'id' => 'formSubmitId' ] );
-	}
+	// yii\base\Component ----------------
 
 	// yii\base\Model --------------------
 
@@ -40,7 +48,7 @@ class FormSubmitField extends \cmsgears\core\common\models\entities\CmgEntity {
         $rules = [
             [ [ 'formSubmitId', 'name' ], 'required' ],
             [ [ 'id', 'value' ], 'safe' ],
-			[ 'name', 'string', 'min' => 1, 'max' => 100 ]
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ]
         ];
 
 		// trim if configured
@@ -66,6 +74,16 @@ class FormSubmitField extends \cmsgears\core\common\models\entities\CmgEntity {
 		];
 	}
 
+	// FormSubmitField -------------------
+
+	/**
+	 * @return FormSubmit - the parent
+	 */
+	public function getFormSubmit() {
+
+		return $this->hasOne( FormSubmit::className(), [ 'id' => 'formSubmitId' ] );
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// yii\db\ActiveRecord ---------------
@@ -79,6 +97,10 @@ class FormSubmitField extends \cmsgears\core\common\models\entities\CmgEntity {
 	}
 
 	// FormSubmitField -------------------
+
+	// Create -------------
+
+	// Read ---------------
 
 	public static function findByFormSubmitId( $formSubmitId ) {
 
@@ -96,6 +118,10 @@ class FormSubmitField extends \cmsgears\core\common\models\entities\CmgEntity {
 
 		self::deleteAll( 'formSubmitId=:id', [ ':id' => $formSubmitId ] );
 	}
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

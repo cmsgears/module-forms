@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\forms\frontend\services;
+namespace cmsgears\forms\frontend\services\entities;
 
 // Yii Imports
 use \Yii;
@@ -8,7 +8,7 @@ use yii\base\Model;
 // CMG Imports
 use cmsgears\forms\common\models\entities\Form;
 
-class FormService extends \cmsgears\core\common\services\FormService {
+class FormService extends \cmsgears\core\common\services\entities\FormService {
 
 	// Static Methods ----------------------------------------------
 

@@ -6,7 +6,7 @@ use \Yii;
 
 // CMG Imports
 use cmsgears\forms\common\models\entities\FormSubmit;
-use cmsgears\forms\common\models\entities\FormSubmitField;
+use cmsgears\forms\common\models\resources\FormSubmitField;
 
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -35,7 +35,7 @@ class GenericForm extends \cmsgears\core\common\models\forms\GenericForm {
 
 		if( isset( $user ) ) {
 
-			$formSubmit->submittedBy	= $user->id;	
+			$formSubmit->submittedBy	= $user->id;
 		}
 
 		// Collect fields to save in json format
@@ -69,12 +69,12 @@ class GenericForm extends \cmsgears\core\common\models\forms\GenericForm {
 			if( !$field->compress ) {
 
 				$formSubmitField	= new FormSubmitField();
-	
+
 				$formSubmitField->formSubmitId 	= $formSubmitId;
 				$formSubmitField->name			= $field->name;
 				$fieldName						= $field->name;
 				$formSubmitField->value			= $this->$fieldName;
-	
+
 				$formSubmitField->save();
 			}
 		}

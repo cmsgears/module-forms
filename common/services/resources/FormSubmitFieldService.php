@@ -1,13 +1,13 @@
 <?php
-namespace cmsgears\forms\common\services;
+namespace cmsgears\forms\common\services\resources;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
-use cmsgears\forms\common\models\entities\FormSubmitField;
+use cmsgears\forms\common\models\resources\FormSubmitField;
 
-class FormSubmitFieldService extends \cmsgears\core\common\services\Service {
+class FormSubmitFieldService extends \cmsgears\core\common\services\base\Service {
 
 	// Static Methods ----------------------------------------------
 
