@@ -11,7 +11,7 @@ use cmsgears\forms\frontend\config\WebGlobalForms;
 
 use cmsgears\forms\common\models\forms\GenericForm;
 
-use cmsgears\forms\frontend\services\entities\FormService;
+use cmsgears\forms\frontend\services\resources\FormService;
 
 // TODO: Automate the form submission and mail triggers using mail template.
 
