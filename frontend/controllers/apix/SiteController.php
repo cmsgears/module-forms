@@ -12,7 +12,7 @@ use cmsgears\forms\frontend\config\WebGlobalForms;
 
 use cmsgears\forms\common\models\forms\GenericForm;
 
-use cmsgears\forms\frontend\services\entities\FormService;
+use cmsgears\forms\frontend\services\resources\FormService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
