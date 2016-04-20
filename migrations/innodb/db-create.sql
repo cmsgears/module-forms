@@ -12,8 +12,8 @@ CREATE TABLE `cmg_form_submit` (
   `submittedAt` datetime DEFAULT NULL,
   `data` mediumtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
-  KEY `fk_form_submit_1` (`formId`),
-  KEY `fk_form_submit_2` (`submittedBy`)
+  KEY `fk_cmg_form_submit_1` (`formId`),
+  KEY `fk_cmg_form_submit_2` (`submittedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -30,7 +30,7 @@ CREATE TABLE `cmg_form_submit_field` (
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_form_submit_field_1` (`formSubmitId`)
+  KEY `fk_cmg_form_submit_field_1` (`formSubmitId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -41,13 +41,13 @@ SET FOREIGN_KEY_CHECKS=0;
 -- Constraints for table `cmg_form_submit`
 --
 ALTER TABLE `cmg_form_submit`
-  	ADD CONSTRAINT `fk_form_submit_1` FOREIGN KEY (`formId`) REFERENCES `cmg_core_form` (`id`),
-  	ADD CONSTRAINT `fk_form_submit_2` FOREIGN KEY (`submittedBy`) REFERENCES `cmg_core_user` (`id`);
+  	ADD CONSTRAINT `fk_cmg_form_submit_1` FOREIGN KEY (`formId`) REFERENCES `cmg_core_form` (`id`),
+  	ADD CONSTRAINT `fk_cmg_form_submit_2` FOREIGN KEY (`submittedBy`) REFERENCES `cmg_core_user` (`id`);
 
 --
 -- Constraints for table `cmg_form_submit_field`
 --
 ALTER TABLE `cmg_form_submit_field`
-  	ADD CONSTRAINT `fk_form_submit_field_1` FOREIGN KEY (`formSubmitId`) REFERENCES `cmg_form_submit` (`id`);
+  	ADD CONSTRAINT `fk_cmg_form_submit_field_1` FOREIGN KEY (`formSubmitId`) REFERENCES `cmg_form_submit` (`id`);
 
 SET FOREIGN_KEY_CHECKS=1;
