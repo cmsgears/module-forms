@@ -4,7 +4,7 @@ Module  	- Forms
 
 License 	- GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
 
-Description - The dynamic forms module for CMSGears. It can be used by the projects which require dynamic forms feature. It needs Core Module from CMSGears.
+Description - The Forms Module for CMSGears. It can be used by the projects which require dynamic forms feature.
 
 Highlighted Features
 =========================================
