@@ -4,38 +4,56 @@ namespace cmsgears\forms\admin\controllers\form;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\forms\admin\services\entities\FormSubmitService;
-
 class SubmitController extends \cmsgears\core\admin\controllers\base\Controller {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
+		$this->crudPermission 	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'formSubmitService' );
+		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
+
+		$this->returnUrl		= Url::previous( 'submits' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/submit/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     public function behaviors() {
 
         return [
             'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'all'    => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'delete' => [ 'permission' => FormsGlobal::PERM_FORM ]
+	                'index'  => [ 'permission' => $this->crudPermission ],
+	                'all'    => [ 'permission' => $this->crudPermission ],
+	                'delete' => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
@@ -49,37 +67,45 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
         ];
     }
 
-	// PageController --------------------
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// SubmitController ----------------------
 
 	public function actionIndex() {
 
 		$this->redirect( [ 'all' ] );
 	}
 
-	public function actionAll( $formid ) {
+	public function actionAll( $fid ) {
 
-		$dataProvider = FormSubmitService::getPaginationByFormId( $formid );
+		// Remember return url for crud
+		Url::remember( [ "form/submit/all?fid=$fid" ], 'submits' );
+
+		$dataProvider = $this->modelService->getPageByFormId( $fid );
 
 	    return $this->render( 'all', [
 	         'dataProvider' => $dataProvider,
-	         'formId' => $formid
+	         'formId' => $fid
 	    ]);
 	}
 
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= FormSubmitService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'FormSubmit' ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-				if( FormSubmitService::delete( $model ) ) {
+				$this->modelService->delete( $model );
 
-					$this->redirect( [ "all?formid=$model->formId" ] );
-				}
+				$this->redirect( [ "all?fid=$model->formId" ] );
 			}
 
 	    	return $this->render( 'delete', [
@@ -89,7 +115,7 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

@@ -8,10 +8,12 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
+use cmsgears\core\common\models\entities\User;
+use cmsgears\core\common\models\resources\Form;
 use cmsgears\forms\common\models\base\FormTables;
 use cmsgears\forms\common\models\resources\FormSubmitField;
 
-use cmsgears\core\common\models\traits\DataTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
  * FormSubmit Entity
@@ -20,17 +22,28 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property integer $formId
  * @property integer $submittedBy
  * @property datetime $submittedAt
+ * @property string $content
  * @property string $data
  */
-class FormSubmit extends \cmsgears\core\common\models\base\CmgEntity {
+class FormSubmit extends \cmsgears\core\common\models\base\Entity {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	// Private/Protected --
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
@@ -38,11 +51,15 @@ class FormSubmit extends \cmsgears\core\common\models\base\CmgEntity {
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-	// yii\base\Model --------------------
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -63,13 +80,20 @@ class FormSubmit extends \cmsgears\core\common\models\base\CmgEntity {
 	public function attributeLabels() {
 
 		return [
-			'formId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'submittedBy' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_SUBMITTED_BY ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+			'formId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'submittedBy' => Yii::$app->formsMessage->getMessage( FormsGlobal::FIELD_SUBMITTED_BY ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 
-	// FormSubmit ------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// FormSubmit ----------------------------
 
 	/**
 	 * @return Form
@@ -113,32 +137,43 @@ class FormSubmit extends \cmsgears\core\common\models\base\CmgEntity {
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ----------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
 	public static function tableName() {
 
 		return FormTables::TABLE_FORM_SUBMIT;
 	}
 
-	// FormSubmit ------------------------
+	// CMG parent classes --------------------
 
-	// Create -------------
+	// FormSubmit ----------------------------
 
-	// Read ---------------
+	// Read - Query -----------
 
-	public static function findWithForm() {
+	public static function queryWithAll( $config = [] ) {
 
-		return self::find()->joinWith( 'form' );
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form', 'user' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
 	}
 
-	public static function findWithFormUser() {
+	public static function queryWithForm( $config = [] ) {
 
-		return self::find()->joinWith( 'form' )->joinWith( 'user' );
+		$config[ 'relations' ]	= [ 'form' ];
+
+		return parent::queryWithAll( $config );
 	}
 
-	// Update -------------
+	// Read - Find ------------
 
-	// Delete -------------
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

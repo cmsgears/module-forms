@@ -19,8 +19,8 @@ class m160621_120632_form extends \yii\db\Migration {
 		$this->prefix		= 'cmg_';
 
 		// Get the values via config
-		$this->fk			= Yii::$app->cmgMigration->isFk();
-		$this->options		= Yii::$app->cmgMigration->getTableOptions();
+		$this->fk			= Yii::$app->migration->isFk();
+		$this->options		= Yii::$app->migration->getTableOptions();
 
 		// Default collation
 		if( $this->db->driverName === 'mysql' ) {
@@ -48,6 +48,7 @@ class m160621_120632_form extends \yii\db\Migration {
 			'formId' => $this->bigInteger( 20 )->notNull(),
 			'submittedBy' => $this->bigInteger( 20 ),
 			'submittedAt' => $this->dateTime()->notNull(),
+			'content' => $this->text(),
 			'data' => $this->text()
         ], $this->options );
 

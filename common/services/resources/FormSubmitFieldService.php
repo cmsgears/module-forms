@@ -5,48 +5,125 @@ namespace cmsgears\forms\common\services\resources;
 use \Yii;
 
 // CMG Imports
+use cmsgears\forms\common\models\base\FormTables;
 use cmsgears\forms\common\models\resources\FormSubmitField;
 
-class FormSubmitFieldService extends \cmsgears\core\common\services\base\Service {
+use cmsgears\forms\common\services\interfaces\resources\IFormSubmitFieldService;
 
-	// Static Methods ----------------------------------------------
+class FormSubmitFieldService extends \cmsgears\core\common\services\base\EntityService implements IFormSubmitFieldService {
 
-	// Read ----------------
+	// Variables ---------------------------------------------------
 
-	public static function findById( $id ) {
+	// Globals -------------------------------
 
-		return FormSubmitField::findById( $id );
+	// Constants --------------
+
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\forms\common\models\resources\FormSubmitField';
+
+	public static $modelTable	= FormTables::TABLE_FORM_SUBMIT_FIELD;
+
+	public static $parentType	= null;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// FormSubmitFieldService ----------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Name',
+	            ]
+	        ],
+	        'defaultOrder' => [
+	        	'sdate' => SORT_DESC
+	        ]
+	    ]);
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		return parent::findPage( $config );
 	}
 
-	// Data Provider ----
+	// Read ---------------
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+    // Read - Models ---
 
-		return self::getDataProvider( new FormSubmitField(), $config );
-	}
+    // Read - Lists ----
 
-	// Delete -----------
+    // Read - Maps -----
 
-	public static function delete( $field ) {
+	// Read - Others ---
 
-		$existingField		= self::findById( $field->id );
+	// Create -------------
 
-		// Delete Model
-		$existingField->delete();
+	// Update -------------
 
-		return true;
-	}
+	// Delete -------------
 
-	public static function deleteByFormSubmitId( $formSubmitId ) {
+	public function deleteByFormSubmitId( $formSubmitId ) {
 
 		FormSubmitField::deleteByFormSubmitId( $formSubmitId );
 
 		return true;
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// FormSubmitFieldService ----------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

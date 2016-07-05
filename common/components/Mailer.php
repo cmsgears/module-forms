@@ -5,20 +5,40 @@ namespace cmsgears\forms\common\components;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
 /**
- * The mail component for CMSGears forms module. It must be initialised for app using the name cmgFormsMailer. 
+ * The mail component for CMSGears forms module. It must be initialised for app using the name cmgFormsMailer.
  */
 class Mailer extends \cmsgears\core\common\base\Mailer {
 
-	// Various mail views
-	const MAIL_GENERIC_USER		= "generic-user";
-	const MAIL_GENERIC_ADMIN	= "generic-admin";
+	// Variables ---------------------------------------------------
+
+	// Global -----------------
+
+	const MAIL_GENERIC_USER		= 'user';
+	const MAIL_GENERIC_ADMIN	= 'admin';
+
+	// Public -----------------
 
     public $htmlLayout 		= '@cmsgears/module-forms/common/mails/layouts/html';
     public $textLayout 		= '@cmsgears/module-forms/common/mails/layouts/text';
     public $viewPath 		= '@cmsgears/module-forms/common/mails/views';
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// Mailer --------------------------------
 
     public function sendUserMail( $form, $model ) {
 

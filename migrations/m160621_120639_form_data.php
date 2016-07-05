@@ -25,6 +25,8 @@ class m160621_120639_form_data extends \yii\db\Migration {
 
 		$this->site		= Site::findBySlug( CoreGlobal::SITE_MAIN );
 		$this->master	= User::findByUsername( 'demomaster' );
+
+		Yii::$app->core->setSite( $this->site );
 	}
 
     public function up() {
@@ -45,9 +47,9 @@ class m160621_120639_form_data extends \yii\db\Migration {
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
 
-		$superAdminRole		= Role::findBySlug( 'super-admin' );
-		$adminRole			= Role::findBySlug( 'admin' );
-		$formManagerRole	= Role::findBySlug( 'form-manager' );
+		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
+		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$formManagerRole	= Role::findBySlugType( 'form-manager', CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
 
@@ -59,9 +61,9 @@ class m160621_120639_form_data extends \yii\db\Migration {
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
-		$adminPerm			= Permission::findBySlug( 'admin' );
-		$userPerm			= Permission::findBySlug( 'user' );
-		$formPerm			= Permission::findBySlug( 'form' );
+		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$formPerm			= Permission::findBySlugType( 'form', CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
 

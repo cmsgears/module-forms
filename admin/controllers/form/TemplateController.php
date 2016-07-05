@@ -11,39 +11,48 @@ use cmsgears\forms\common\config\FormsGlobal;
 
 class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
-		
-		$this->sidebar 	= [ 'parent' => 'sidebar-form', 'child' => 'form-template' ];
-		
-		$this->type		= CoreGlobal::TYPE_FORM;
+        parent::init();
+
+		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form-template' ];
+
+		$this->type				= CoreGlobal::TYPE_FORM;
+
+		$this->returnUrl		= Url::previous( 'templates' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/templates/all' ], true );
 	}
 
-	// Instance Methods ------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
-		
-		$behaviors	= parent::behaviors();
-		
-		$behaviors[ 'rbac' ][ 'actions' ] = [
-								                'all'  => [ 'permission' => FormsGlobal::PERM_FORM ],
-								                'create'  => [ 'permission' => FormsGlobal::PERM_FORM ],
-								                'update'  => [ 'permission' => FormsGlobal::PERM_FORM ],
-								                'delete'  => [ 'permission' => FormsGlobal::PERM_FORM ]
-							                ];
-		
-		return $behaviors;
-    }
+	// Yii parent classes --------------------
 
-	// CategoryController --------------------
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// TemplateController --------------------
 
 	public function actionAll() {
-		
+
 		Url::remember( [ 'form/template/all' ], 'templates' );
 
 		return parent::actionAll();

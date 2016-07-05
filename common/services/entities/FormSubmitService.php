@@ -3,48 +3,151 @@ namespace cmsgears\forms\common\services\entities;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\forms\common\models\base\FormTables;
 use cmsgears\forms\common\models\entities\FormSubmit;
 
-use cmsgears\forms\common\services\resources\FormSubmitFieldService;
+use cmsgears\forms\common\services\interfaces\entities\IFormSubmitService;
+use cmsgears\forms\common\services\interfaces\resources\IFormSubmitFieldService;
 
-class FormSubmitService extends \cmsgears\core\common\services\base\Service {
+class FormSubmitService extends \cmsgears\core\common\services\base\EntityService implements IFormSubmitService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Read ----------------
+	// Globals -------------------------------
 
-	public static function findById( $id ) {
+	// Constants --------------
 
-		return FormSubmit::findById( $id );
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\forms\common\models\entities\FormSubmit';
+
+	public static $modelTable	= FormTables::TABLE_FORM_SUBMIT;
+
+	public static $parentType	= null;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	private $formSubmitFieldService;
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+    public function __construct( IFormSubmitFieldService $formSubmitFieldService, $config = [] ) {
+
+		$this->formSubmitFieldService	= $formSubmitFieldService;
+
+        parent::__construct( $config );
+    }
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// FormSubmitService ---------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'sdate' => [
+	                'asc' => [ 'submittedAt' => SORT_ASC ],
+	                'desc' => ['submittedAt' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'sdate',
+	            ]
+	        ],
+	        'defaultOrder' => [
+	        	'sdate' => SORT_DESC
+	        ]
+	    ]);
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		if( !isset( $config[ 'search-col' ] ) ) {
+
+			$config[ 'search-col' ] = 'submittedAt';
+		}
+
+		return parent::findPage( $config );
 	}
 
-	// Data Provider ----
+	public function getPageByFormId( $formId ) {
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
-
-		return self::getDataProvider( new FormSubmit(), $config );
+		return $this->getPage( [ 'conditions' => [ 'formId' => $formId ] ] );
 	}
 
-	// Delete -----------
+	// Read ---------------
 
-	public static function delete( $formSubmit ) {
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
 
 		$existingFormSubmit		= self::findById( $formSubmit->id );
 
 		// Delete Dependency
-		FormSubmitFieldService::deleteByFormSubmitId( $existingFormSubmit->id );
+		$this->formSubmitFieldService->deleteByFormSubmitId( $model->id );
 
-		// Delete Model
-		$existingFormSubmit->delete();
-
-		return true;
+		return parent::delete( $model, $config );
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// FormSubmitService ---------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

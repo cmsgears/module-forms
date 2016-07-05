@@ -69,18 +69,18 @@ if( !isset( $sortOrder ) ) {
 					<tr>
 						<td>
 							<table>
-							<?php 
+							<?php
 								$formData	= json_decode( $formSubmit->data, true );
-								
+
 								foreach (  $formData as $key => $value ) {
-									
+
 									echo "<tr><td>$key</td><td>$value</td></tr>";
 								}
 
 								$formFields	= $formSubmit->fields;
 
 								foreach (  $formFields as $formField ) {
-									
+
 									echo "<tr><td>$formField->name</td><td>$formField->value</td></tr>";
 								}
 							?>
@@ -88,7 +88,7 @@ if( !isset( $sortOrder ) ) {
 						</td>
 						<td><?= $formSubmit->submittedAt ?></td>
 						<td class="actions">
-							<span title="Delete Submit"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

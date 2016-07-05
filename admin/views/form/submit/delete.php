@@ -5,6 +5,7 @@ use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Submit | ' . $coreProperties->getSiteTitle();
+$returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
@@ -14,22 +15,22 @@ $this->title 	= 'Delete Submit | ' . $coreProperties->getSiteTitle();
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-gallery' ] );?>
 
 		<?= $form->field( $model, 'submittedAt' )->textInput( [ 'readonly' => true ] ) ?>
-		
+
 		<div class="box-content">
 			<div class="info">
 				<table style='width:100%;'>
 				<?php
 					$formData	= json_decode( $model->data, true );
-		
+
 					foreach (  $formData as $key => $value ) {
-						
+
 						echo "<tr><td>$key</td><td>$value</td></tr>";
 					}
-						
+
 					$formFields	= $model->fields;
-		
+
 					foreach (  $formFields as $formField ) {
-						
+
 						echo "<tr><td>$formField->name</td><td>$formField->value</td></tr>";
 					}
 				?>
@@ -40,7 +41,7 @@ $this->title 	= 'Delete Submit | ' . $coreProperties->getSiteTitle();
 		<div class="clear filler-height"></div>
 
 		<div class="align align-center">
-			<?=Html::a( 'Cancel', [ "form/submit/all?formid=$formId" ], [ 'class' => 'btn btn-medium' ] );?>
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
 			<input class="element-medium" type="submit" value="Delete" />
 		</div>
 

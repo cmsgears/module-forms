@@ -10,40 +10,49 @@ use cmsgears\forms\common\config\FormsGlobal;
 
 class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
-		
-		$this->sidebar 		= [ 'parent' => 'sidebar-form', 'child' => 'form-config' ];
+        parent::init();
+
+		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'config' ];
+
+		$this->returnUrl		= Url::previous( 'fields' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/field/all' ], true );
 	}
 
-	// Instance Methods ------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
-		
-		$behaviors	= parent::behaviors();
-		
-		$behaviors[ 'rbac' ][ 'actions' ] = [
-								                'all'  => [ 'permission' => FormsGlobal::PERM_FORM ],
-								                'create'  => [ 'permission' => FormsGlobal::PERM_FORM ],
-								                'update'  => [ 'permission' => FormsGlobal::PERM_FORM ],
-								                'delete'  => [ 'permission' => FormsGlobal::PERM_FORM ],
-							                ];
+	// Yii parent classes --------------------
 
-		return $behaviors;
-    }
+	// yii\base\Component -----
 
-	// CategoryController --------------------
+	// yii\base\Controller ----
 
-	public function actionAll( $formid ) {
+	// CMG interfaces ------------------------
 
-		Url::remember( [ "config/field/all?formid=$formid" ], 'fields' );
+	// CMG parent classes --------------------
 
-		return parent::actionAll( $formid );
+	// FieldController -----------------------
+
+	public function actionAll( $fid ) {
+
+		Url::remember( [ "config/field/all?fid=$fid" ], 'fields' );
+
+		return parent::actionAll( $fid );
 	}
 }
 

@@ -19,25 +19,39 @@ use cmsgears\forms\common\models\base\FormTables;
  * @property string $name
  * @property string $value
  */
-class FormSubmitField extends \cmsgears\core\common\models\base\CmgEntity {
+class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	// Private/Protected --
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-	// yii\base\Model --------------------
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -48,11 +62,11 @@ class FormSubmitField extends \cmsgears\core\common\models\base\CmgEntity {
         $rules = [
             [ [ 'formSubmitId', 'name' ], 'required' ],
             [ [ 'id', 'value' ], 'safe' ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ]
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ]
         ];
 
 		// trim if configured
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -68,13 +82,19 @@ class FormSubmitField extends \cmsgears\core\common\models\base\CmgEntity {
 	public function attributeLabels() {
 
 		return [
-			'formSubmitId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE )
+			'formSubmitId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
 		];
 	}
 
-	// FormSubmitField -------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// FormSubmitField -----------------------
 
 	/**
 	 * @return FormSubmit - the parent
@@ -86,7 +106,9 @@ class FormSubmitField extends \cmsgears\core\common\models\base\CmgEntity {
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -96,11 +118,13 @@ class FormSubmitField extends \cmsgears\core\common\models\base\CmgEntity {
 		return FormTables::TABLE_FORM_SUBMIT_FIELD;
 	}
 
-	// FormSubmitField -------------------
+	// CMG parent classes --------------------
 
-	// Create -------------
+	// FormSubmitField -----------------------
 
-	// Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
 	public static function findByFormSubmitId( $formSubmitId ) {
 
@@ -109,7 +133,11 @@ class FormSubmitField extends \cmsgears\core\common\models\base\CmgEntity {
 		return self::find()->joinWith( 'formSubmit' )->where( "$frmSubmitTable.id=:id", [ ':id' => $formSubmitId ] )->all();
 	}
 
-	// Delete ----
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 
 	/**
 	 * Delete all entries related to a form submit
@@ -118,10 +146,6 @@ class FormSubmitField extends \cmsgears\core\common\models\base\CmgEntity {
 
 		self::deleteAll( 'formSubmitId=:id', [ ':id' => $formSubmitId ] );
 	}
-
-	// Update -------------
-
-	// Delete -------------
 }
 
 ?>
