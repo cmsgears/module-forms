@@ -84,5 +84,3 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
     	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
 }
-
-?>

@@ -147,5 +147,3 @@ class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
 		self::deleteAll( 'formSubmitId=:id', [ ':id' => $formSubmitId ] );
 	}
 }
-
-?>

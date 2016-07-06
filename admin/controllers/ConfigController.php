@@ -61,5 +61,3 @@ class ConfigController extends \cmsgears\core\admin\controllers\base\FormControl
 		return parent::actionAll();
 	}
 }
-
-?>

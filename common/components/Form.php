@@ -92,5 +92,3 @@ class Form extends \yii\base\Component {
 		$factory->set( 'formSubmitService', 'cmsgears\forms\common\services\entities\FormSubmitService' );
 	}
 }
-
-?>

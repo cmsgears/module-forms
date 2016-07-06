@@ -16,11 +16,9 @@ class Module extends \cmsgears\core\common\base\Module {
     }
 
 	public function getSidebarHtml() {
-		
+
 		$path	= Yii::getAlias( "@cmsgears" ) . "/module-forms/admin/views/sidebar.php";
 
 		return $path;
 	}
 }
-
-?>

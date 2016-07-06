@@ -55,5 +55,3 @@ class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldCo
 		return parent::actionAll( $fid );
 	}
 }
-
-?>

@@ -40,5 +40,3 @@ class MessageSource extends \yii\base\Component {
 		return $this->messageDb[ $messageKey ];
 	}
 }
-
-?>

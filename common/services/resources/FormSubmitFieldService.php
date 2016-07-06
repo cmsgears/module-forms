@@ -125,5 +125,3 @@ class FormSubmitFieldService extends \cmsgears\core\common\services\base\EntityS
 
 	// Delete -------------
 }
-
-?>

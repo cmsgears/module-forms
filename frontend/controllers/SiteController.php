@@ -103,5 +103,3 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
         	]);
 	}
 }
-
-?>

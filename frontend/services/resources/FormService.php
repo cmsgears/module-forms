@@ -21,5 +21,3 @@ class FormService extends \cmsgears\core\common\services\resources\FormService {
 		return $formSubmit;
     }
 }
-
-?>

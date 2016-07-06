@@ -101,5 +101,3 @@ class m160621_120632_form extends \yii\db\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'submit_field_parent', $this->prefix . 'form_submit_field' );
 	}
 }
-
-?>

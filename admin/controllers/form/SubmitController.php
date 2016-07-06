@@ -118,5 +118,3 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

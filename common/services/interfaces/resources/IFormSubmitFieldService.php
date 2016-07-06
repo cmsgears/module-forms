@@ -27,5 +27,3 @@ interface IFormSubmitFieldService extends \cmsgears\core\common\services\interfa
 
 	public function deleteByFormSubmitId( $formSubmitId );
 }
-
-?>

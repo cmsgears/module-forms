@@ -28,5 +28,3 @@ interface IFormSubmitService extends \cmsgears\core\common\services\interfaces\b
 	// Delete -------------
 
 }
-
-?>

@@ -175,5 +175,3 @@ class FormSubmit extends \cmsgears\core\common\models\base\Entity {
 
 	// Delete -----------------
 }
-
-?>

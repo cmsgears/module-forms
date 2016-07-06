@@ -7,5 +7,3 @@ class WebGlobalForms {
 
 	// Messages - Generic
 }
-
-?>

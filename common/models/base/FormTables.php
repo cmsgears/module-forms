@@ -13,5 +13,3 @@ class FormTables {
 
 	// Mappers & Traits -----
 }
-
-?>

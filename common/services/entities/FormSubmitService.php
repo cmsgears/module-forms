@@ -149,5 +149,3 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Delete -------------
 }
-
-?>

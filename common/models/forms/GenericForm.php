@@ -122,5 +122,3 @@ class GenericForm extends \cmsgears\core\common\models\forms\GenericForm {
 		return $formSubmit;
 	}
 }
-
-?>
