@@ -75,6 +75,7 @@ class Form extends \yii\base\Component {
 
 		$factory = Yii::$app->factory->getContainer();
 
+		$factory->set( 'cmsgears\forms\common\services\interfaces\entities\IFormService', 'cmsgears\forms\common\services\entities\FormService' );
 		$factory->set( 'cmsgears\forms\common\services\interfaces\entities\IFormSubmitService', 'cmsgears\forms\common\services\entities\FormSubmitService' );
 	}
 
@@ -89,6 +90,7 @@ class Form extends \yii\base\Component {
 
 		$factory = Yii::$app->factory->getContainer();
 
+		$factory->set( 'formService', 'cmsgears\forms\common\services\entities\FormService' );
 		$factory->set( 'formSubmitService', 'cmsgears\forms\common\services\entities\FormSubmitService' );
 	}
 }

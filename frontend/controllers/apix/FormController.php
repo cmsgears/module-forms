@@ -7,27 +7,41 @@ use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\frontend\config\WebGlobalCore;
-use cmsgears\forms\frontend\config\WebGlobalForms;
 
 use cmsgears\forms\common\models\forms\GenericForm;
 
-use cmsgears\forms\frontend\services\resources\FormService;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
+class FormController extends \cmsgears\core\frontend\controllers\base\Controller {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $formService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
-	public function _construct( $id, $module, $config = [] )  {
+ 	public function init() {
 
-		parent::_construct( $id, $module, $config );
+        parent::init();
+
+		$this->formService	= Yii::$app->factory->get( 'formService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     public function behaviors() {
 
@@ -41,11 +55,22 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
         ];
     }
 
-	// SiteController
+	// yii\base\Controller ----
 
-    public function actionIndex( $slug ) {
+	// CMG interfaces ------------------------
 
-		$form 		= FormService::findBySlug( $slug );
+	// CMG parent classes --------------------
+
+	// FormController ------------------------
+
+    public function actionIndex( $slug, $type = null ) {
+
+		if( !isset( $type ) ) {
+
+			$type = CoreGlobal::TYPE_SITE;
+		}
+
+		$form 		= $this->formService->getBySlugType( $slug, $type );
 		$template	= $form->template;
 		$formFields	= $form->getFieldsMap();
  		$model		= new GenericForm( [ 'fields' => $formFields ] );
@@ -58,18 +83,18 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
 
 			// Save Model
-			if( FormService::processForm( $form, $model ) ) {
+			if( $this->formService->processForm( $form, $model ) ) {
 
 				// Trigger User Mail
 				if( $form->userMail ) {
 
-					Yii::$app->cmgFormsMailer->sendUserMail( $form, $model );
+					Yii::$app->formsMailer->sendUserMail( $form, $model );
 				}
 
 				// Trigger Admin Mail
 				if( $form->adminMail ) {
 
-					Yii::$app->cmgFormsMailer->sendAdminMail( $form, $model );
+					Yii::$app->formsMailer->sendAdminMail( $form, $model );
 				}
 
 				// Trigger Ajax Success
@@ -81,6 +106,6 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
 }

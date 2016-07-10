@@ -6,23 +6,44 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\forms\frontend\config\WebGlobalForms;
 
 use cmsgears\forms\common\models\forms\GenericForm;
 
-use cmsgears\forms\frontend\services\resources\FormService;
-
 // TODO: Automate the form submission and mail triggers using mail template.
 
 class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $formService;
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
+
+		$this->formService	= Yii::$app->factory->get( 'formService' );
 	}
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     public function behaviors() {
 
@@ -46,13 +67,22 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
         ];
     }
 
-	// Instance Methods --------------------------------------------
+	// yii\base\Controller ----
 
-	// SiteController
+	// CMG interfaces ------------------------
 
-    public function actionIndex( $slug ) {
+	// CMG parent classes --------------------
 
-		$form 		= FormService::findBySlug( $slug );
+	// SiteController ------------------------
+
+    public function actionIndex( $slug, $type = null ) {
+
+		if( !isset( $type ) ) {
+
+			$type = CoreGlobal::TYPE_SITE;
+		}
+
+		$form 		= $this->formService->getBySlugType( $slug, $type );
 		$template	= $form->template;
 		$formFields	= $form->getFieldsMap();
  		$model		= new GenericForm( [ 'fields' => $formFields ] );
@@ -65,18 +95,18 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
 
 			// Save Model
-			if( FormService::processForm( $form, $model ) ) {
+			if( $this->formService->processForm( $form, $model ) ) {
 
 				// Trigger User Mail
 				if( $form->userMail ) {
 
-					Yii::$app->cmgFormsMailer->sendUserMail( $form, $model );
+					Yii::$app->formsMailer->sendUserMail( $form, $model );
 				}
 
 				// Trigger Admin Mail
 				if( $form->adminMail ) {
 
-					Yii::$app->cmgFormsMailer->sendAdminMail( $form, $model );
+					Yii::$app->formsMailer->sendAdminMail( $form, $model );
 				}
 
 				// Set success message
@@ -92,7 +122,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 
 		if( isset( $template ) ) {
 
-			return Yii::$app->templateSource->renderViewPublic( $template, [
+			return Yii::$app->templateManager->renderViewPublic( $template, [
 	        	'form' => $form,
 		        'model' => $model
 	        ], [ 'page' => true ] );
