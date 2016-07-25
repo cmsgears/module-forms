@@ -21,6 +21,8 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
 
 	// Protected --------------
 
+	protected $formService;
+
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -30,7 +32,10 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
         parent::init();
 
 		$this->crudPermission 	= CoreGlobal::PERM_CORE;
+
 		$this->modelService		= Yii::$app->factory->get( 'formSubmitService' );
+		$this->formService		= Yii::$app->factory->get( 'formService' );
+
 		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
 
 		$this->returnUrl		= Url::previous( 'submits' );
@@ -82,15 +87,23 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
 
 	public function actionAll( $fid ) {
 
-		// Remember return url for crud
-		Url::remember( [ "form/submit/all?fid=$fid" ], 'submits' );
+		$form	= $this->formService->getById( $fid );
 
-		$dataProvider = $this->modelService->getPageByFormId( $fid );
+		if( isset( $form ) ) {
 
-	    return $this->render( 'all', [
-	         'dataProvider' => $dataProvider,
-	         'formId' => $fid
-	    ]);
+			// Remember return url for crud
+			Url::remember( [ "form/submit/all?fid=$fid" ], 'submits' );
+
+			$dataProvider = $this->modelService->getPageByFormId( $fid );
+
+		    return $this->render( 'all', [
+		         'dataProvider' => $dataProvider,
+		         'form' => $form
+		    ]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {

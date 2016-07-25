@@ -49,7 +49,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'index' => [ 'post' ]
+                    'submit' => [ 'post' ]
                 ]
             ]
         ];
@@ -63,7 +63,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 
 	// FormController ------------------------
 
-    public function actionIndex( $slug, $type = null ) {
+    public function actionSubmit( $slug, $type = null ) {
 
 		if( !isset( $type ) ) {
 

@@ -124,6 +124,14 @@ class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
+	public static function queryWithHasOne( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'formSubmit' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
 
 	public static function findByFormSubmitId( $formSubmitId ) {

@@ -152,7 +152,7 @@ class FormSubmit extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form', 'user' ];
 		$config[ 'relations' ]	= $relations;
@@ -163,6 +163,13 @@ class FormSubmit extends \cmsgears\core\common\models\base\Entity {
 	public static function queryWithForm( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'form' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithFieds( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'fields' ];
 
 		return parent::queryWithAll( $config );
 	}

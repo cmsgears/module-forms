@@ -1,6 +1,5 @@
 <?php
 // Yii Imports
-use \Yii;
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
 
@@ -50,7 +49,9 @@ if( !isset( $sortOrder ) ) {
 			<thead>
 				<tr>
 					<th>Form Data</th>
-					<th>SubmittedAt
+					<th>User</th>
+					<th>Email</th>
+					<th>Submitted At
 						<span class='box-icon-sort'>
 							<span sort-order='sdate' class="icon-sort <?php if( strcmp( $sortOrder, 'sdate') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-sdate' class="icon-sort <?php if( strcmp( $sortOrder, '-sdate') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
@@ -64,7 +65,8 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $formSubmit ) {
 
-						$id 	= $formSubmit->id;
+						$id		= $formSubmit->id;
+						$user	= $formSubmit->user;
 				?>
 					<tr>
 						<td>
@@ -86,6 +88,8 @@ if( !isset( $sortOrder ) ) {
 							?>
 							</table>
 						</td>
+						<td><?= isset( $user ) ? $user->getName() : '' ?></td>
+						<td><?= isset( $user ) ? $user->email : '' ?></td>
 						<td><?= $formSubmit->submittedAt ?></td>
 						<td class="actions">
 							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>

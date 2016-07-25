@@ -3,7 +3,9 @@ namespace cmsgears\forms\frontend\controllers;
 
 // Yii Imports
 use Yii;
+use yii\helpers\Url;
 use yii\filters\VerbFilter;
+use yii\web\UnauthorizedHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -14,7 +16,7 @@ use cmsgears\forms\common\models\forms\GenericForm;
 
 // TODO: Automate the form submission and mail triggers using mail template.
 
-class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
+class FormController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -48,14 +50,22 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
     public function behaviors() {
 
         return [
+            'rbac' => [
+                'class' => Yii::$app->core->getRbacFilterClass(),
+                'actions' => [
+	                // secure actions
+                ]
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'index' => [ 'get', 'post' ]
+                    'single' => [ 'get', 'post' ]
                 ]
             ]
         ];
     }
+
+	// yii\base\Controller ----
 
     public function actions() {
 
@@ -67,15 +77,13 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
         ];
     }
 
-	// yii\base\Controller ----
-
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
 	// SiteController ------------------------
 
-    public function actionIndex( $slug, $type = null ) {
+    public function actionSingle( $slug, $type = null ) {
 
 		if( !isset( $type ) ) {
 
@@ -86,6 +94,29 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		$template	= $form->template;
 		$formFields	= $form->getFieldsMap();
  		$model		= new GenericForm( [ 'fields' => $formFields ] );
+
+		$user		= Yii::$app->user->getIdentity();
+
+		// Form need a valid user
+		if( !$form->isVisibilityPublic() ) {
+
+			// Form need it's owner
+			if( $form->isVisibilityPrivate() && !$form->isOwner( $user ) ) {
+
+				// Error- Not allowed
+				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+			}
+
+			// Form need logged in user
+			if( $form->isVisibilityProtected() && empty( $user ) ) {
+
+				// Remember URL for Login
+				Url::remember( Url::canonical(), CoreGlobal::REDIRECT_LOGIN );
+
+				// Error- Not allowed
+				return $this->redirect( [ '/login' ] );
+			}
+		}
 
 		if( $form->captcha ) {
 

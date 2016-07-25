@@ -18,12 +18,12 @@ class MessageSource extends \yii\base\Component {
 
 	// Protected --------------
 
-	// Private ----------------
-
-	private $messageDb = [
+	protected $messageDb = [
 		// Generic Fields
 		FormsGlobal::FIELD_SUBMITTED_BY => 'Submitted By'
 	];
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
