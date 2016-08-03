@@ -117,7 +117,7 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function delete( $model, $config = [] ) {
 
-		$existingFormSubmit		= self::findById( $formSubmit->id );
+		$existingFormSubmit		= self::findById( $model->id );
 
 		// Delete Dependency
 		$this->formSubmitFieldService->deleteByFormSubmitId( $model->id );
