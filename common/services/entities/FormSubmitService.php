@@ -103,6 +103,18 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 
     // Read - Models ---
 
+    public function findbyFormIdSubmittedBy( $formId, $submittedBy, $first = false ) {
+
+		$modelClass	= self::$modelClass;
+
+		if( $first ) {
+
+			return $modelClass::find()->where( 'formId=:fid AND submittedBy=:uid', [ ':fid' => $formId, ':uid' => $submittedBy ] )->one();
+		}
+
+		return $modelClass::find()->where( 'formId=:fid AND submittedBy=:uid', [ ':fid' => $formId, ':uid' => $submittedBy ] )->all();
+    }
+
     // Read - Lists ----
 
     // Read - Maps -----

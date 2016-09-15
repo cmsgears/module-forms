@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\forms\common\models\base\FormTables;
+use cmsgears\forms\common\models\entities\FormSubmit;
 
 /**
  * FormSubmitField Entity
@@ -134,11 +135,18 @@ class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Find ------------
 
-	public static function findByFormSubmitId( $formSubmitId ) {
+	public static function findByFormSubmitId( $formSubmitId, $first = false ) {
 
 		$frmSubmitTable	= FormTables::TABLE_FORM_SUBMIT;
 
-		return self::find()->joinWith( 'formSubmit' )->where( "$frmSubmitTable.id=:id", [ ':id' => $formSubmitId ] )->all();
+		$query	= self::find()->joinWith( 'formSubmit' )->where( "$frmSubmitTable.id=:id", [ ':id' => $formSubmitId ] );
+
+		if( $first ) {
+
+			return $query->one();
+		}
+
+		return $query->all();
 	}
 
 	// Create -----------------

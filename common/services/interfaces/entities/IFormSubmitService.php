@@ -17,6 +17,8 @@ interface IFormSubmitService extends \cmsgears\core\common\services\interfaces\b
 
     // Read - Models ---
 
+    public function findbyFormIdSubmittedBy( $formId, $submittedBy, $first = false );
+
     // Read - Lists ----
 
     // Read - Maps -----

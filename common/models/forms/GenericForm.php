@@ -97,25 +97,81 @@ class GenericForm extends \cmsgears\core\common\models\forms\GenericForm {
 
 		$formSubmit->data	= json_encode( $attribs );
 
-		// save form submit
-		$formSubmit->save();
+		if( $form->uniqueSubmit ) {
+
+			// Find existing form ---
+			$existingForm	= Yii::$app->factory->get( 'formSubmitService' )->findbyFormIdSubmittedBy( $formSubmit->formId, $formSubmit->submittedBy, true );
+
+			if( isset( $existingForm ) ) {
+
+				// update form submit
+				$formSubmit->update();
+
+				$formSubmit	= $existingForm;
+			}
+			else {
+
+				// save form submit
+				$formSubmit->save();
+			}
+		}
+		else {
+
+			// save form submit
+			$formSubmit->save();
+		}
 
 		// Get Form Submit Id
-		$formSubmitId	= $formSubmit->id;
+		$formSubmitId		= $formSubmit->id;
 
-		// Save Form Fields
-		foreach ( $fields as $field ) {
+		if( $form->uniqueSubmit ) {
 
-			if( !$field->compress ) {
+			$formSubmitEmail	= null;
 
-				$formSubmitField	= new FormSubmitField();
+			// Update Form Fields
+			$formSubmitField			= Yii::$app->factory->get( 'formSubmitFieldService' )->findByFormSubmitId( $formSubmitId, true );
 
-				$formSubmitField->formSubmitId 	= $formSubmitId;
-				$formSubmitField->name			= $field->name;
-				$fieldName						= $field->name;
-				$formSubmitField->value			= $this->$fieldName;
+			if( isset( $formSubmitField ) ) {
 
-				$formSubmitField->save();
+				$formSubmitField->value		= $this->$fieldName;
+
+				$formSubmitField->update();
+			}
+			else {
+
+				// Save Form Fields
+				foreach ( $fields as $field ) {
+
+					if( !$field->compress ) {
+
+						$formSubmitField	= new FormSubmitField();
+
+						$formSubmitField->formSubmitId 	= $formSubmitId;
+						$formSubmitField->name			= $field->name;
+						$fieldName						= $field->name;
+						$formSubmitField->value			= $this->$fieldName;
+
+						$formSubmitField->save();
+					}
+				}
+			}
+		}
+		else {
+
+			// Save Form Fields
+			foreach ( $fields as $field ) {
+
+				if( !$field->compress ) {
+
+					$formSubmitField	= new FormSubmitField();
+
+					$formSubmitField->formSubmitId 	= $formSubmitId;
+					$formSubmitField->name			= $field->name;
+					$fieldName						= $field->name;
+					$formSubmitField->value			= $this->$fieldName;
+
+					$formSubmitField->save();
+				}
 			}
 		}
 

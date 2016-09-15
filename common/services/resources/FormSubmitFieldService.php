@@ -82,6 +82,13 @@ class FormSubmitFieldService extends \cmsgears\core\common\services\base\EntityS
 
     // Read - Models ---
 
+    public function findByFormSubmitId( $formSubmitId, $first = false ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findByFormSubmitId( $formSubmitId, $first );
+    }
+
     // Read - Lists ----
 
     // Read - Maps -----
@@ -96,7 +103,9 @@ class FormSubmitFieldService extends \cmsgears\core\common\services\base\EntityS
 
 	public function deleteByFormSubmitId( $formSubmitId ) {
 
-		FormSubmitField::deleteByFormSubmitId( $formSubmitId );
+		$modelClass	= self::$modelClass;
+
+		$modelClass::deleteByFormSubmitId( $formSubmitId );
 
 		return true;
 	}
