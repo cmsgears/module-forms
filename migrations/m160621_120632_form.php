@@ -62,7 +62,7 @@ class m160621_120632_form extends \yii\db\Migration {
         $this->createTable( $this->prefix . 'form_submit_field', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'formSubmitId' => $this->bigInteger( 20 )->notNull(),
-			'name' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
 			'value' => $this->text()
         ], $this->options );
 

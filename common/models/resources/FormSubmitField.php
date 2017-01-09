@@ -61,9 +61,11 @@ class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
 
 		// model rules
         $rules = [
+        	// Required, Safe
             [ [ 'formSubmitId', 'name' ], 'required' ],
             [ [ 'id', 'value' ], 'safe' ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ]
+            // Text Limit
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ]
         ];
 
 		// trim if configured
