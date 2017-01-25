@@ -8,18 +8,92 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
+use cmsgears\core\common\models\entities\User;
+use cmsgears\core\common\models\resources\Form;
+use cmsgears\forms\common\models\base\FormTables;
+use cmsgears\forms\common\models\resources\FormSubmitField;
+
+use cmsgears\core\common\models\traits\resources\DataTrait;
+
 /**
- * FormSubmitField Entity
+ * FormSubmit Entity
  *
  * @property integer $id
  * @property integer $formId
  * @property integer $submittedBy
  * @property datetime $submittedAt
+ * @property string $content
  * @property string $data
  */
-class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
+class FormSubmit extends \cmsgears\core\common\models\base\Entity {
 
-	// Instance Methods --------------------------------------------
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	use DataTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+    /**
+     * @inheritdoc
+     */
+	public function rules() {
+
+        return [
+            [ [ 'formId' ], 'required' ],
+			[ [ 'id', 'data' ], 'safe' ],
+			[ [ 'formId', 'submittedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'submittedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+	public function attributeLabels() {
+
+		return [
+			'formId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'submittedBy' => Yii::$app->formsMessage->getMessage( FormsGlobal::FIELD_SUBMITTED_BY ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
+		];
+	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// FormSubmit ----------------------------
 
 	/**
 	 * @return Form
@@ -61,53 +135,50 @@ class FormSubmit extends \cmsgears\core\common\models\entities\CmgEntity {
     	return $formFieldsMap;
 	}
 
-	// yii\base\Model --------------------
-
-    /**
-     * @inheritdoc
-     */
-	public function rules() {
-
-        return [
-            [ [ 'formId' ], 'required' ],
-			[ [ 'id', 'data' ], 'safe' ],
-			[ [ 'formId', 'submittedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'submittedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-	public function attributeLabels() {
-
-		return [
-			'formId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'submittedBy' => Yii::$app->cmgFormsMessage->getMessage( FormsGlobal::FIELD_SUBMITTED_BY ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
-		];
-	}
-
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ----------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
 	public static function tableName() {
 
 		return FormTables::TABLE_FORM_SUBMIT;
 	}
 
-	// FormSubmit ------------------------
+	// CMG parent classes --------------------
 
-	public static function findWithForm() {
+	// FormSubmit ----------------------------
 
-		return self::find()->joinWith( 'form' );
+	// Read - Query -----------
+
+	public static function queryWithHasOne( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form', 'user' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
 	}
 
-	public static function findWithFormUser() {
+	public static function queryWithForm( $config = [] ) {
 
-		return self::find()->joinWith( 'form' )->joinWith( 'user' );
+		$config[ 'relations' ]	= [ 'form' ];
+
+		return parent::queryWithAll( $config );
 	}
+
+	public static function queryWithFieds( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'fields' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 }
-
-?>

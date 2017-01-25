@@ -4,76 +4,54 @@ namespace cmsgears\forms\admin\controllers\form;
 // Yii Imports
 use \Yii;
 use yii\helpers\Url;
-use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
-use yii\db\IntegrityException;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
 class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
-		
-		$this->sidebar 		= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
+        parent::init();
+
+		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
+
+		$this->returnUrl		= Url::previous( 'fields' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/field/all' ], true );
 	}
 
-	// Instance Methods ------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all'    => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'create' => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'update' => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'delete' => [ 'permission' => FormsGlobal::PERM_FORM ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'  => [ 'get' ],
-	                'create'  => [ 'get', 'post' ],
-	                'update'  => [ 'get', 'post' ],
-	                'delete'  => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// CategoryController --------------------
+	// yii\base\Controller ----
 
-	public function actionAll( $formid ) {
-		
-		Url::remember( [ 'form/template/all' ], 'templates' );
+	// CMG interfaces ------------------------
 
-		return parent::actionAll( $formid );
-	}
-	
-	public function actionCreate( $formid ) {
+	// CMG parent classes --------------------
 
-		return parent::actionCreate( $formid );
-	}
-	 
-	public function actionUpdate( $id ) {
+	// FieldController -----------------------
 
-		return parent::actionUpdate( $id );
-	}
-	
-	public function actionDelete( $id ) {
+	public function actionAll( $fid ) {
 
-		return parent::actionDelete( $id );
+		Url::remember( [ "form/field/all?fid=$fid" ], 'fields' );
+
+		return parent::actionAll( $fid );
 	}
 }
-
-?>

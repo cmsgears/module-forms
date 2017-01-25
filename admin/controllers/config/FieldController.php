@@ -1,15 +1,14 @@
 <?php
-namespace cmsgears\forms\admin\controllers\form;
+namespace cmsgears\forms\admin\controllers\config;
 
 // Yii Imports
 use \Yii;
 use yii\helpers\Url;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
+class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldController {
 
 	// Variables ---------------------------------------------------
 
@@ -27,12 +26,10 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
         parent::init();
 
-		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form-template' ];
+		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'config' ];
 
-		$this->type				= CoreGlobal::TYPE_FORM;
-
-		$this->returnUrl		= Url::previous( 'templates' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/templates/all' ], true );
+		$this->returnUrl		= Url::previous( 'fields' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/field/all' ], true );
 	}
 
 	// Instance methods --------------------------------------------
@@ -49,12 +46,12 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	// CMG parent classes --------------------
 
-	// TemplateController --------------------
+	// FieldController -----------------------
 
-	public function actionAll() {
+	public function actionAll( $fid ) {
 
-		Url::remember( [ 'form/template/all' ], 'templates' );
+		Url::remember( [ "config/field/all?fid=$fid" ], 'fields' );
 
-		return parent::actionAll();
+		return parent::actionAll( $fid );
 	}
 }

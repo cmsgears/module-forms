@@ -1,15 +1,16 @@
 <?php
-namespace cmsgears\forms\admin\controllers\form;
+namespace cmsgears\forms\admin\controllers;
 
 // Yii Imports
 use \Yii;
+use yii\filters\VerbFilter;
 use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
+class ConfigController extends \cmsgears\core\admin\controllers\base\FormController {
 
 	// Variables ---------------------------------------------------
 
@@ -27,12 +28,13 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
         parent::init();
 
-		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form-template' ];
+		$this->crudPermission 	= FormsGlobal::PERM_FORM;
+		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form-config' ];
 
-		$this->type				= CoreGlobal::TYPE_FORM;
+		$this->submits			= false;
 
-		$this->returnUrl		= Url::previous( 'templates' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/templates/all' ], true );
+		$this->returnUrl		= Url::previous( 'forms' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/all' ], true );
 	}
 
 	// Instance methods --------------------------------------------
@@ -49,11 +51,12 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	// CMG parent classes --------------------
 
-	// TemplateController --------------------
+	// FormController ------------------------
 
 	public function actionAll() {
 
-		Url::remember( [ 'form/template/all' ], 'templates' );
+		// Remember return url for crud
+		Url::remember( [ 'config/all' ], 'forms' );
 
 		return parent::actionAll();
 	}

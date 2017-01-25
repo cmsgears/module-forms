@@ -15,5 +15,3 @@ class FormsGlobal {
 	// Generic Fields
 	const FIELD_SUBMITTED_BY	= 'submittedByField';
 }
-
-?>

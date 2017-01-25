@@ -1,17 +1,13 @@
 <?php
-use \Yii;
-use yii\helpers\Html; 
+// Yii Imports
+use yii\helpers\Html;
 use yii\widgets\LinkPager;
 
+// CMG Imports
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | All Forms';
-$siteUrl		= $coreProperties->getSiteUrl();
-
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-form';
-$this->params['sidebar-child'] 	= 'form';
+$this->title 	= 'All Submits | ' . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -28,20 +24,34 @@ if( !isset( $sortOrder ) ) {
 	$sortOrder	= '';
 }
 ?>
-<div class="content-header clearfix">
-	<div class="header-actions"></div>
-	<div class="header-search"></div>
-</div>
-<div class="data-grid">
-	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
+<div class="header-content clearfix">
+	<div class="header-actions col15x10"></div>
+	<div class="header-search col15x5">
+		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
+		<span class="frm-icon-element element-medium">
+			<i class="cmti cmti-search"></i>
+			<button id="btn-search">Search</button>
+		</span>
 	</div>
-	<div class="wrap-grid">
+</div>
+
+<div class="data-grid">
+	<div class="grid-header clearfix">
+		<div class="col12x6 info">
+			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
+		</div>
+		<div class="col12x6 pagination">
+			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
+		</div>
+	</div>
+	<div class="grid-content">
 		<table>
 			<thead>
 				<tr>
 					<th>Form Data</th>
-					<th>SubmittedAt
+					<th>User</th>
+					<th>Email</th>
+					<th>Submitted At
 						<span class='box-icon-sort'>
 							<span sort-order='sdate' class="icon-sort <?php if( strcmp( $sortOrder, 'sdate') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-sdate' class="icon-sort <?php if( strcmp( $sortOrder, '-sdate') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
@@ -53,43 +63,48 @@ if( !isset( $sortOrder ) ) {
 			<tbody>
 				<?php
 
-					$slugBase	= $siteUrl;
-
 					foreach( $models as $formSubmit ) {
 
-						$id 		= $formSubmit->id;
+						$id		= $formSubmit->id;
+						$user	= $formSubmit->user;
 				?>
 					<tr>
 						<td>
 							<table>
-							<?php 
+							<?php
 								$formData	= json_decode( $formSubmit->data, true );
-								
+
 								foreach (  $formData as $key => $value ) {
-									
+
 									echo "<tr><td>$key</td><td>$value</td></tr>";
 								}
 
 								$formFields	= $formSubmit->fields;
 
 								foreach (  $formFields as $formField ) {
-									
+
 									echo "<tr><td>$formField->name</td><td>$formField->value</td></tr>";
 								}
 							?>
 							</table>
 						</td>
+						<td><?= isset( $user ) ? $user->getName() : '' ?></td>
+						<td><?= isset( $user ) ? $user->email : '' ?></td>
 						<td><?= $formSubmit->submittedAt ?></td>
-						<td>
-							<span class="wrap-icon-action" title="Delete Form"><?= Html::a( "", ["/cmgforms/form/submit/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
+						<td class="actions">
+							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>
 			</tbody>
 		</table>
 	</div>
-	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
+	<div class="grid-header clearfix">
+		<div class="col12x6 info">
+			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
+		</div>
+		<div class="col12x6 pagination">
+			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
+		</div>
 	</div>
 </div>
