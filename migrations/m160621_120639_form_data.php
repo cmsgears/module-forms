@@ -39,10 +39,10 @@ class m160621_120639_form_data extends \yii\db\Migration {
 
 		// Roles
 
-		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$roles = [
-			[ $this->master->id, $this->master->id, 'Form Manager', 'form-manager', 'dashboard', CoreGlobal::TYPE_SYSTEM, null, 'The role Form Manager is limited to manage forms from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'Form Manager', 'form-manager', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role Form Manager is limited to manage forms from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
