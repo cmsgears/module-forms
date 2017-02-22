@@ -73,7 +73,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 		$form 		= $this->formService->getBySlugType( $slug, $type );
 		$template	= $form->template;
 		$formFields	= $form->getFieldsMap();
- 		$model		= new GenericForm( [ 'fields' => $formFields ] );
+ 		$model		= new GenericForm( [ 'fields' => $formFields, 'ajax' => true ] );
 
 		if( $form->captcha ) {
 
