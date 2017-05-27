@@ -28,6 +28,8 @@ class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldCo
 
 		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'config' ];
 
+		$this->crudPermission	= FormsGlobal::PERM_FORM_ADMIN;
+
 		$this->returnUrl		= Url::previous( 'fields' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/field/all' ], true );
 	}

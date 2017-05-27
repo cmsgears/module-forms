@@ -27,7 +27,8 @@ class FormController extends \cmsgears\core\admin\controllers\base\FormControlle
 
         parent::init();
 
-		$this->crudPermission 	= FormsGlobal::PERM_FORM;
+        $this->crudPermission	= FormsGlobal::PERM_FORM_ADMIN;
+
 		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
 
 		$this->type				= CoreGlobal::TYPE_SITE;

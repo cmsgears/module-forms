@@ -50,37 +50,37 @@ class m160621_120639_form_data extends \yii\db\Migration {
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$roles = [
-			[ $this->master->id, $this->master->id, 'Form Manager', 'form-manager', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role Form Manager is limited to manage forms from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'Form Admin', 'form-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role Form Admin is limited to manage forms from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
 
 		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
 		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$formManagerRole	= Role::findBySlugType( 'form-manager', CoreGlobal::TYPE_SYSTEM );
+		$formAdminRole		= Role::findBySlugType( 'form-admin', CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
 
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$permissions = [
-			[ $this->master->id, $this->master->id, 'Form', 'form', CoreGlobal::TYPE_SYSTEM, null, 'The permission form is to manage forms from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'Admin Forms', 'admin-forms', CoreGlobal::TYPE_SYSTEM, null, 'The permission admin forms is to manage forms from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
 		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
 		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$formPerm			= Permission::findBySlugType( 'form', CoreGlobal::TYPE_SYSTEM );
+		$formAdminPerm		= Permission::findBySlugType( 'admin-forms', CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
 
 		$columns = [ 'roleId', 'permissionId' ];
 
 		$mappings = [
-			[ $superAdminRole->id, $formPerm->id ],
-			[ $adminRole->id, $formPerm->id ],
-			[ $formManagerRole->id, $adminPerm->id ], [ $formManagerRole->id, $userPerm->id ], [ $formManagerRole->id, $formPerm->id ]
+			[ $superAdminRole->id, $formAdminPerm->id ],
+			[ $adminRole->id, $formAdminPerm->id ],
+			[ $formAdminRole->id, $adminPerm->id ], [ $formAdminRole->id, $userPerm->id ], [ $formAdminRole->id, $formAdminPerm->id ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role_permission', $columns, $mappings );
@@ -89,42 +89,65 @@ class m160621_120639_form_data extends \yii\db\Migration {
 	private function insertFormPermissions() {
 
 		// Permissions
-
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'group', 'description', 'createdAt', 'modifiedAt' ];
 
 		$permissions = [
-			// Permission Groups
-			[ $this->master->id, $this->master->id, 'Form Manager', 'form-manager', CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission Form Manager allows user to manage their forms from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			// Permission Groups - Default - Website - Individual, Organization
+			[ $this->master->id, $this->master->id, 'Manage Forms', 'manage-forms', CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission manage forms allows user to manage forms from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Form Author', 'form-author', CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission form author allows user to perform crud operations of form belonging to respective author from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
 
-			// System Permissions
+			// Form Permissions - Hard Coded - Website - Individual, Organization
 			[ $this->master->id, $this->master->id, 'View Forms', 'view-forms', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission view forms allows users to view their forms from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->master->id, $this->master->id, 'Add Form', 'add-form', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission add form allows users to create form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->master->id, $this->master->id, 'Update Form', 'update-form', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission update form allows users to update form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Delete Form', 'delete-form', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission delete form allows users to delete form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'Delete Form', 'delete-form', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission delete form allows users to delete form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Approve Form', 'approve-form', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission approve form allows user to approve, freeze or block form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Print Form', 'print-form', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission print form allows user to print form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Import Forms', 'import-forms', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission import forms allows user to import forms from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Export Forms', 'export-forms', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission export forms allows user to export forms from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
 		// Permission Groups
-		$formManagerPerm	= Permission::findBySlugType( 'form-manager', CoreGlobal::TYPE_SYSTEM );
+		$formManagerPerm	= Permission::findBySlugType( 'manage-forms', CoreGlobal::TYPE_SYSTEM );
+		$formAuthorPerm		= Permission::findBySlugType( 'form-author', CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
-		$viewPerm			= Permission::findBySlugType( 'view-forms', CoreGlobal::TYPE_SYSTEM );
-		$addPerm			= Permission::findBySlugType( 'add-form', CoreGlobal::TYPE_SYSTEM );
-		$updatePerm			= Permission::findBySlugType( 'update-form', CoreGlobal::TYPE_SYSTEM );
-		$deletePerm			= Permission::findBySlugType( 'delete-form', CoreGlobal::TYPE_SYSTEM );
+		$vFormsPerm		= Permission::findBySlugType( 'view-forms', CoreGlobal::TYPE_SYSTEM );
+		$aFormPerm		= Permission::findBySlugType( 'add-form', CoreGlobal::TYPE_SYSTEM );
+		$uFormPerm		= Permission::findBySlugType( 'update-form', CoreGlobal::TYPE_SYSTEM );
+		$dFormPerm		= Permission::findBySlugType( 'delete-form', CoreGlobal::TYPE_SYSTEM );
+		$apFormPerm		= Permission::findBySlugType( 'approve-form', CoreGlobal::TYPE_SYSTEM );
+		$pFormPerm		= Permission::findBySlugType( 'print-form', CoreGlobal::TYPE_SYSTEM );
+		$iFormsPerm		= Permission::findBySlugType( 'import-forms', CoreGlobal::TYPE_SYSTEM );
+		$eFormsPerm		= Permission::findBySlugType( 'export-forms', CoreGlobal::TYPE_SYSTEM );
 
 		//Hierarchy
 
 		$columns = [ 'parentId', 'childId', 'rootId', 'parentType', 'lValue', 'rValue' ];
 
 		$hierarchy = [
-			// Org Admin Hierarchy
-			[ null, null, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 10 ],
-			[ $formManagerPerm->id, $viewPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 9 ],
-			[ $formManagerPerm->id, $addPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 8 ],
-			[ $formManagerPerm->id, $updatePerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 7 ],
-			[ $formManagerPerm->id, $deletePerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 5, 6 ]
+			// Form Manager - Organization
+			[ null, null, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 18 ],
+			[ $formManagerPerm->id, $vFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 17 ],
+			[ $formManagerPerm->id, $aFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 16 ],
+			[ $formManagerPerm->id, $uFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 15 ],
+			[ $formManagerPerm->id, $dFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 5, 14 ],
+			[ $formManagerPerm->id, $apFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 13 ],
+			[ $formManagerPerm->id, $pFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 7, 12 ],
+			[ $formManagerPerm->id, $iFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 11 ],
+			[ $formManagerPerm->id, $eFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 9, 10 ],
+
+			// Form Author- Individual
+			[ null, null, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 16 ],
+			[ $formAuthorPerm->id, $vFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 15 ],
+			[ $formAuthorPerm->id, $aFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 14 ],
+			[ $formAuthorPerm->id, $uFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 13 ],
+			[ $formAuthorPerm->id, $dFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 5, 12 ],
+			[ $formAuthorPerm->id, $pFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 11 ],
+			[ $formAuthorPerm->id, $iFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 7, 10 ],
+			[ $formAuthorPerm->id, $eFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 9 ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_model_hierarchy', $columns, $hierarchy );

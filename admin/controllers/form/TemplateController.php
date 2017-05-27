@@ -27,7 +27,9 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
         parent::init();
 
-		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form-template' ];
+		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'template' ];
+
+		$this->crudPermission	= FormsGlobal::PERM_FORM_ADMIN;
 
 		$this->type				= CoreGlobal::TYPE_FORM;
 

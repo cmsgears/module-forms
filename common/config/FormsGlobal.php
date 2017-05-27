@@ -7,8 +7,7 @@ class FormsGlobal {
 
 	// Permissions -----------------------------------------------------
 
-	// form submits
-	const PERM_FORM				= 'form';
+	const PERM_FORM_ADMIN		= 'admin-forms';
 
 	// Model Fields ----------------------------------------------------
 

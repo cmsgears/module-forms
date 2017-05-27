@@ -28,8 +28,9 @@ class ConfigController extends \cmsgears\core\admin\controllers\base\FormControl
 
         parent::init();
 
-		$this->crudPermission 	= FormsGlobal::PERM_FORM;
-		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form-config' ];
+        $this->crudPermission	= FormsGlobal::PERM_FORM_ADMIN;
+
+		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'config' ];
 
 		$this->submits			= false;
 

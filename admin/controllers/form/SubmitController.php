@@ -31,7 +31,7 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
 
         parent::init();
 
-		$this->crudPermission 	= CoreGlobal::PERM_CORE;
+        $this->crudPermission	= FormsGlobal::PERM_FORM_ADMIN;
 
 		$this->modelService		= Yii::$app->factory->get( 'formSubmitService' );
 		$this->formService		= Yii::$app->factory->get( 'formService' );
