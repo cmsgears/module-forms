@@ -167,7 +167,7 @@ class FormSubmit extends \cmsgears\core\common\models\base\Entity {
 		return parent::queryWithAll( $config );
 	}
 
-	public static function queryWithFields( $config = [] ) {
+	public static function queryWithFieds( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'fields' ];
 
