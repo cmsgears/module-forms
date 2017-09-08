@@ -13,4 +13,8 @@ class FormsGlobal {
 
 	// Generic Fields
 	const FIELD_SUBMITTED_BY	= 'submittedByField';
+
+    // Notification Templates ------------------------------------------
+
+    const TEMPLATE_NOTIFY_FORM_SUBMIT   = 'form-submit';
 }
