@@ -23,6 +23,8 @@ class GenericForm extends \cmsgears\core\common\models\forms\GenericForm {
 
 	// Public -----------------
 
+	public static $multiSite	= true;
+
 	// Protected --------------
 
 	// Variables -----------------------------
