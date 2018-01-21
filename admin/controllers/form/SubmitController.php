@@ -31,15 +31,28 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
 
         parent::init();
 
-		$this->crudPermission 	= CoreGlobal::PERM_CORE;
+		// Permission
+        $this->crudPermission	= FormsGlobal::PERM_FORM_ADMIN;
 
+		// Service
 		$this->modelService		= Yii::$app->factory->get( 'formSubmitService' );
 		$this->formService		= Yii::$app->factory->get( 'formService' );
 
+		// Sidebar
 		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'submits' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/submit/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Form Submit' ] ],
+			'create' => [ [ 'label' => 'Form Submit', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Form Submit', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Form Submit', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Form Submit', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------

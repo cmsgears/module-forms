@@ -2,8 +2,7 @@
 namespace cmsgears\forms\common\models\resources;
 
 // Yii Imports
-use \Yii;
-use yii\validators\FilterValidator;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports

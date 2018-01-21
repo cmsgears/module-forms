@@ -6,6 +6,7 @@ use Yii;
 use yii\helpers\Url;
 use yii\filters\VerbFilter;
 use yii\web\UnauthorizedHttpException;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -70,7 +71,13 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
     public function actions() {
 
         return [
+        	// Captcha for regular forms
             'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+        	// Captcha for ajax forms
+            'acaptcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ]
@@ -90,77 +97,84 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 			$type = CoreGlobal::TYPE_SITE;
 		}
 
-		$form 		= $this->formService->getBySlugType( $slug, $type );
-		$template	= $form->template;
-		$formFields	= $form->getFieldsMap();
- 		$model		= new GenericForm( [ 'fields' => $formFields ] );
+		$form	= $this->formService->getBySlugType( $slug, $type );
 
-		$user		= Yii::$app->user->getIdentity();
+		if( isset( $form ) ) {
 
-		// Form need a valid user
-		if( !$form->isVisibilityPublic() ) {
+			$template	= $form->template;
+			$formFields	= $form->getFieldsMap();
+	 		$model		= new GenericForm( [ 'fields' => $formFields ] );
 
-			// Form need it's owner
-			if( $form->isVisibilityPrivate() && !$form->isOwner( $user ) ) {
+			$user		= Yii::$app->user->getIdentity();
 
-				// Error- Not allowed
-				throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
-			}
+			// Form need a valid user
+			if( !$form->isVisibilityPublic() ) {
 
-			// Form need logged in user
-			if( $form->isVisibilityProtected() && empty( $user ) ) {
+				// Form need it's owner
+				if( $form->isVisibilityPrivate() && !$form->isOwner( $user ) ) {
 
-				// Remember URL for Login
-				Url::remember( Url::canonical(), CoreGlobal::REDIRECT_LOGIN );
-
-				// Error- Not allowed
-				return $this->redirect( [ '/login' ] );
-			}
-		}
-
-		if( $form->captcha ) {
-
-			$model->setScenario( 'captcha' );
-		}
-
-		if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
-
-			// Save Model
-			if( $this->formService->processForm( $form, $model ) ) {
-
-				// Trigger User Mail
-				if( $form->userMail ) {
-
-					Yii::$app->formsMailer->sendUserMail( $form, $model );
+					// Error- Not allowed
+					throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 				}
 
-				// Trigger Admin Mail
-				if( $form->adminMail ) {
+				// Form need logged in user
+				if( $form->isVisibilityProtected() && empty( $user ) ) {
 
-					Yii::$app->formsMailer->sendAdminMail( $form, $model );
+					// Remember URL for Login
+					Url::remember( Url::canonical(), CoreGlobal::REDIRECT_LOGIN );
+
+					// Error- Not allowed
+					return $this->redirect( [ '/login' ] );
 				}
-
-				// Set success message
-				if( isset( $form->successMessage ) ) {
-
-					Yii::$app->session->setFlash( 'message', $form->successMessage );
-				}
-
-				// Refresh the Page
-	        	return $this->refresh();
 			}
+
+			if( $form->captcha ) {
+
+				$model->setScenario( 'captcha' );
+			}
+
+			if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
+
+				// Save Model
+				if( $this->formService->processForm( $form, $model ) ) {
+
+					// Trigger User Mail
+					if( $form->userMail ) {
+
+						Yii::$app->formsMailer->sendUserMail( $form, $model );
+					}
+
+					// Trigger Admin Mail
+					if( $form->adminMail ) {
+
+						Yii::$app->formsMailer->sendAdminMail( $form, $model );
+					}
+
+					// Set success message
+					if( isset( $form->successMessage ) ) {
+
+						Yii::$app->session->setFlash( 'message', $form->successMessage );
+					}
+
+					// Refresh the Page
+		        	return $this->refresh();
+				}
+			}
+
+			if( isset( $template ) ) {
+
+				return Yii::$app->templateManager->renderViewPublic( $template, [
+		        	'form' => $form,
+			        'model' => $model
+		        ], [ 'page' => true ] );
+			}
+
+	        return $this->render( WebGlobalCore::PAGE_INDEX, [
+	        	'model' => $model
+	        ]);
 		}
 
-		if( isset( $template ) ) {
-
-			return Yii::$app->templateManager->renderViewPublic( $template, [
-	        	'form' => $form,
-		        'model' => $model
-	        ], [ 'page' => true ] );
-		}
-
-        return $this->render( WebGlobalCore::PAGE_INDEX, [
-        		'model' => $model
-        	]);
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }

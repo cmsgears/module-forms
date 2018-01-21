@@ -27,13 +27,26 @@ class FormController extends \cmsgears\core\admin\controllers\base\FormControlle
 
         parent::init();
 
-		$this->crudPermission 	= FormsGlobal::PERM_FORM;
+		$this->type				= CoreGlobal::TYPE_SITE;
+		
+		// Permissions
+        $this->crudPermission	= FormsGlobal::PERM_FORM_ADMIN;
+
+		// Sidebar
 		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
 
-		$this->type				= CoreGlobal::TYPE_SITE;
-
+		// Return Url
 		$this->returnUrl		= Url::previous( 'forms' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Form' ] ],
+			'create' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -55,7 +68,7 @@ class FormController extends \cmsgears\core\admin\controllers\base\FormControlle
 	public function actionAll() {
 
 		// Remember return url for crud
-		Url::remember( [ 'form/all' ], 'forms' );
+		Url::remember( Yii::$app->request->getUrl(), 'forms' );
 
 		return parent::actionAll();
 	}

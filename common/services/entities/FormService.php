@@ -2,12 +2,11 @@
 namespace cmsgears\forms\common\services\entities;
 
 // Yii Imports
-use \Yii;
-use yii\data\Sort;
+use Yii;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Form;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\forms\common\services\interfaces\entities\IFormService;
 
@@ -65,7 +64,23 @@ class FormService extends \cmsgears\core\common\services\resources\FormService i
 
 		$formSubmit = $formModel->processFormSubmit( $form );
 
+		$this->triggerNotification( $form );
+
 		return $formSubmit;
+    }
+
+    private function triggerNotification( $form ) {
+
+        $formId = $form->id;
+
+        Yii::$app->eventManager->triggerNotification( FormsGlobal::TEMPLATE_NOTIFY_FORM_SUBMIT,
+            [ 'title' => $form->name ],
+            [
+                'parentId' => $formId,
+                'parentType' => CoreGlobal::TYPE_FORM,
+                'adminLink' => "/forms/form/submit/all?fid=$formId",
+            ]
+        );
     }
 
 	// Update -------------
@@ -95,4 +110,5 @@ class FormService extends \cmsgears\core\common\services\resources\FormService i
 	// Update -------------
 
 	// Delete -------------
+
 }

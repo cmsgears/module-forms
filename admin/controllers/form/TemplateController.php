@@ -27,12 +27,26 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
         parent::init();
 
-		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form-template' ];
+		// Sidebar
+		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'template' ];
+
+		// Permission
+		$this->crudPermission	= FormsGlobal::PERM_FORM_ADMIN;
 
 		$this->type				= CoreGlobal::TYPE_FORM;
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'templates' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/templates/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Form Template' ] ],
+			'create' => [ [ 'label' => 'Form Template', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Form Template', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Form Template', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Form Template', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -53,7 +67,7 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	public function actionAll() {
 
-		Url::remember( [ 'form/template/all' ], 'templates' );
+		Url::remember( Yii::$app->request->getUrl(), 'templates' );
 
 		return parent::actionAll();
 	}
