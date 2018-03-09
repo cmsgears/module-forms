@@ -78,11 +78,18 @@ class FormSubmitFieldService extends \cmsgears\core\common\services\base\EntityS
 
     // Read - Models ---
 
-    public function findByFormSubmitId( $formSubmitId, $first = false ) {
+    public function findByFormSubmitId( $formSubmitId ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByFormSubmitId( $formSubmitId, $first );
+		return $modelClass::findByFormSubmitId( $formSubmitId );
+    }
+
+    public function findByName( $formSubmitId, $name ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByName( $formSubmitId, $name );
     }
 
     // Read - Lists ----

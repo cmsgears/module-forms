@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\common\models\entities;
 
 // Yii Imports
@@ -8,6 +16,9 @@ use Yii;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
+use cmsgears\core\common\models\interfaces\resources\IData;
+
+use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\resources\Form;
 use cmsgears\forms\common\models\base\FormTables;
@@ -16,7 +27,8 @@ use cmsgears\forms\common\models\resources\FormSubmitField;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
- * FormSubmit Entity
+ * FormSubmit model stores the form data submitted by user. It can either store the submitted
+ * data in [[$data]] object data or [[FormSubmitField]].
  *
  * @property integer $id
  * @property integer $formId
@@ -24,8 +36,10 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property datetime $submittedAt
  * @property string $content
  * @property string $data
+ *
+ * @since 1.0.0
  */
-class FormSubmit extends \cmsgears\core\common\models\base\Entity {
+class FormSubmit extends Entity implements IData {
 
 	// Variables ---------------------------------------------------
 
@@ -66,12 +80,17 @@ class FormSubmit extends \cmsgears\core\common\models\base\Entity {
      */
 	public function rules() {
 
-        return [
-            [ [ 'formId' ], 'required' ],
-			[ [ 'id', 'data' ], 'safe' ],
+		// Model Rules
+        $rules = [
+			// Required, Safe
+            [ 'formId', 'required' ],
+			[ [ 'id', 'content', 'data' ], 'safe' ],
+			// Other
 			[ [ 'formId', 'submittedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'submittedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ 'submittedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
+
+		return $rules;
     }
 
     /**
@@ -96,31 +115,39 @@ class FormSubmit extends \cmsgears\core\common\models\base\Entity {
 	// FormSubmit ----------------------------
 
 	/**
+	 * Returns the corresponding form.
+	 *
 	 * @return Form
 	 */
 	public function getForm() {
 
-		return $this->hasOne( Form::className(), [ 'id' => 'formId' ] );
+		return $this->hasOne( Form::class, [ 'id' => 'formId' ] );
 	}
 
 	/**
-	 * @return User - who submitted the form
+	 * Returns user who submitted the form.
+	 *
+	 * @return User
 	 */
 	public function getUser() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'submittedBy' ] );
+		return $this->hasOne( User::class, [ 'id' => 'submittedBy' ] );
 	}
 
 	/**
-	 * @return array - list of FormSubmitField
+	 * Returns all the form fields associated with the form.
+	 *
+	 * @return FormSubmitField[]
 	 */
 	public function getFields() {
 
-    	return $this->hasMany( FormSubmitField::className(), [ 'formSubmitId' => 'id' ] );
+    	return $this->hasMany( FormSubmitField::class, [ 'formSubmitId' => 'id' ] );
 	}
 
 	/**
-	 * @return array - map of FormSubmitField having field name as key
+	 * Generate and return the map of form submit fields.
+	 *
+	 * @return array
 	 */
 	public function getFieldsMap() {
 
@@ -141,9 +168,12 @@ class FormSubmit extends \cmsgears\core\common\models\base\Entity {
 
 	// yii\db\ActiveRecord ----
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
-		return FormTables::TABLE_FORM_SUBMIT;
+		return FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT );
 	}
 
 	// CMG parent classes --------------------
@@ -152,6 +182,9 @@ class FormSubmit extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
+    /**
+     * @inheritdoc
+     */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form', 'user' ];
@@ -160,6 +193,12 @@ class FormSubmit extends \cmsgears\core\common\models\base\Entity {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the form submit with form.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with form.
+	 */
 	public static function queryWithForm( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'form' ];
@@ -167,6 +206,12 @@ class FormSubmit extends \cmsgears\core\common\models\base\Entity {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the form submit with submit fields.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with submit fields.
+	 */
 	public static function queryWithFieds( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'fields' ];
@@ -181,4 +226,5 @@ class FormSubmit extends \cmsgears\core\common\models\base\Entity {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

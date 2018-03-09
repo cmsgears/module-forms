@@ -1,17 +1,30 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\base\Migration;
 
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Role;
 use cmsgears\core\common\models\entities\Permission;
-use cmsgears\core\common\models\resources\Form;
-use cmsgears\core\common\models\resources\FormField;
 
 use cmsgears\core\common\utilities\DateUtil;
 
-class m160621_120639_form_data extends \yii\db\Migration {
+/**
+ * The form data migration inserts the base data required to run the application.
+ *
+ * @since 1.0.0
+ */
+class m160621_120639_form_data extends Migration {
 
 	// Public Variables
 
@@ -128,7 +141,7 @@ class m160621_120639_form_data extends \yii\db\Migration {
 		$columns = [ 'parentId', 'childId', 'rootId', 'parentType', 'lValue', 'rValue' ];
 
 		$hierarchy = [
-			// Form Manager - Organization
+			// Form Manager - Organization, Approver
 			[ null, null, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 18 ],
 			[ $formManagerPerm->id, $vFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 17 ],
 			[ $formManagerPerm->id, $aFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 16 ],

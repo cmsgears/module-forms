@@ -1,11 +1,7 @@
 <?php
 namespace cmsgears\forms\common\components;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
 class MessageSource extends \yii\base\Component {
@@ -19,6 +15,9 @@ class MessageSource extends \yii\base\Component {
 	// Protected --------------
 
 	protected $messageDb = [
+		// Generic Errors
+		FormsGlobal::ERROR_RE_SUBMIT => 'The form is already submitted by you. It cannot be processed.',
+
 		// Generic Fields
 		FormsGlobal::FIELD_SUBMITTED_BY => 'Submitted By'
 	];
