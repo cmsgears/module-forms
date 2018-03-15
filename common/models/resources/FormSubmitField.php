@@ -15,6 +15,9 @@ use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\forms\common\config\FormsGlobal;
+
+use cmsgears\core\common\models\base\Resource;
 
 use cmsgears\forms\common\models\base\FormTables;
 use cmsgears\forms\common\models\entities\FormSubmit;
@@ -29,7 +32,7 @@ use cmsgears\forms\common\models\entities\FormSubmit;
  *
  * @since 1.0.0
  */
-class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
+class FormSubmitField extends Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -46,6 +49,8 @@ class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
 	// Public -----------------
 
 	// Protected --------------
+
+	protected $modelType	= FormsGlobal::TYPE_FORM_SUBMIT_FIELD;
 
 	// Private ----------------
 
