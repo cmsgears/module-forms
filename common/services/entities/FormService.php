@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\common\services\entities;
 
 // Yii Imports
@@ -10,7 +18,14 @@ use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\forms\common\services\interfaces\entities\IFormService;
 
-class FormService extends \cmsgears\core\common\services\resources\FormService implements IFormService {
+use cmsgears\core\common\services\resources\FormService;
+
+/**
+ * FormService provide service methods of form model.
+ *
+ * @since 1.0.0
+ */
+class FormService extends FormService implements IFormService {
 
 	// Variables ---------------------------------------------------
 
@@ -86,6 +101,14 @@ class FormService extends \cmsgears\core\common\services\resources\FormService i
 	// Update -------------
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

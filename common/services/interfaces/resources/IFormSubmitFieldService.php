@@ -1,7 +1,23 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\common\services\interfaces\resources;
 
-interface IFormSubmitFieldService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
+// CMG Imports
+use cmsgears\core\common\services\interfaces\base\IResourceService;
+
+/**
+ * IFormSubmitFieldService declares methods specific to form submit field.
+ *
+ * @since 1.0.0
+ */
+interface IFormSubmitFieldService extends IResourceService {
 
 	// Data Provider ------
 
@@ -17,6 +33,8 @@ interface IFormSubmitFieldService extends \cmsgears\core\common\services\interfa
 
     // Read - Maps -----
 
+	// Read - Others ---
+
 	// Create -------------
 
 	// Update -------------
@@ -24,4 +42,12 @@ interface IFormSubmitFieldService extends \cmsgears\core\common\services\interfa
 	// Delete -------------
 
 	public function deleteByFormSubmitId( $formSubmitId );
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
+
 }

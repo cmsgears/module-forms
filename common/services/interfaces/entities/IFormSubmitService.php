@@ -1,7 +1,23 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\common\services\interfaces\entities;
 
-interface IFormSubmitService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
+// CMG Imports
+use cmsgears\core\common\services\interfaces\base\IEntityService;
+
+/**
+ * IFormSubmitService declares methods specific to form submit.
+ *
+ * @since 1.0.0
+ */
+interface IFormSubmitService extends IEntityService {
 
 	// Data Provider ------
 
@@ -19,10 +35,20 @@ interface IFormSubmitService extends \cmsgears\core\common\services\interfaces\b
 
     // Read - Maps -----
 
+	// Read - Others ---
+
 	// Create -------------
 
 	// Update -------------
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 }

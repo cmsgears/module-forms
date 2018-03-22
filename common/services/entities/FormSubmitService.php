@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\common\services\entities;
 
 // Yii Imports
@@ -10,7 +18,14 @@ use cmsgears\forms\common\models\base\FormTables;
 use cmsgears\forms\common\services\interfaces\entities\IFormSubmitService;
 use cmsgears\forms\common\services\interfaces\resources\IFormSubmitFieldService;
 
-class FormSubmitService extends \cmsgears\core\common\services\base\EntityService implements IFormSubmitService {
+use cmsgears\core\common\services\base\EntityService;
+
+/**
+ * FormSubmitService provide service methods of form submit.
+ *
+ * @since 1.0.0
+ */
+class FormSubmitService extends EntityService implements IFormSubmitService {
 
 	// Variables ---------------------------------------------------
 
@@ -137,6 +152,14 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 		return parent::delete( $model, $config );
 	}
 
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
+
 	// Static Methods ----------------------------------------------
 
 	// CMG parent classes --------------------
@@ -160,4 +183,5 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 	// Update -------------
 
 	// Delete -------------
+
 }
