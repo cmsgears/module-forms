@@ -58,9 +58,6 @@ class Form extends Component {
 	 */
 	public function registerComponents() {
 
-		// Init system services
-		$this->initSystemServices();
-
 		// Register services
 		$this->registerResourceServices();
 		$this->registerEntityServices();
