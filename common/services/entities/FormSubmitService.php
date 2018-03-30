@@ -13,8 +13,6 @@ namespace cmsgears\forms\common\services\entities;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\forms\common\models\base\FormTables;
-
 use cmsgears\forms\common\services\interfaces\entities\IFormSubmitService;
 use cmsgears\forms\common\services\interfaces\resources\IFormSubmitFieldService;
 
@@ -35,11 +33,7 @@ class FormSubmitService extends EntityService implements IFormSubmitService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\forms\common\models\entities\FormSubmit';
-
-	public static $modelTable	= FormTables::TABLE_FORM_SUBMIT;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\forms\common\models\entities\FormSubmit';
 
 	// Protected --------------
 
@@ -59,7 +53,7 @@ class FormSubmitService extends EntityService implements IFormSubmitService {
 
     public function __construct( IFormSubmitFieldService $formSubmitFieldService, $config = [] ) {
 
-		$this->formSubmitFieldService	= $formSubmitFieldService;
+		$this->formSubmitFieldService = $formSubmitFieldService;
 
         parent::__construct( $config );
     }
@@ -80,11 +74,20 @@ class FormSubmitService extends EntityService implements IFormSubmitService {
 
 	public function getPage( $config = [] ) {
 
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
 	    $sort = new Sort([
 	        'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 	            'sdate' => [
-	                'asc' => [ 'submittedAt' => SORT_ASC ],
-	                'desc' => ['submittedAt' => SORT_DESC ],
+	                'asc' => [ "$modelTable.submittedAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.submittedAt" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'sdate',
 	            ]
@@ -144,7 +147,7 @@ class FormSubmitService extends EntityService implements IFormSubmitService {
 
 	public function delete( $model, $config = [] ) {
 
-		$existingFormSubmit		= self::findById( $model->id );
+		$existingFormSubmit	= self::findById( $model->id );
 
 		// Delete Dependency
 		$this->formSubmitFieldService->deleteByFormSubmitId( $model->id );

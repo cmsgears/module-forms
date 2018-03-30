@@ -10,8 +10,6 @@
 namespace cmsgears\forms\common\services\resources;
 
 // CMG Imports
-use cmsgears\forms\common\models\base\FormTables;
-
 use cmsgears\forms\common\services\interfaces\resources\IFormSubmitFieldService;
 
 use cmsgears\core\common\services\base\ResourceService;
@@ -31,11 +29,7 @@ class FormSubmitFieldService extends ResourceService implements IFormSubmitField
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\forms\common\models\resources\FormSubmitField';
-
-	public static $modelTable	= FormTables::TABLE_FORM_SUBMIT_FIELD;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\forms\common\models\resources\FormSubmitField';
 
 	// Protected --------------
 
@@ -67,11 +61,20 @@ class FormSubmitFieldService extends ResourceService implements IFormSubmitField
 
 	public function getPage( $config = [] ) {
 
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
 	    $sort = new Sort([
 	        'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 	            'name' => [
-	                'asc' => [ 'name' => SORT_ASC ],
-	                'desc' => ['name' => SORT_DESC ],
+	                'asc' => [ "$modelTable.name" => SORT_ASC ],
+	                'desc' => [ "$modelTable.name" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Name',
 	            ]
