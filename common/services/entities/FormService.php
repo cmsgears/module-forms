@@ -18,14 +18,14 @@ use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\forms\common\services\interfaces\entities\IFormService;
 
-use cmsgears\core\common\services\resources\FormService;
+use cmsgears\core\common\services\resources\FormService as BaseFormService;
 
 /**
  * FormService provide service methods of form model.
  *
  * @since 1.0.0
  */
-class FormService extends FormService implements IFormService {
+class FormService extends BaseFormService implements IFormService {
 
 	// Variables ---------------------------------------------------
 
@@ -84,20 +84,6 @@ class FormService extends FormService implements IFormService {
 		return $formSubmit;
     }
 
-    private function triggerNotification( $form ) {
-
-        $formId = $form->id;
-
-        Yii::$app->eventManager->triggerNotification( FormsGlobal::TEMPLATE_NOTIFY_FORM_SUBMIT,
-            [ 'title' => $form->name ],
-            [
-                'parentId' => $formId,
-                'parentType' => CoreGlobal::TYPE_FORM,
-                'adminLink' => "/forms/form/submit/all?fid=$formId",
-            ]
-        );
-    }
-
 	// Update -------------
 
 	// Delete -------------
@@ -105,6 +91,18 @@ class FormService extends FormService implements IFormService {
 	// Bulk ---------------
 
 	// Notifications ------
+
+    private function triggerNotification( $form ) {
+
+        Yii::$app->eventManager->triggerNotification( FormsGlobal::TEMPLATE_NOTIFY_FORM_SUBMIT,
+            [ 'model' => $form ],
+            [
+                'parentId' => $form->id,
+                'parentType' => CoreGlobal::TYPE_FORM,
+                'adminLink' => "/forms/form/submit/all?fid=$form->id"
+            ]
+        );
+    }
 
 	// Cache --------------
 

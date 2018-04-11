@@ -1,14 +1,29 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\admin\controllers\config;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\forms\common\config\FormsGlobal;
 
-class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldController {
+use cmsgears\core\admin\controllers\base\form\FieldController as BaseFieldController;
+
+/**
+ * FieldController provides actions specific to form field model.
+ *
+ * @since 1.0.0
+ */
+class FieldController extends BaseFieldController {
 
 	// Variables ---------------------------------------------------
 
@@ -26,12 +41,28 @@ class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldCo
 
         parent::init();
 
-		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'config' ];
+		// Permission
+		$this->crudPermission = FormsGlobal::PERM_FORM_ADMIN;
 
-		$this->crudPermission	= FormsGlobal::PERM_FORM_ADMIN;
+		// Sidebar
+		$this->sidebar = [ 'parent' => 'sidebar-form', 'child' => 'config' ];
 
-		$this->returnUrl		= Url::previous( 'fields' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/field/all' ], true );
+		// Return Url
+		$this->returnUrl = Url::previous( 'cfields' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/field/all' ], true );
+
+		// Config Form Url
+		$configsUrl = Url::previous( 'configs' );
+		$configsUrl = isset( $configsUrl ) ? $configsUrl : Url::toRoute( [ '/forms/config/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs = [
+			'base' => [ [ 'label' => 'Config Forms', 'url' =>  $configsUrl ] ],
+			'all' => [ [ 'label' => 'Form Fields' ] ],
+			'create' => [ [ 'label' => 'Form Fields', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Form Fields', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Form Fields', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -52,8 +83,9 @@ class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldCo
 
 	public function actionAll( $fid ) {
 
-		Url::remember( [ "config/field/all?fid=$fid" ], 'fields' );
+		Url::remember( Yii::$app->request->getUrl(), 'cfields' );
 
 		return parent::actionAll( $fid );
 	}
+
 }

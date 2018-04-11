@@ -1,17 +1,26 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\common\components;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\forms\common\config\FormsGlobal;
+use cmsgears\core\common\base\Mailer as BaseMailer;
 
 /**
- * The mail component for CMSGears forms module. It must be initialised for app using the name cmgFormsMailer.
+ * Mailer triggers the mails provided by Forms Module.
+ *
+ * @since 1.0.0
  */
-class Mailer extends \cmsgears\core\common\base\Mailer {
+class Mailer extends BaseMailer {
 
 	// Variables ---------------------------------------------------
 
@@ -45,9 +54,10 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$mailProperties	= $this->mailProperties;
 		$fromEmail 		= $mailProperties->getContactEmail();
 		$fromName 		= $mailProperties->getContactName();
-		$toEmail		= null;
-		$name			= null;
-		$subject		= '';
+
+		$toEmail	= null;
+		$name		= null;
+		$subject	= '';
 
 		// Email
 		if( isset( $model->email ) ) {
@@ -64,18 +74,18 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		// Email, Name
 		if( isset( Yii::$app->user ) ) {
 
-			$user	= Yii::$app->user->getIdentity();
+			$user = Yii::$app->user->getIdentity();
 
 			if( isset( $user ) ) {
 
 				if( !isset( $toEmail ) ) {
 
-					$toEmail	= $user->email;
+					$toEmail = $user->email;
 				}
 
 				if( !isset( $name ) ) {
 
-					$name	= $user->getName();
+					$name = $user->getName();
 				}
 			}
 		}
@@ -83,8 +93,8 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		// Name
 		if( !isset( $name ) && isset( $toEmail ) ) {
 
-			$name	= preg_split( "/@", $toEmail );
-			$name	= $name[0];
+			$name = preg_split( "/@", $toEmail );
+			$name = $name[0];
 		}
 
 		// Subject
@@ -94,7 +104,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		}
 		else {
 
-			$subject	= $form->name;
+			$subject = $form->name;
 		}
 
 		if( isset( $toEmail ) ) {
@@ -114,8 +124,8 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail 		= $mailProperties->getSenderEmail();
 		$fromName 		= $mailProperties->getSenderName();
 
-		$adminEmail		= $mailProperties->getContactEmail();
-		$subject		= '';
+		$adminEmail	= $mailProperties->getContactEmail();
+		$subject	= '';
 
 		// Subject
 		if( isset( $model->subject ) ) {
@@ -124,7 +134,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		}
 		else {
 
-			$subject	= $form->name;
+			$subject = $form->name;
 		}
 
 		// Admin Mail
@@ -135,4 +145,5 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
             //->setTextBody( $contact->contact_message )
             ->send();
     }
+
 }

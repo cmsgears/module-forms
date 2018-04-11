@@ -2,13 +2,12 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$logoUrl		= Yii::getAlias( "@web" );
-$logoUrl		= Url::to( $logoUrl. "/images/logo-mail.png", true );
+$logoUrl	= Url::to( "@web/images/logo-mail.png", true );
 
-$logo 			= "<img class='logo' style='margin:10px;' src='$logoUrl'>";
-$siteName		= $coreProperties->getSiteName();
+$logo 		= "<img class='logo' style='margin:10px;' src='$logoUrl'>";
+$siteName	= $coreProperties->getSiteName();
 
-$fields			= $model->fields;
+$fields		= $model->fields;
 ?>
 <table cellspacing='0' cellpadding='2' border='0' align='center' width='805px' style='font-family: Calibri; color: #4f4f4f; font-size: 14px; font-weight: 400;'>
 	<tbody>
@@ -29,17 +28,17 @@ $fields			= $model->fields;
 				<br/>A new form is submitted for <?=$form->name?>.<br/>
 			</td>
 		</tr>
-		<?php 
-			
+		<?php
+
 			foreach ( $fields as $field ) {
-				
-				$fieldName	= $field->name; 
+
+				$fieldName	= $field->name;
 		?>
 
 			<tr> <td><?=$fieldName?>: <?=Html::encode( $model->$fieldName )?></td> </tr>
 
 		<?php } ?>
-		<tr> 
+		<tr>
 			<td>
   				<div style='line-height:15px; margin:0px; padding:0px; margin-top:30px;'>Sincerely,</div>
   				<div style='line-height:15px; margin:0px; padding:0px; margin-top:3px;'><?=$siteName?> Team</div>

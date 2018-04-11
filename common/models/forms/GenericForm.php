@@ -184,4 +184,5 @@ class GenericForm extends ParentGenericForm {
 
 		return $formSubmit;
 	}
+
 }

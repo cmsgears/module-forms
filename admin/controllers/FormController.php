@@ -1,15 +1,30 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\admin\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-class FormController extends \cmsgears\core\admin\controllers\base\FormController {
+use cmsgears\core\admin\controllers\base\FormController as BaseFormController;
+
+/**
+ * FormController provides actions specific to forms.
+ *
+ * @since 1.0.0
+ */
+class FormController extends BaseFormController {
 
 	// Variables ---------------------------------------------------
 
@@ -27,25 +42,27 @@ class FormController extends \cmsgears\core\admin\controllers\base\FormControlle
 
         parent::init();
 
-		$this->type				= CoreGlobal::TYPE_SITE;
-		
-		// Permissions
-        $this->crudPermission	= FormsGlobal::PERM_FORM_ADMIN;
+		// Config
+		$this->type		= CoreGlobal::TYPE_SITE;
+		$this->submits	= true;
+
+		// Permission
+        $this->crudPermission = FormsGlobal::PERM_FORM_ADMIN;
 
 		// Sidebar
-		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
+		$this->sidebar = [ 'parent' => 'sidebar-form', 'child' => 'form' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'forms' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/all' ], true );
-		
+		$this->returnUrl = Url::previous( 'forms' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/all' ], true );
+
 		// Breadcrumbs
-		$this->breadcrumbs		= [
+		$this->breadcrumbs = [
 			'all' => [ [ 'label' => 'Form' ] ],
 			'create' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+			'fields' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Fields' ] ]
 		];
 	}
 
@@ -67,9 +84,9 @@ class FormController extends \cmsgears\core\admin\controllers\base\FormControlle
 
 	public function actionAll() {
 
-		// Remember return url for crud
 		Url::remember( Yii::$app->request->getUrl(), 'forms' );
 
 		return parent::actionAll();
 	}
+
 }

@@ -1,16 +1,30 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\admin\controllers;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-class ConfigController extends \cmsgears\core\admin\controllers\base\FormController {
+use cmsgears\core\admin\controllers\base\FormController;
+
+/**
+ * ConfigController provides actions specific to configuration forms.
+ *
+ * @since 1.0.0
+ */
+class ConfigController extends FormController {
 
 	// Variables ---------------------------------------------------
 
@@ -28,14 +42,28 @@ class ConfigController extends \cmsgears\core\admin\controllers\base\FormControl
 
         parent::init();
 
-        $this->crudPermission	= FormsGlobal::PERM_FORM_ADMIN;
+		// Config
+		$this->type		= CoreGlobal::TYPE_SYSTEM;
+		$this->submits	= false;
 
-		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'config' ];
+		// Permission
+		$this->crudPermission = FormsGlobal::PERM_FORM_ADMIN;
 
-		$this->submits			= false;
+		// Sidebar
+		$this->sidebar = [ 'parent' => 'sidebar-form', 'child' => 'config' ];
 
-		$this->returnUrl		= Url::previous( 'forms' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/all' ], true );
+		// Return Url
+		$this->returnUrl = Url::previous( 'configs' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs = [
+			'all' => [ [ 'label' => 'Forms' ] ],
+			'create' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'fields' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Fields' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -52,13 +80,13 @@ class ConfigController extends \cmsgears\core\admin\controllers\base\FormControl
 
 	// CMG parent classes --------------------
 
-	// FormController ------------------------
+	// ConfigController ----------------------
 
 	public function actionAll() {
 
-		// Remember return url for crud
-		Url::remember( [ 'config/all' ], 'forms' );
+		Url::remember( Yii::$app->request->getUrl(), 'configs' );
 
 		return parent::actionAll();
 	}
+
 }

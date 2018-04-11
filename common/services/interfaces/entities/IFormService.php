@@ -10,14 +10,14 @@
 namespace cmsgears\forms\common\services\interfaces\entities;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\resources\IFormService;
+use cmsgears\core\common\services\interfaces\resources\IFormService as IBaseFormService;
 
 /**
  * IFormService declares methods specific to form model.
  *
  * @since 1.0.0
  */
-interface IFormService extends IFormService {
+interface IFormService extends IBaseFormService {
 
 	// Data Provider ------
 
