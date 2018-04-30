@@ -42,11 +42,12 @@ class TemplateController extends BaseTemplateController {
 
         parent::init();
 
-		// Config
-		$this->type = CoreGlobal::TYPE_FORM;
-
 		// Permission
 		$this->crudPermission = FormsGlobal::PERM_FORM_ADMIN;
+
+		// Config
+		$this->type		= CoreGlobal::TYPE_FORM;
+		$this->apixBase	= 'core/template';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-form', 'child' => 'template' ];

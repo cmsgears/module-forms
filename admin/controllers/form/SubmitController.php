@@ -1,8 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\admin\controllers\form;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
@@ -11,7 +19,14 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-class SubmitController extends \cmsgears\core\admin\controllers\base\Controller {
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * SubmitController provides actions specific to form submit model.
+ *
+ * @since 1.0.0
+ */
+class SubmitController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -32,21 +47,24 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
         parent::init();
 
 		// Permission
-        $this->crudPermission	= FormsGlobal::PERM_FORM_ADMIN;
+        $this->crudPermission = FormsGlobal::PERM_FORM_ADMIN;
 
-		// Service
-		$this->modelService		= Yii::$app->factory->get( 'formSubmitService' );
-		$this->formService		= Yii::$app->factory->get( 'formService' );
+		// Config
+		$this->apixBase = 'form/form/submit';
+
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'formSubmitService' );
+		$this->formService = Yii::$app->factory->get( 'formService' );
 
 		// Sidebar
-		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
+		$this->sidebar = [ 'parent' => 'sidebar-form', 'child' => 'form' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'submits' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/submit/all' ], true );
-		
+		$this->returnUrl = Url::previous( 'form-submits' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/submit/all' ], true );
+
 		// Breadcrumbs
-		$this->breadcrumbs		= [
+		$this->breadcrumbs = [
 			'all' => [ [ 'label' => 'Form Submit' ] ],
 			'create' => [ [ 'label' => 'Form Submit', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Form Submit', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
@@ -75,7 +93,7 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
                 ]
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
 	                'index'  => [ 'get' ],
 	                'all'   => [ 'get' ],
@@ -105,7 +123,7 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
 		if( isset( $form ) ) {
 
 			// Remember return url for crud
-			Url::remember( [ "form/submit/all?fid=$fid" ], 'submits' );
+			Url::remember( [ "form/submit/all?fid=$fid" ], 'form-submits' );
 
 			$dataProvider = $this->modelService->getPageByFormId( $fid );
 

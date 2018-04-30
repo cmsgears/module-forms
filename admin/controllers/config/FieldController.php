@@ -44,6 +44,9 @@ class FieldController extends BaseFieldController {
 		// Permission
 		$this->crudPermission = FormsGlobal::PERM_FORM_ADMIN;
 
+		// Config
+		$this->apixBase = 'core/form/field';
+
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-form', 'child' => 'config' ];
 

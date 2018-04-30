@@ -42,12 +42,13 @@ class ConfigController extends FormController {
 
         parent::init();
 
-		// Config
-		$this->type		= CoreGlobal::TYPE_SYSTEM;
-		$this->submits	= false;
-
 		// Permission
 		$this->crudPermission = FormsGlobal::PERM_FORM_ADMIN;
+
+		// Config
+		$this->type		= CoreGlobal::TYPE_SYSTEM;
+		$this->apixBase = 'core/form';
+		$this->submits	= false;
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-form', 'child' => 'config' ];

@@ -42,12 +42,13 @@ class FormController extends BaseFormController {
 
         parent::init();
 
-		// Config
-		$this->type		= CoreGlobal::TYPE_SITE;
-		$this->submits	= true;
-
 		// Permission
         $this->crudPermission = FormsGlobal::PERM_FORM_ADMIN;
+
+		// Config
+		$this->type		= CoreGlobal::TYPE_SITE;
+		$this->apixBase = 'core/form';
+		$this->submits	= true;
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-form', 'child' => 'form' ];

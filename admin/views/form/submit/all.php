@@ -1,114 +1,87 @@
 <?php
-// Yii Imports
-use yii\helpers\Html;
-use yii\widgets\LinkPager;
-
 // CMG Imports
-use cmsgears\core\common\utilities\CodeGenUtil;
+use cmsgears\widgets\popup\Popup;
+
+use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'All Submits | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Form Submits | ' . $coreProperties->getSiteTitle();
+$apixBase		= $this->context->apixBase;
 
-// Data
-$pagination		= $dataProvider->getPagination();
-$models			= $dataProvider->getModels();
-
-// Searching
-$keywords		= Yii::$app->request->getQueryParam( 'keywords' );
-
-// Sorting
-$sortOrder		= Yii::$app->request->getQueryParam( 'sort' );
-
-if( !isset( $sortOrder ) ) {
-
-	$sortOrder	= '';
-}
+// View Templates
+$moduleTemplates	= '@cmsgears/module-forms/admin/views/templates';
+$themeTemplates		= '@themes/admin/views/templates';
 ?>
-<div class="row header-content">
-	<div class="col-small col15x10 header-actions">
-		<span class="frm-icon-element element-small">
-			<i class="cmti cmti-plus"></i>
-			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>
-	</div>
-	<div class="col-small col15x5 header-search">
-		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $keywords ?>">
-		<span class="frm-icon-element element-medium">
-			<i class="cmti cmti-search"></i>
-			<button id="btn-search">Search</button>
-		</span>
-	</div>
-</div>
-<div class="data-grid">
-	<div class="row grid-header">
-		<div class="col col12x6 info">
-			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
-		</div>
-		<div class="col col12x6 pagination">
-			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
-		</div>
-	</div>
-	<div class="grid-content">
-		<table>
-			<thead>
-				<tr>
-					<th>Form Data</th>
-					<th>User</th>
-					<th>Email</th>
-					<th>Submitted At
-						<span class='box-icon-sort'>
-							<span sort-order='sdate' class="icon-sort <?php if( strcmp( $sortOrder, 'sdate') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
-							<span sort-order='-sdate' class="icon-sort <?php if( strcmp( $sortOrder, '-sdate') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
-						</span>
-					</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
+<?= DataGrid::widget([
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ 'submits' => $submits ],
+	'title' => 'Form Submits', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'searchColumns' => [ 'user' => 'User', 'email' => 'Email' ],
+	'sortColumns' => [
+		'user' => 'User', 'email' => 'Email',
+		'sdate' => 'Submitted At'
+	],
+	'filters' => [],
+	'reportColumns' => [
+		'user' => [ 'title' => 'User', 'type' => 'text' ],
+		'email' => [ 'title' => 'Email', 'type' => 'text' ],
+		'sdate' => [ 'title' => 'Submitted At', 'type' => 'date' ]
+	],
+	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
+		'model' => [ 'delete' => 'Delete' ]
+	],
+	'header' => false, 'footer' => true,
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x7', 'x2', 'x2', 'x2', null ] ],
+	'gridColumns' => [
+		'bulk' => 'Action',
+		'fields' => [ 'title' => 'Fields', 'generate' => function( $model ) {
+			ob_start();
 
-					foreach( $models as $formSubmit ) {
+			echo "<table>";
 
-						$id		= $formSubmit->id;
-						$user	= $formSubmit->user;
-				?>
-					<tr>
-						<td>
-							<table>
-							<?php
-								$formData	= json_decode( $formSubmit->data, true );
+			$formData = json_decode( $formSubmit->data, true );
 
-								foreach (  $formData as $key => $value ) {
+			foreach(  $formData as $key => $value ) {
 
-									echo "<tr><td>$key</td><td>$value</td></tr>";
-								}
+				echo "<tr><td>$key</td><td>$value</td></tr>";
+			}
 
-								$formFields	= $formSubmit->fields;
+			$formFields	= $formSubmit->fields;
 
-								foreach (  $formFields as $formField ) {
+			foreach (  $formFields as $formField ) {
 
-									echo "<tr><td>$formField->name</td><td>$formField->value</td></tr>";
-								}
-							?>
-							</table>
-						</td>
-						<td><?= isset( $user ) ? $user->getName() : '' ?></td>
-						<td><?= isset( $user ) ? $user->email : '' ?></td>
-						<td><?= $formSubmit->submittedAt ?></td>
-						<td class="actions">
-							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
-						</td>
-					</tr>
-				<?php } ?>
-			</tbody>
-		</table>
-	</div>
-	<div class="row grid-header">
-		<div class="col col12x6 info">
-			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
-		</div>
-		<div class="col col12x6 pagination">
-			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
-		</div>
-	</div>
-</div>
+				echo "<tr><td>$formField->name</td><td>$formField->value</td></tr>";
+			}
+
+			echo "</table>";
+
+			$output = ob_get_clean();
+
+			return $output;
+		}],
+		'user' => [ 'title' => 'User', 'generate' => function( $model ) {
+			return isset( $model->user ) ? $model->user->name : null;
+		}],
+		'email' => [ 'title' => 'Email', 'generate' => function( $model ) {
+			return isset( $model->user ) ? $model->user->email : null;
+		}],
+		'submittedAt' => 'Submitted At',
+		'actions' => 'Actions'
+	],
+	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
+	'templateDir' => "$themeTemplates/widget/grid",
+	//'dataView' => "$moduleTemplates/grid/data/submit",
+	//'cardView' => "$moduleTemplates/grid/cards/submit",
+	//'actionView' => "$moduleTemplates/grid/actions/submit"
+]) ?>
+
+<?= Popup::widget([
+	'title' => 'Apply Bulk Action', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
+	'data' => [ 'model' => 'Form', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
+]) ?>
+
+<?= Popup::widget([
+	'title' => 'Delete Form', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
+	'data' => [ 'model' => 'Form', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
+]) ?>
