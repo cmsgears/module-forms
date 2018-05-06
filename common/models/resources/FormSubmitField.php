@@ -50,7 +50,7 @@ class FormSubmitField extends Resource {
 
 	// Protected --------------
 
-	protected $modelType	= FormsGlobal::TYPE_FORM_SUBMIT_FIELD;
+	protected $modelType = FormsGlobal::TYPE_FORM_SUBMIT_FIELD;
 
 	// Private ----------------
 

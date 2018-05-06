@@ -57,7 +57,7 @@ class FormSubmit extends Entity implements IData {
 
 	// Protected --------------
 
-	protected $modelType	= FormsGlobal::TYPE_FORM_SUBMIT;
+	protected $modelType = FormsGlobal::TYPE_FORM_SUBMIT;
 
 	// Private ----------------
 
