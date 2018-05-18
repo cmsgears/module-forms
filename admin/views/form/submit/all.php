@@ -13,7 +13,7 @@ $moduleTemplates	= '@cmsgears/module-forms/admin/views/templates';
 $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ 'submits' => $submits ],
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [],
 	'title' => 'Form Submits', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [ 'user' => 'User', 'email' => 'Email' ],
 	'sortColumns' => [
@@ -38,14 +38,14 @@ $themeTemplates		= '@themes/admin/views/templates';
 
 			echo "<table>";
 
-			$formData = json_decode( $formSubmit->data, true );
+			$formData = json_decode( $model->data, true );
 
-			foreach(  $formData as $key => $value ) {
+			foreach( $formData as $key => $value ) {
 
 				echo "<tr><td>$key</td><td>$value</td></tr>";
 			}
 
-			$formFields	= $formSubmit->fields;
+			$formFields	= $model->fields;
 
 			foreach (  $formFields as $formField ) {
 
@@ -77,11 +77,11 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
-	'data' => [ 'model' => 'Form', 'grid' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
+	'data' => [ 'model' => 'Form Submit', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
 ]) ?>
 
 <?= Popup::widget([
-	'title' => 'Delete Form', 'size' => 'medium',
+	'title' => 'Delete Form Submit', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
-	'data' => [ 'model' => 'Form', 'grid' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
+	'data' => [ 'model' => 'Form Submit', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
 ]) ?>

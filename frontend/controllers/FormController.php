@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\frontend\controllers;
 
 // Yii Imports
@@ -10,14 +18,20 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\frontend\config\WebGlobalCore;
-use cmsgears\forms\frontend\config\WebGlobalForms;
+use cmsgears\core\frontend\config\CoreGlobalWeb;
 
 use cmsgears\forms\common\models\forms\GenericForm;
 
+use cmsgears\core\frontend\controllers\base\Controller;
+
 // TODO: Automate the form submission and mail triggers using mail template.
 
-class FormController extends \cmsgears\core\frontend\controllers\base\Controller {
+/**
+ * FormController provides actions specific to form model.
+ *
+ * @since 1.0.0
+ */
+class FormController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -37,7 +51,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 
         parent::init();
 
-		$this->formService	= Yii::$app->factory->get( 'formService' );
+		$this->formService = Yii::$app->factory->get( 'formService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -58,7 +72,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
                 ]
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'single' => [ 'get', 'post' ]
                 ]
@@ -88,24 +102,21 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 
 	// CMG parent classes --------------------
 
-	// SiteController ------------------------
+	// FormController ------------------------
 
-    public function actionSingle( $slug, $type = null ) {
+    public function actionSingle( $slug ) {
 
-		if( !isset( $type ) ) {
-
-			$type = CoreGlobal::TYPE_SITE;
-		}
-
-		$form	= $this->formService->getBySlugType( $slug, $type );
+		$form = $this->formService->getBySlugType( $slug, CoreGlobal::TYPE_FORM );
 
 		if( isset( $form ) ) {
 
 			$template	= $form->template;
 			$formFields	= $form->getFieldsMap();
-	 		$model		= new GenericForm( [ 'fields' => $formFields ] );
 
-			$user		= Yii::$app->user->getIdentity();
+	 		$model	= new GenericForm( [ 'fields' => $formFields ] );
+			$user	= Yii::$app->user->getIdentity();
+
+			$this->view->params[ 'model' ] = $form;
 
 			// Form need a valid user
 			if( !$form->isVisibilityPublic() ) {
@@ -169,7 +180,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 		        ], [ 'page' => true ] );
 			}
 
-	        return $this->render( WebGlobalCore::PAGE_INDEX, [
+	        return $this->render( CoreGlobalWeb::PAGE_INDEX, [
 	        	'model' => $model
 	        ]);
 		}
@@ -177,4 +188,5 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }
