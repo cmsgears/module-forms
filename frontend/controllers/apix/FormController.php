@@ -2,7 +2,7 @@
 namespace cmsgears\forms\frontend\controllers\apix;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
@@ -10,9 +10,11 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\forms\common\models\forms\GenericForm;
 
+use cmsgears\core\frontend\controllers\base\Controller;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class FormController extends \cmsgears\core\frontend\controllers\base\Controller {
+class FormController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -47,7 +49,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'submit' => [ 'post' ]
                 ]
@@ -98,7 +100,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 				}
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( $form->successMessage );
+				return AjaxUtil::generateSuccess( $form->success );
 			}
 		}
 
@@ -108,4 +110,5 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 		// Trigger Ajax Failure
     	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
+
 }
