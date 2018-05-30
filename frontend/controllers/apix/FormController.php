@@ -69,7 +69,7 @@ class FormController extends Controller {
 
 		if( !isset( $type ) ) {
 
-			$type = CoreGlobal::TYPE_SITE;
+			$type = CoreGlobal::TYPE_FORM;
 		}
 
 		$form 		= $this->formService->getBySlugType( $slug, $type );
