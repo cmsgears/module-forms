@@ -72,40 +72,48 @@ class FormController extends Controller {
 			$type = CoreGlobal::TYPE_FORM;
 		}
 
-		$form 		= $this->formService->getBySlugType( $slug, $type );
-		$template	= $form->template;
-		$formFields	= $form->getFieldsMap();
- 		$model		= new GenericForm( [ 'fields' => $formFields, 'ajax' => true ] );
+		$model 		= $this->formService->getBySlugType( $slug, $type );
+		$template	= $model->template;
+		$formFields	= $model->getFieldsMap();
+ 		$form		= new GenericForm( [ 'fields' => $formFields, 'ajax' => true ] );
 
-		if( $form->captcha ) {
+		if( $model->captcha ) {
 
-			$model->setScenario( 'captcha' );
+			$form->setScenario( 'captcha' );
 		}
 
-		if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
+		if( $form->load( Yii::$app->request->post(), 'GenericForm' ) && $form->validate() ) {
 
 			// Save Model
-			if( $this->formService->processForm( $form, $model ) ) {
+			if( $this->formService->processForm( $model, $form ) ) {
 
 				// Trigger User Mail
-				if( $form->userMail ) {
+				if( $model->userMail ) {
 
-					Yii::$app->formsMailer->sendUserMail( $form, $model );
+					Yii::$app->formsMailer->sendUserMail( $model, $form );
 				}
 
 				// Trigger Admin Mail
-				if( $form->adminMail ) {
+				if( $model->adminMail ) {
 
-					Yii::$app->formsMailer->sendAdminMail( $form, $model );
+					Yii::$app->formsMailer->sendAdminMail( $model, $form );
+				}
+
+				$data = [];
+
+				// Set success message
+				if( isset( $model->success ) ) {
+
+					$data[ 'message' ] = $model->success;
 				}
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( $form->success );
+				return AjaxUtil::generateSuccess( $model->success, $data );
 			}
 		}
 
 		// Generate Errors
-		$errors = AjaxUtil::generateErrorMessage( $model );
+		$errors = AjaxUtil::generateErrorMessage( $form );
 
 		// Trigger Ajax Failure
     	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );

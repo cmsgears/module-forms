@@ -22,8 +22,6 @@ class FormsGlobal {
 
 	// Templates -------------------------------------------------------
 
-	const TEMPLATE_FORM	= 'form';
-
 	const TEMPLATE_NOTIFY_FORM_SUBMIT   = 'form-submit';
 
 	// Config ----------------------------------------------------------

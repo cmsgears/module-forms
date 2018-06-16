@@ -111,30 +111,30 @@ class FormController extends Controller {
 
     public function actionSingle( $slug ) {
 
-		$form = $this->formService->getBySlugType( $slug, CoreGlobal::TYPE_FORM );
+		$model = $this->formService->getBySlugType( $slug, CoreGlobal::TYPE_FORM );
 
-		if( isset( $form ) ) {
+		if( isset( $model ) ) {
 
-			$template	= $form->template;
-			$formFields	= $form->getFieldsMap();
+			$template	= $model->template;
+			$formFields	= $model->getFieldsMap();
 
-	 		$model	= new GenericForm( [ 'fields' => $formFields ] );
+	 		$form	= new GenericForm( [ 'fields' => $formFields ] );
 			$user	= Yii::$app->user->getIdentity();
 
-			$this->view->params[ 'model' ] = $form;
+			$this->view->params[ 'model' ] = $model;
 
 			// Form need a valid user
-			if( !$form->isVisibilityPublic() ) {
+			if( !$model->isVisibilityPublic() ) {
 
 				// Form need it's owner
-				if( $form->isVisibilityPrivate() && !$form->isOwner( $user ) ) {
+				if( $model->isVisibilityPrivate() && !$model->isOwner( $user ) ) {
 
 					// Error- Not allowed
 					throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 				}
 
 				// Form need logged in user
-				if( $form->isVisibilityProtected() && empty( $user ) ) {
+				if( $model->isVisibilityProtected() && empty( $user ) ) {
 
 					// Remember URL for Login
 					Url::remember( Url::canonical(), CoreGlobal::REDIRECT_LOGIN );
@@ -144,32 +144,32 @@ class FormController extends Controller {
 				}
 			}
 
-			if( $form->captcha ) {
+			if( $model->captcha ) {
 
-				$model->setScenario( 'captcha' );
+				$form->setScenario( 'captcha' );
 			}
 
-			if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
+			if( $form->load( Yii::$app->request->post(), 'GenericForm' ) && $form->validate() ) {
 
 				// Save Model
-				if( $this->formService->processForm( $form, $model ) ) {
+				if( $this->formService->processForm( $model, $form ) ) {
 
 					// Trigger User Mail
-					if( $form->userMail ) {
+					if( $model->userMail ) {
 
-						Yii::$app->formsMailer->sendUserMail( $form, $model );
+						Yii::$app->formsMailer->sendUserMail( $model, $form );
 					}
 
 					// Trigger Admin Mail
-					if( $form->adminMail ) {
+					if( $model->adminMail ) {
 
-						Yii::$app->formsMailer->sendAdminMail( $form, $model );
+						Yii::$app->formsMailer->sendAdminMail( $model, $form );
 					}
 
 					// Set success message
-					if( isset( $form->successMessage ) ) {
+					if( isset( $model->successMessage ) ) {
 
-						Yii::$app->session->setFlash( 'message', $form->successMessage );
+						Yii::$app->session->setFlash( 'message', $model->successMessage );
 					}
 
 					// Refresh the Page
@@ -186,13 +186,14 @@ class FormController extends Controller {
 			if( isset( $template ) ) {
 
 				return Yii::$app->templateManager->renderViewPublic( $template, [
-		        	'form' => $form,
-			        'model' => $model
+		        	'model' => $model,
+					'form' => $form
 		        ], [ 'page' => true ] );
 			}
 
 	        return $this->render( CoreGlobalWeb::PAGE_INDEX, [
-	        	'model' => $model
+				'model' => $model,
+				'form' => $form
 	        ]);
 		}
 
