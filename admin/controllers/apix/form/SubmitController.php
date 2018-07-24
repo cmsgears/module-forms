@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\form\admin\controllers\apix\form;
+namespace cmsgears\forms\admin\controllers\apix\form;
 
 // Yii Imports
 use Yii;
@@ -23,7 +23,7 @@ use cmsgears\core\admin\controllers\base\Controller;
  *
  * @since 1.0.0
  */
-class FormController extends Controller {
+class SubmitController extends Controller {
 
 	// Variables ---------------------------------------------------
 

@@ -50,7 +50,7 @@ class SubmitController extends Controller {
         $this->crudPermission = FormsGlobal::PERM_FORM_ADMIN;
 
 		// Config
-		$this->apixBase = 'form/form/submit';
+		$this->apixBase = 'forms/form/submit';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'formSubmitService' );
