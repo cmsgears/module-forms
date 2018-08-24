@@ -50,6 +50,9 @@ class ConfigController extends FormController {
 		$this->apixBase = 'core/form';
 		$this->submits	= false;
 
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'cmsgears\core\common\services\interfaces\resources\IFormService' );
+
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-form', 'child' => 'config' ];
 
