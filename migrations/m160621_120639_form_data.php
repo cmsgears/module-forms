@@ -143,24 +143,24 @@ class m160621_120639_form_data extends Migration {
 		$hierarchy = [
 			// Form Manager - Organization, Approver
 			[ null, null, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 18 ],
-			[ $formManagerPerm->id, $vFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 17 ],
-			[ $formManagerPerm->id, $aFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 16 ],
-			[ $formManagerPerm->id, $uFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 15 ],
-			[ $formManagerPerm->id, $dFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 5, 14 ],
-			[ $formManagerPerm->id, $apFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 13 ],
-			[ $formManagerPerm->id, $pFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 7, 12 ],
-			[ $formManagerPerm->id, $iFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 11 ],
-			[ $formManagerPerm->id, $eFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 9, 10 ],
+			[ $formManagerPerm->id, $vFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 3 ],
+			[ $formManagerPerm->id, $aFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 5 ],
+			[ $formManagerPerm->id, $uFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 7 ],
+			[ $formManagerPerm->id, $dFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 9 ],
+			[ $formManagerPerm->id, $apFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 10, 11 ],
+			[ $formManagerPerm->id, $pFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 12, 13 ],
+			[ $formManagerPerm->id, $iFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 14, 15 ],
+			[ $formManagerPerm->id, $eFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 16, 17 ],
 
 			// Form Author- Individual
 			[ null, null, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 16 ],
-			[ $formAuthorPerm->id, $vFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 15 ],
-			[ $formAuthorPerm->id, $aFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 14 ],
-			[ $formAuthorPerm->id, $uFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 13 ],
-			[ $formAuthorPerm->id, $dFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 5, 12 ],
-			[ $formAuthorPerm->id, $pFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 11 ],
-			[ $formAuthorPerm->id, $iFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 7, 10 ],
-			[ $formAuthorPerm->id, $eFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 9 ]
+			[ $formAuthorPerm->id, $vFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 3 ],
+			[ $formAuthorPerm->id, $aFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 5 ],
+			[ $formAuthorPerm->id, $uFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 7 ],
+			[ $formAuthorPerm->id, $dFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 9 ],
+			[ $formAuthorPerm->id, $pFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 10, 11 ],
+			[ $formAuthorPerm->id, $iFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 12, 13 ],
+			[ $formAuthorPerm->id, $eFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 14, 15 ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_model_hierarchy', $columns, $hierarchy );
