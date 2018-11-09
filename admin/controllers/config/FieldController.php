@@ -54,17 +54,20 @@ class FieldController extends BaseFieldController {
 		$this->returnUrl = Url::previous( 'cfields' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/field/all' ], true );
 
-		// Config Form Url
-		$configsUrl = Url::previous( 'configs' );
-		$configsUrl = isset( $configsUrl ) ? $configsUrl : Url::toRoute( [ '/forms/config/all' ], true );
+		// All Url
+		$allUrl = Url::previous( 'configs' );
+		$allUrl = isset( $allUrl ) ? $allUrl : Url::toRoute( [ '/forms/config/all' ], true );
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
-			'base' => [ [ 'label' => 'Config Forms', 'url' =>  $configsUrl ] ],
-			'all' => [ [ 'label' => 'Form Fields' ] ],
-			'create' => [ [ 'label' => 'Form Fields', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Form Fields', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Form Fields', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
+				[ 'label' => 'Config Forms', 'url' =>  $allUrl ]
+			],
+			'all' => [ [ 'label' => 'Config Fields' ] ],
+			'create' => [ [ 'label' => 'Config Fields', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Config Fields', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Config Fields', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 

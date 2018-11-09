@@ -62,6 +62,9 @@ class ConfigController extends FormController {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Forms' ] ],
 			'create' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

@@ -59,6 +59,9 @@ class FormController extends BaseFormController {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Form' ] ],
 			'create' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

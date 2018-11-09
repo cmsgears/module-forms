@@ -58,7 +58,9 @@ class TemplateController extends BaseTemplateController {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
-			'base' => [ [ 'label' => 'Forms', 'url' =>  [ '/forms/form/all' ] ] ],
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Form Templates' ] ],
 			'create' => [ [ 'label' => 'Form Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Form Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
