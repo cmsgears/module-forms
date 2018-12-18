@@ -19,7 +19,7 @@ use cmsgears\forms\common\models\base\FormTables;
  *
  * @since 1.0.0
  */
-class m160621_121912_form_stats extends Migration {
+class m160622_121912_form_stats extends Migration {
 
 	// Public Variables
 

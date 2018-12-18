@@ -17,7 +17,7 @@ use cmsgears\core\common\base\Migration;
  *
  * @since 1.0.0
  */
-class m160621_121832_form_index extends Migration {
+class m160622_121832_form_index extends Migration {
 
 	// Public Variables
 
