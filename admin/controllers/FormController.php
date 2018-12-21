@@ -17,14 +17,12 @@ use yii\helpers\Url;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\core\admin\controllers\base\FormController as BaseFormController;
-
 /**
  * FormController provides actions specific to forms.
  *
  * @since 1.0.0
  */
-class FormController extends BaseFormController {
+class FormController extends \cmsgears\core\admin\controllers\base\FormController {
 
 	// Variables ---------------------------------------------------
 

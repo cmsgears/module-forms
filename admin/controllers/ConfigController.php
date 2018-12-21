@@ -17,14 +17,12 @@ use yii\helpers\Url;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\core\admin\controllers\base\FormController;
-
 /**
  * ConfigController provides actions specific to configuration forms.
  *
  * @since 1.0.0
  */
-class ConfigController extends FormController {
+class ConfigController extends \cmsgears\core\admin\controllers\base\FormController {
 
 	// Variables ---------------------------------------------------
 
@@ -41,6 +39,9 @@ class ConfigController extends FormController {
  	public function init() {
 
         parent::init();
+
+		// Views
+		$this->setViewPath( '@cmsgears/module-core/admin/views/config' );
 
 		// Permission
 		$this->crudPermission = FormsGlobal::PERM_FORM_ADMIN;
