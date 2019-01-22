@@ -31,9 +31,9 @@ class Mailer extends BaseMailer {
 
 	// Public -----------------
 
-    public $htmlLayout 		= '@cmsgears/module-forms/common/mails/layouts/html';
-    public $textLayout 		= '@cmsgears/module-forms/common/mails/layouts/text';
-    public $viewPath 		= '@cmsgears/module-forms/common/mails/views';
+    public $htmlLayout 	= '@cmsgears/module-core/common/mails/layouts/html';
+    public $textLayout 	= '@cmsgears/module-core/common/mails/layouts/text';
+    public $viewPath 	= '@cmsgears/module-forms/common/mails/views';
 
 	// Protected --------------
 
@@ -74,7 +74,7 @@ class Mailer extends BaseMailer {
 		// Email, Name
 		if( isset( Yii::$app->user ) ) {
 
-			$user = Yii::$app->user->getIdentity();
+			$user = Yii::$app->core->getUser();
 
 			if( isset( $user ) ) {
 
@@ -109,7 +109,7 @@ class Mailer extends BaseMailer {
 
 		if( isset( $toEmail ) ) {
 
-	        $this->getMailer()->compose( self::MAIL_GENERIC_USER, [ 'coreProperties' => $this->coreProperties, 'form' => $form, 'model' => $model, 'name' => $name ] )
+	        $this->getMailer()->compose( self::MAIL_GENERIC_USER, [ 'coreProperties' => $this->coreProperties, 'form' => $form, 'model' => $model, 'name' => $name, 'email' => $toEmail ] )
 	            ->setTo( $toEmail )
 	            ->setFrom( [ $fromEmail => $fromName ] )
 	            ->setSubject( $subject )
@@ -124,6 +124,7 @@ class Mailer extends BaseMailer {
 		$fromEmail 		= $mailProperties->getSenderEmail();
 		$fromName 		= $mailProperties->getSenderName();
 
+		$adminName	= $mailProperties->getContactName();
 		$adminEmail	= $mailProperties->getContactEmail();
 		$subject	= '';
 
@@ -138,7 +139,7 @@ class Mailer extends BaseMailer {
 		}
 
 		// Admin Mail
-        $this->getMailer()->compose( self::MAIL_GENERIC_ADMIN, [ 'coreProperties' => $this->coreProperties, 'form' => $form, 'model' => $model, 'name' => $fromName ] )
+        $this->getMailer()->compose( self::MAIL_GENERIC_ADMIN, [ 'coreProperties' => $this->coreProperties, 'form' => $form, 'model' => $model, 'name' => $adminName, 'email' => $adminEmail ] )
             ->setTo( $adminEmail )
             ->setFrom( [ $fromEmail => $fromName ] )
             ->setSubject( $subject )
