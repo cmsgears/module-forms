@@ -40,7 +40,7 @@ class m160622_121832_form_index extends Migration {
 
 		// Form Submit Field
 		$this->createIndex( 'idx_' . $this->prefix . 'submit_field_name', $this->prefix . 'form_submit_field', 'name' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'form_submit_field' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'submit_field_value' . '(value ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'form_submit_field' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'submit_field_value' . '(value)' );
 	}
 
 	public function down() {
