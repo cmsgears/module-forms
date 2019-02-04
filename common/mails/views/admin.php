@@ -34,10 +34,11 @@ $fields = $model->fields;
 	<?php
 		foreach( $fields as $field ) {
 
-			$fieldName = isset( $field->label ) ? $field->label : ucfirst( $field->name );
+			$fieldName = isset( $field->label ) ? $field->label :  $field->name;
+			$fieldName = strtolower( $fieldName );
 	?>
 
-		<tr><td><font face="Roboto, Arial, sans-serif"><?= $fieldName ?>: <?= Html::encode( $model->$fieldName ) ?></font></td></tr>
+		<tr><td><font face="Roboto, Arial, sans-serif"><?= ucfirst( $fieldName ) ?>: <?= Html::encode( $model->$fieldName ) ?></font></td></tr>
 
 	<?php } ?>
 	<tr><td height="40"></td></tr>
