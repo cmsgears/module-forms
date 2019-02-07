@@ -37,9 +37,7 @@ $fields = $model->fields;
 			$fieldName = isset( $field->label ) ? $field->label :  $field->name;
 			$fieldName = strtolower( $fieldName );
 	?>
-
 		<tr><td><font face="Roboto, Arial, sans-serif"><?= ucfirst( $fieldName ) ?>: <?= Html::encode( $model->$fieldName ) ?></font></td></tr>
-
 	<?php } ?>
 	<tr><td height="40"></td></tr>
 </table>
