@@ -1,7 +1,6 @@
 <?php
 // Yii Imports
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 $siteProperties = Yii::$app->controller->getSiteProperties();
 
@@ -11,8 +10,8 @@ $name	= Html::encode( $name );
 $email	= Html::encode( $email );
 
 $siteName	= Html::encode( $coreProperties->getSiteName() );
-$logoUrl	= Url::to( "@web/images/" . $siteProperties->getMailAvatar(), true );
 $siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
+$logoUrl	= "$siteUrl/images/" . $siteProperties->getMailAvatar();
 $siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
 $homeUrl	= $siteUrl;
 ?>

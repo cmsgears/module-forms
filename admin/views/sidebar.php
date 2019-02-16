@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use cmsgears\forms\common\config\FormsGlobal;
 
 $core	= Yii::$app->core;
-$user	= Yii::$app->core->getUser();
+$user	= $core->getUser();
 ?>
 <?php if( $core->hasModule( 'forms' ) && $user->isPermitted( FormsGlobal::PERM_FORM_ADMIN ) ) { ?>
 	<div id="sidebar-form" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-form' ) == 0 ) echo 'active';?>">
