@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\frontend\controllers;
 
 // Yii Imports
@@ -10,14 +18,21 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\frontend\config\WebGlobalCore;
-use cmsgears\forms\frontend\config\WebGlobalForms;
+use cmsgears\core\frontend\config\CoreGlobalWeb;
+use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\forms\common\models\forms\GenericForm;
 
+use cmsgears\core\frontend\controllers\base\Controller;
+
 // TODO: Automate the form submission and mail triggers using mail template.
 
-class FormController extends \cmsgears\core\frontend\controllers\base\Controller {
+/**
+ * FormController provides actions specific to form model.
+ *
+ * @since 1.0.0
+ */
+class FormController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -29,6 +44,8 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 
 	protected $formService;
 
+	protected $templateService;
+
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -37,7 +54,9 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 
         parent::init();
 
-		$this->formService	= Yii::$app->factory->get( 'formService' );
+		$this->formService = Yii::$app->factory->get( 'formService' );
+
+		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -58,7 +77,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
                 ]
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'single' => [ 'get', 'post' ]
                 ]
@@ -88,37 +107,34 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 
 	// CMG parent classes --------------------
 
-	// SiteController ------------------------
+	// FormController ------------------------
 
-    public function actionSingle( $slug, $type = null ) {
+    public function actionSingle( $slug ) {
 
-		if( !isset( $type ) ) {
+		$model = $this->formService->getBySlugType( $slug, CoreGlobal::TYPE_FORM );
 
-			$type = CoreGlobal::TYPE_SITE;
-		}
+		if( isset( $model ) ) {
 
-		$form	= $this->formService->getBySlugType( $slug, $type );
+			$template	= $model->template;
+			$formFields	= $model->getFieldsMap();
 
-		if( isset( $form ) ) {
+	 		$form	= new GenericForm( [ 'fields' => $formFields ] );
+			$user	= Yii::$app->user->getIdentity();
 
-			$template	= $form->template;
-			$formFields	= $form->getFieldsMap();
-	 		$model		= new GenericForm( [ 'fields' => $formFields ] );
-
-			$user		= Yii::$app->user->getIdentity();
+			$this->view->params[ 'model' ] = $model;
 
 			// Form need a valid user
-			if( !$form->isVisibilityPublic() ) {
+			if( !$model->isVisibilityPublic() ) {
 
 				// Form need it's owner
-				if( $form->isVisibilityPrivate() && !$form->isOwner( $user ) ) {
+				if( $model->isVisibilityPrivate() && !$model->isOwner( $user ) ) {
 
 					// Error- Not allowed
 					throw new UnauthorizedHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 				}
 
 				// Form need logged in user
-				if( $form->isVisibilityProtected() && empty( $user ) ) {
+				if( $model->isVisibilityProtected() && empty( $user ) ) {
 
 					// Remember URL for Login
 					Url::remember( Url::canonical(), CoreGlobal::REDIRECT_LOGIN );
@@ -128,32 +144,32 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 				}
 			}
 
-			if( $form->captcha ) {
+			if( $model->captcha ) {
 
-				$model->setScenario( 'captcha' );
+				$form->setScenario( 'captcha' );
 			}
 
-			if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
+			if( $form->load( Yii::$app->request->post(), 'GenericForm' ) && $form->validate() ) {
 
 				// Save Model
-				if( $this->formService->processForm( $form, $model ) ) {
+				if( $this->formService->processForm( $model, $form ) ) {
 
 					// Trigger User Mail
-					if( $form->userMail ) {
+					if( $model->userMail ) {
 
-						Yii::$app->formsMailer->sendUserMail( $form, $model );
+						Yii::$app->formsMailer->sendUserMail( $model, $form );
 					}
 
 					// Trigger Admin Mail
-					if( $form->adminMail ) {
+					if( $model->adminMail ) {
 
-						Yii::$app->formsMailer->sendAdminMail( $form, $model );
+						Yii::$app->formsMailer->sendAdminMail( $model, $form );
 					}
 
 					// Set success message
-					if( isset( $form->successMessage ) ) {
+					if( isset( $model->successMessage ) ) {
 
-						Yii::$app->session->setFlash( 'message', $form->successMessage );
+						Yii::$app->session->setFlash( 'message', $model->successMessage );
 					}
 
 					// Refresh the Page
@@ -161,20 +177,28 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 				}
 			}
 
+			// Fallback to default template
+			if( empty( $template ) ) {
+
+				$template = $this->templateService->getGlobalBySlugType( FormsGlobal::TEMPLATE_FORM, CoreGlobal::TYPE_FORM );
+			}
+
 			if( isset( $template ) ) {
 
 				return Yii::$app->templateManager->renderViewPublic( $template, [
-		        	'form' => $form,
-			        'model' => $model
+		        	'model' => $model,
+					'form' => $form
 		        ], [ 'page' => true ] );
 			}
 
-	        return $this->render( WebGlobalCore::PAGE_INDEX, [
-	        	'model' => $model
+	        return $this->render( CoreGlobalWeb::PAGE_INDEX, [
+				'model' => $model,
+				'form' => $form
 	        ]);
 		}
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

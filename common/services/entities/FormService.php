@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\common\services\entities;
 
 // Yii Imports
@@ -10,7 +18,14 @@ use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\forms\common\services\interfaces\entities\IFormService;
 
-class FormService extends \cmsgears\core\common\services\resources\FormService implements IFormService {
+use cmsgears\core\common\services\resources\FormService as BaseFormService;
+
+/**
+ * FormService provide service methods of form model.
+ *
+ * @since 1.0.0
+ */
+class FormService extends BaseFormService implements IFormService {
 
 	// Variables ---------------------------------------------------
 
@@ -69,23 +84,29 @@ class FormService extends \cmsgears\core\common\services\resources\FormService i
 		return $formSubmit;
     }
 
+	// Update -------------
+
+	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
     private function triggerNotification( $form ) {
 
-        $formId = $form->id;
-
         Yii::$app->eventManager->triggerNotification( FormsGlobal::TEMPLATE_NOTIFY_FORM_SUBMIT,
-            [ 'title' => $form->name ],
+            [ 'model' => $form ],
             [
-                'parentId' => $formId,
+                'parentId' => $form->id,
                 'parentType' => CoreGlobal::TYPE_FORM,
-                'adminLink' => "/forms/form/submit/all?fid=$formId",
+                'adminLink' => "/forms/form/submit/all?fid=$form->id"
             ]
         );
     }
 
-	// Update -------------
+	// Cache --------------
 
-	// Delete -------------
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

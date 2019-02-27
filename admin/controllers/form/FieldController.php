@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\admin\controllers\form;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\forms\common\config\FormsGlobal;
 
-class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldController {
+use cmsgears\core\admin\controllers\base\form\FieldController as BaseFieldController;
+
+/**
+ * FieldController provides actions specific to form field model.
+ *
+ * @since 1.0.0
+ */
+class FieldController extends BaseFieldController {
 
 	// Variables ---------------------------------------------------
 
@@ -27,22 +42,32 @@ class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldCo
         parent::init();
 
 		// Permission
-        $this->crudPermission	= FormsGlobal::PERM_FORM_ADMIN;
+        $this->crudPermission = FormsGlobal::PERM_FORM_ADMIN;
+
+		// Config
+		$this->apixBase = 'core/form/field';
 
 		// Sidebar
-		$this->sidebar 			= [ 'parent' => 'sidebar-form', 'child' => 'form' ];
+		$this->sidebar = [ 'parent' => 'sidebar-form', 'child' => 'form' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'fields' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/field/all' ], true );
-		
+		$this->returnUrl = Url::previous( 'fields' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/field/all' ], true );
+
+		// All Url
+		$allUrl = Url::previous( 'forms' );
+		$allUrl = isset( $allUrl ) ? $allUrl : Url::toRoute( [ '/forms/form/all' ], true );
+
 		// Breadcrumbs
-		$this->breadcrumbs		= [
-			'all' => [ [ 'label' => 'Field' ] ],
-			'create' => [ [ 'label' => 'Field', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Field', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Field', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Field', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
+				[ 'label' => 'Forms', 'url' =>  $allUrl ]
+			],
+			'all' => [ [ 'label' => 'Form Fields' ] ],
+			'create' => [ [ 'label' => 'Form Fields', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Form Fields', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Form Fields', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 
@@ -64,8 +89,9 @@ class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldCo
 
 	public function actionAll( $fid ) {
 
-		Url::remember( [ "form/field/all?fid=$fid" ], 'fields' );
+		Url::remember( Yii::$app->request->getUrl(), 'fields' );
 
 		return parent::actionAll( $fid );
 	}
+
 }

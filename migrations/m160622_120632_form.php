@@ -1,8 +1,22 @@
 <?php
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
 
-class m160621_120632_form extends \yii\db\Migration {
+// CMG Imports
+use cmsgears\core\common\base\Migration;
+
+/**
+ * The form migration inserts the database tables of form module. It also insert the foreign
+ * keys if FK flag of migration component is true.
+ *
+ * @since 1.0.0
+ */
+class m160622_120632_form extends Migration {
 
 	// Public Variables
 
@@ -48,11 +62,11 @@ class m160621_120632_form extends \yii\db\Migration {
 			'formId' => $this->bigInteger( 20 )->notNull(),
 			'submittedBy' => $this->bigInteger( 20 ),
 			'submittedAt' => $this->dateTime()->notNull(),
-			'content' => $this->text(),
-			'data' => $this->text()
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText()
         ], $this->options );
 
-        // Index for columns form and submitter
+        // Index for foreign keys
         $this->createIndex( 'idx_' . $this->prefix . 'submit_parent', $this->prefix . 'form_submit', 'formId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'submit_user', $this->prefix . 'form_submit', 'submittedBy' );
 	}
@@ -62,11 +76,11 @@ class m160621_120632_form extends \yii\db\Migration {
         $this->createTable( $this->prefix . 'form_submit_field', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'formSubmitId' => $this->bigInteger( 20 )->notNull(),
-			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'value' => $this->text()
         ], $this->options );
 
-        // Index for columns site, parent, creator and modifier
+        // Index for foreign keys
 		$this->createIndex( 'idx_' . $this->prefix . 'submit_field_parent', $this->prefix . 'form_submit_field', 'formSubmitId' );
 	}
 

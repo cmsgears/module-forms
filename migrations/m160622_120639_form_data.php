@@ -1,17 +1,30 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\base\Migration;
 
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Role;
 use cmsgears\core\common\models\entities\Permission;
-use cmsgears\core\common\models\resources\Form;
-use cmsgears\core\common\models\resources\FormField;
 
 use cmsgears\core\common\utilities\DateUtil;
 
-class m160621_120639_form_data extends \yii\db\Migration {
+/**
+ * The form data migration inserts the base data required to run the application.
+ *
+ * @since 1.0.0
+ */
+class m160622_120639_form_data extends Migration {
 
 	// Public Variables
 
@@ -128,26 +141,26 @@ class m160621_120639_form_data extends \yii\db\Migration {
 		$columns = [ 'parentId', 'childId', 'rootId', 'parentType', 'lValue', 'rValue' ];
 
 		$hierarchy = [
-			// Form Manager - Organization
+			// Form Manager - Organization, Approver
 			[ null, null, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 18 ],
-			[ $formManagerPerm->id, $vFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 17 ],
-			[ $formManagerPerm->id, $aFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 16 ],
-			[ $formManagerPerm->id, $uFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 15 ],
-			[ $formManagerPerm->id, $dFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 5, 14 ],
-			[ $formManagerPerm->id, $apFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 13 ],
-			[ $formManagerPerm->id, $pFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 7, 12 ],
-			[ $formManagerPerm->id, $iFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 11 ],
-			[ $formManagerPerm->id, $eFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 9, 10 ],
+			[ $formManagerPerm->id, $vFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 3 ],
+			[ $formManagerPerm->id, $aFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 5 ],
+			[ $formManagerPerm->id, $uFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 7 ],
+			[ $formManagerPerm->id, $dFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 9 ],
+			[ $formManagerPerm->id, $apFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 10, 11 ],
+			[ $formManagerPerm->id, $pFormPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 12, 13 ],
+			[ $formManagerPerm->id, $iFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 14, 15 ],
+			[ $formManagerPerm->id, $eFormsPerm->id, $formManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 16, 17 ],
 
 			// Form Author- Individual
 			[ null, null, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 16 ],
-			[ $formAuthorPerm->id, $vFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 15 ],
-			[ $formAuthorPerm->id, $aFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 14 ],
-			[ $formAuthorPerm->id, $uFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 13 ],
-			[ $formAuthorPerm->id, $dFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 5, 12 ],
-			[ $formAuthorPerm->id, $pFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 11 ],
-			[ $formAuthorPerm->id, $iFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 7, 10 ],
-			[ $formAuthorPerm->id, $eFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 9 ]
+			[ $formAuthorPerm->id, $vFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 3 ],
+			[ $formAuthorPerm->id, $aFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 5 ],
+			[ $formAuthorPerm->id, $uFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 6, 7 ],
+			[ $formAuthorPerm->id, $dFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 8, 9 ],
+			[ $formAuthorPerm->id, $pFormPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 10, 11 ],
+			[ $formAuthorPerm->id, $iFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 12, 13 ],
+			[ $formAuthorPerm->id, $eFormsPerm->id, $formAuthorPerm->id, CoreGlobal::TYPE_PERMISSION, 14, 15 ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_model_hierarchy', $columns, $hierarchy );
@@ -155,8 +168,9 @@ class m160621_120639_form_data extends \yii\db\Migration {
 
     public function down() {
 
-        echo "m160621_120639_form_data will be deleted with m160621_014408_core.\n";
+        echo "m160622_120639_form_data will be deleted with m160622_014408_core.\n";
 
         return true;
     }
+
 }

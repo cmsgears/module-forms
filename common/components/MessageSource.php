@@ -1,14 +1,26 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\common\components;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-class MessageSource extends \yii\base\Component {
+use cmsgears\core\common\base\MessageSource as BaseMessageSource;
+
+/**
+ * MessageSource stores and provide the messages and message templates available in
+ * Cms Module.
+ *
+ * @since 1.0.0
+ */
+class MessageSource extends BaseMessageSource {
 
 	// Variables ---------------------------------------------------
 
@@ -19,7 +31,11 @@ class MessageSource extends \yii\base\Component {
 	// Protected --------------
 
 	protected $messageDb = [
+		// Generic Errors
+		FormsGlobal::ERROR_RE_SUBMIT => 'The form is already submitted by you. It cannot be processed.',
+
 		// Generic Fields
+		// Field
 		FormsGlobal::FIELD_SUBMITTED_BY => 'Submitted By'
 	];
 
@@ -35,8 +51,4 @@ class MessageSource extends \yii\base\Component {
 
 	// MessageSource -------------------------
 
-	public function getMessage( $messageKey, $params = [], $language = null ) {
-
-		return $this->messageDb[ $messageKey ];
-	}
 }

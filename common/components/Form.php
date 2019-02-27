@@ -1,14 +1,23 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\common\components;
 
-// Yii Imports
-use \Yii;
-use yii\di\Container;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\base\Component;
 
-class Form extends \yii\base\Component {
+/**
+ * Form component initialize the module Form and it's properties.
+ *
+ * @since 1.0.0
+ */
+class Form extends Component {
 
 	// Global -----------------
 
@@ -20,16 +29,10 @@ class Form extends \yii\base\Component {
 
 	// Constructor and Initialisation ------------------------------
 
-    /**
-     * Initialise the CMG Core Component.
-     */
-    public function init() {
+	public function init() {
 
-        parent::init();
-
-		// Register application components and objects i.e. CMG and Project
-		$this->registerComponents();
-    }
+		parent::init();
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -37,60 +40,6 @@ class Form extends \yii\base\Component {
 
 	// CMG parent classes --------------------
 
-	// Core ----------------------------------
+	// Form ----------------------------------
 
-	// Properties
-
-	// Components and Objects
-
-	public function registerComponents() {
-
-		// Init system services
-		$this->initSystemServices();
-
-		// Register services
-		$this->registerResourceServices();
-		$this->registerEntityServices();
-
-		// Init services
-		$this->initResourceServices();
-		$this->initEntityServices();
-	}
-
-	public function initSystemServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		//$factory->set( '<name>', '<classpath>' );
-	}
-
-	public function registerResourceServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		$factory->set( 'cmsgears\forms\common\services\interfaces\resources\IFormSubmitFieldService', 'cmsgears\forms\common\services\resources\FormSubmitFieldService' );
-	}
-
-	public function registerEntityServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		$factory->set( 'cmsgears\forms\common\services\interfaces\entities\IFormService', 'cmsgears\forms\common\services\entities\FormService' );
-		$factory->set( 'cmsgears\forms\common\services\interfaces\entities\IFormSubmitService', 'cmsgears\forms\common\services\entities\FormSubmitService' );
-	}
-
-	public function initResourceServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		$factory->set( 'formSubmitFieldService', 'cmsgears\forms\common\services\resources\FormSubmitFieldService' );
-	}
-
-	public function initEntityServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		$factory->set( 'formService', 'cmsgears\forms\common\services\entities\FormService' );
-		$factory->set( 'formSubmitService', 'cmsgears\forms\common\services\entities\FormSubmitService' );
-	}
 }

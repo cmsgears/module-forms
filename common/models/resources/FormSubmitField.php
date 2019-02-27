@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\common\models\resources;
 
 // Yii Imports
@@ -7,6 +15,9 @@ use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\forms\common\config\FormsGlobal;
+
+use cmsgears\core\common\models\base\Resource;
 
 use cmsgears\forms\common\models\base\FormTables;
 use cmsgears\forms\common\models\entities\FormSubmit;
@@ -18,8 +29,10 @@ use cmsgears\forms\common\models\entities\FormSubmit;
  * @property integer $formSubmitId
  * @property string $name
  * @property string $value
+ *
+ * @since 1.0.0
  */
-class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
+class FormSubmitField extends Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -36,6 +49,8 @@ class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
 	// Public -----------------
 
 	// Protected --------------
+
+	protected $modelType = FormsGlobal::TYPE_FORM_SUBMIT_FIELD;
 
 	// Private ----------------
 
@@ -58,16 +73,16 @@ class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
      */
 	public function rules() {
 
-		// model rules
+		// Model Rules
         $rules = [
         	// Required, Safe
             [ [ 'formSubmitId', 'name' ], 'required' ],
             [ [ 'id', 'value' ], 'safe' ],
             // Text Limit
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ]
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ]
         ];
 
-		// trim if configured
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
@@ -99,11 +114,13 @@ class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
 	// FormSubmitField -----------------------
 
 	/**
-	 * @return FormSubmit - the parent
+	 * Returns corresponding form submit.
+	 *
+	 * @return FormSubmit
 	 */
 	public function getFormSubmit() {
 
-		return $this->hasOne( FormSubmit::className(), [ 'id' => 'formSubmitId' ] );
+		return $this->hasOne( FormSubmit::class, [ 'id' => 'formSubmitId' ] );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -117,7 +134,7 @@ class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
      */
 	public static function tableName() {
 
-		return FormTables::TABLE_FORM_SUBMIT_FIELD;
+		return FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT_FIELD );
 	}
 
 	// CMG parent classes --------------------
@@ -126,6 +143,9 @@ class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
+    /**
+     * @inheritdoc
+     */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'formSubmit' ];
@@ -136,18 +156,36 @@ class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Find ------------
 
-	public static function findByFormSubmitId( $formSubmitId, $first = false ) {
+	/**
+	 * Find and return the form submit fields associated with given form submit id.
+	 *
+	 * @param integer $formSubmitId
+	 * @return FormSubmitField[]
+	 */
+	public static function findByFormSubmitId( $formSubmitId ) {
 
-		$frmSubmitTable	= FormTables::TABLE_FORM_SUBMIT;
+		$frmSubmitTable	= FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT );
 
-		$query	= self::find()->joinWith( 'formSubmit' )->where( "$frmSubmitTable.id=:id", [ ':id' => $formSubmitId ] );
-
-		if( $first ) {
-
-			return $query->one();
-		}
+		$query	= static::find()->joinWith( 'formSubmit' )->where( "$frmSubmitTable.id=:id", [ ':id' => $formSubmitId ] );
 
 		return $query->all();
+	}
+
+	/**
+	 * Find and return the form submit field associated with given form submit id and name.
+	 *
+	 * @param integer $formSubmitId
+	 * @param string $name
+	 * @return FormSubmitField
+	 */
+	public static function findByName( $formSubmitId, $name ) {
+
+		$frmSubmitTable			= FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT );
+		$frmSubmitFieldTable	= FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT_FIELD );
+
+		$query	= static::find()->joinWith( 'formSubmit' )->where( "$frmSubmitTable.id=:id AND $frmSubmitFieldTable.name=:name", [ ':id' => $formSubmitId, ':name' => $name ] );
+
+		return $query->one();
 	}
 
 	// Create -----------------
@@ -157,10 +195,13 @@ class FormSubmitField extends \cmsgears\core\common\models\base\Entity {
 	// Delete -----------------
 
 	/**
-	 * Delete all entries related to a form submit
+	 * Delete all submit fields associated with given form submit id.
+	 *
+	 * @param integer $formSubmitId
+	 * @return integer number of rows.
 	 */
 	public static function deleteByFormSubmitId( $formSubmitId ) {
 
-		self::deleteAll( 'formSubmitId=:id', [ ':id' => $formSubmitId ] );
+		return self::deleteAll( 'formSubmitId=:id', [ ':id' => $formSubmitId ] );
 	}
 }
