@@ -10,11 +10,9 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\forms\common\models\forms\GenericForm;
 
-use cmsgears\core\frontend\controllers\base\Controller;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class FormController extends Controller {
+class FormController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -34,7 +32,7 @@ class FormController extends Controller {
 
         parent::init();
 
-		$this->formService	= Yii::$app->factory->get( 'formService' );
+		$this->formService = Yii::$app->factory->get( 'formService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -86,18 +84,6 @@ class FormController extends Controller {
 
 			// Save Model
 			if( $this->formService->processForm( $model, $form ) ) {
-
-				// Trigger User Mail
-				if( $model->userMail ) {
-
-					Yii::$app->formsMailer->sendUserMail( $model, $form );
-				}
-
-				// Trigger Admin Mail
-				if( $model->adminMail ) {
-
-					Yii::$app->formsMailer->sendAdminMail( $model, $form );
-				}
 
 				$data = [];
 

@@ -22,7 +22,7 @@ class FormsGlobal {
 
 	// Templates -------------------------------------------------------
 
-	const TEMPLATE_NOTIFY_FORM_SUBMIT   = 'form-submit';
+	const TEMPLATE_NOTIFY_FORM_SUBMIT = 'form-submit';
 
 	// Config ----------------------------------------------------------
 
@@ -52,13 +52,13 @@ class FormsGlobal {
 
 	// Errors ----------------------------------------------------------
 
-	const ERROR_RE_SUBMIT		= 'reSubmitFormError';
+	const ERROR_RE_SUBMIT = 'reSubmitFormError';
 
 	// Model Fields ----------------------------------------------------
 
 	// Generic Fields
 
 	// Field
-	const FIELD_SUBMITTED_BY	= 'submittedByField';
+	const FIELD_SUBMITTED_BY = 'submittedByField';
 
 }

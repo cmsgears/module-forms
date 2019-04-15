@@ -8,8 +8,6 @@
  */
 
 // CMG Imports
-use cmsgears\core\common\base\Migration;
-
 use cmsgears\core\common\models\resources\Stats;
 use cmsgears\forms\common\models\base\FormTables;
 
@@ -19,11 +17,9 @@ use cmsgears\forms\common\models\base\FormTables;
  *
  * @since 1.0.0
  */
-class m160622_121912_form_stats extends Migration {
+class m160622_121912_form_stats extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
-
-	public $options;
 
 	// Private Variables
 
@@ -32,16 +28,7 @@ class m160622_121912_form_stats extends Migration {
 	public function init() {
 
 		// Table prefix
-		$this->prefix		= Yii::$app->migration->cmgPrefix;
-
-		// Get the values via config
-		$this->options		= Yii::$app->migration->getTableOptions();
-
-		// Default collation
-		if( $this->db->driverName === 'mysql' ) {
-
-			$this->options = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
-		}
+		$this->prefix = Yii::$app->migration->cmgPrefix;
 	}
 
 	public function up() {
@@ -52,9 +39,9 @@ class m160622_121912_form_stats extends Migration {
 
 	private function insertTables() {
 
-		$columns 	= [ 'tableName', 'type', 'count' ];
+		$columns = [ 'tableName', 'type', 'count' ];
 
-		$tableData	= [
+		$tableData = [
 			[ $this->prefix . 'form_submit', 'rows', 0 ],
 			[ $this->prefix . 'form_submit_field', 'rows', 0 ]
 		];
@@ -67,4 +54,5 @@ class m160622_121912_form_stats extends Migration {
 		Stats::deleteByTableName( FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT ) );
 		Stats::deleteByTableName( FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT_FIELD ) );
 	}
+
 }

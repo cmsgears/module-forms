@@ -10,8 +10,6 @@
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Migration;
-
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Role;
@@ -24,7 +22,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class m160622_120639_form_data extends Migration {
+class m160622_120639_form_data extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -39,7 +37,7 @@ class m160622_120639_form_data extends Migration {
 	public function init() {
 
 		// Table prefix
-		$this->prefix	= Yii::$app->migration->cmgPrefix;
+		$this->prefix = Yii::$app->migration->cmgPrefix;
 
 		$this->site		= Site::findBySlug( CoreGlobal::SITE_MAIN );
 		$this->master	= User::findByUsername( Yii::$app->migration->getSiteMaster() );
@@ -54,6 +52,8 @@ class m160622_120639_form_data extends Migration {
 
 		// Create form permission groups and CRUD permissions
 		$this->insertFormPermissions();
+
+		$this->insertNotificationTemplates();
     }
 
 	private function insertRolePermission() {
@@ -164,6 +164,17 @@ class m160622_120639_form_data extends Migration {
 		];
 
 		$this->batchInsert( $this->prefix . 'core_model_hierarchy', $columns, $hierarchy );
+	}
+
+	private function insertNotificationTemplates() {
+
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'icon', 'type', 'description', 'active', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'createdAt', 'modifiedAt', 'content', 'data' ];
+
+		$templates = [
+			[ $this->master->id, $this->master->id, 'Form Submit', 'form-submit', null, 'notification', 'Trigger notification to Site Admin when new form has been submitted.', true, 'twig', 0, null, false, null, DateUtil::getDateTime(), DateUtil::getDateTime(), 'A new form - <b>{{ $model->displayName }}</b> has been submitted.', '{"config":{"admin":"1","user":"0","adminEmail":"0","userEmail":"0"}}' ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_template', $columns, $templates );
 	}
 
     public function down() {

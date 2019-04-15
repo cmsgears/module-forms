@@ -13,19 +13,16 @@ namespace cmsgears\forms\common\services\entities;
 use Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\forms\common\services\interfaces\entities\IFormService;
-
-use cmsgears\core\common\services\resources\FormService as BaseFormService;
 
 /**
  * FormService provide service methods of form model.
  *
  * @since 1.0.0
  */
-class FormService extends BaseFormService implements IFormService {
+class FormService extends \cmsgears\core\common\services\resources\FormService implements IFormService {
 
 	// Variables ---------------------------------------------------
 
@@ -75,11 +72,33 @@ class FormService extends BaseFormService implements IFormService {
 
 	// Create -------------
 
-    public function processForm( $form, $formModel ) {
+    public function processForm( $form, $formModel, $config = [] ) {
+
+		$notification					= isset( $config[ 'notification' ] ) ? $config[ 'notification' ] : [];
+		$notification[ 'template' ]		= isset( $notification[ 'template' ] ) ? $notification[ 'template' ] : FormsGlobal::TEMPLATE_NOTIFY_FORM_SUBMIT;
+		$notification[ 'title' ]		= isset( $notification[ 'title' ] ) ? $notification[ 'title' ] : "$form->displayName Form Submit";
+		$notification[ 'adminLink' ]	= isset( $notification[ 'adminLink' ] ) ? $notification[ 'adminLink' ] : "/forms/form/submit/all?fid=$form->id";
 
 		$formSubmit = $formModel->processFormSubmit( $form );
 
-		$this->triggerNotification( $form );
+		// Trigger Notification
+		$this->notifyAdmin( $form, $notification );
+
+		// Trigger Emails
+		if( $formSubmit ) {
+
+			// Trigger User Mail
+			if( $form->userMail ) {
+
+				Yii::$app->formsMailer->sendUserMail( $form, $formModel );
+			}
+
+			// Trigger Admin Mail
+			if( $form->adminMail ) {
+
+				Yii::$app->formsMailer->sendAdminMail( $form, $formModel );
+			}
+		}
 
 		return $formSubmit;
     }
@@ -91,18 +110,6 @@ class FormService extends BaseFormService implements IFormService {
 	// Bulk ---------------
 
 	// Notifications ------
-
-    private function triggerNotification( $form ) {
-
-        Yii::$app->eventManager->triggerNotification( FormsGlobal::TEMPLATE_NOTIFY_FORM_SUBMIT,
-            [ 'model' => $form ],
-            [
-                'parentId' => $form->id,
-                'parentType' => CoreGlobal::TYPE_FORM,
-                'adminLink' => "/forms/form/submit/all?fid=$form->id"
-            ]
-        );
-    }
 
 	// Cache --------------
 

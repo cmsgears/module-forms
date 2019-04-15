@@ -23,8 +23,6 @@ use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\forms\common\models\forms\GenericForm;
 
-use cmsgears\core\frontend\controllers\base\Controller;
-
 // TODO: Automate the form submission and mail triggers using mail template.
 
 /**
@@ -32,7 +30,7 @@ use cmsgears\core\frontend\controllers\base\Controller;
  *
  * @since 1.0.0
  */
-class FormController extends Controller {
+class FormController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -153,18 +151,6 @@ class FormController extends Controller {
 
 				// Save Model
 				if( $this->formService->processForm( $model, $form ) ) {
-
-					// Trigger User Mail
-					if( $model->userMail ) {
-
-						Yii::$app->formsMailer->sendUserMail( $model, $form );
-					}
-
-					// Trigger Admin Mail
-					if( $model->adminMail ) {
-
-						Yii::$app->formsMailer->sendAdminMail( $model, $form );
-					}
 
 					// Set success message
 					if( isset( $model->successMessage ) ) {

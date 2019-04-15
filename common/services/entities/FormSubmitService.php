@@ -16,14 +16,12 @@ use yii\data\Sort;
 use cmsgears\forms\common\services\interfaces\entities\IFormSubmitService;
 use cmsgears\forms\common\services\interfaces\resources\IFormSubmitFieldService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 /**
  * FormSubmitService provide service methods of form submit.
  *
  * @since 1.0.0
  */
-class FormSubmitService extends EntityService implements IFormSubmitService {
+class FormSubmitService extends \cmsgears\core\common\services\base\EntityService implements IFormSubmitService {
 
 	// Variables ---------------------------------------------------
 
