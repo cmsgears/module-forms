@@ -54,7 +54,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 
 		$this->formService = Yii::$app->factory->get( 'formService' );
 
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->templateService = Yii::$app->factory->get( 'templateService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -117,7 +117,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 			$formFields	= $model->getFieldsMap();
 
 	 		$form	= new GenericForm( [ 'fields' => $formFields ] );
-			$user	= Yii::$app->user->getIdentity();
+			$user	= Yii::$app->core->getUser();
 
 			$this->view->params[ 'model' ] = $model;
 
@@ -147,7 +147,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 				$form->setScenario( 'captcha' );
 			}
 
-			if( $form->load( Yii::$app->request->post(), 'GenericForm' ) && $form->validate() ) {
+			if( $form->load( Yii::$app->request->post(), $form->getClassName() ) && $form->validate() ) {
 
 				// Save Model
 				if( $this->formService->processForm( $model, $form ) ) {

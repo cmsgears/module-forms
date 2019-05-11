@@ -168,10 +168,10 @@ class m160622_120639_form_data extends \cmsgears\core\common\base\Migration {
 
 	private function insertNotificationTemplates() {
 
-		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'icon', 'type', 'description', 'active', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'createdAt', 'modifiedAt', 'content', 'data' ];
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'icon', 'type', 'description', 'active', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'createdAt', 'modifiedAt', 'message', 'content', 'data' ];
 
 		$templates = [
-			[ $this->master->id, $this->master->id, 'Form Submit', 'form-submit', null, 'notification', 'Trigger notification to Site Admin when new form has been submitted.', true, 'twig', 0, null, false, null, DateUtil::getDateTime(), DateUtil::getDateTime(), 'A new form - <b>{{ $model->displayName }}</b> has been submitted.', '{"config":{"admin":"1","user":"0","adminEmail":"0","userEmail":"0"}}' ]
+			[ $this->master->id, $this->master->id, 'Form Submit', 'form-submit', null, 'notification', 'Trigger notification to Site Admin when new form has been submitted.', true, 'twig', 0, null, false, null, DateUtil::getDateTime(), DateUtil::getDateTime(), 'Form submitted - <b>{{model.displayName}}</b>', 'A new form - <b>{{model.displayName}}</b> has been submitted.', '{"config":{"admin":"1","user":"0","direct":"0","adminEmail":"0","userEmail":"0","directEmail":"0"}}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_template', $columns, $templates );

@@ -71,7 +71,6 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 		}
 
 		$model 		= $this->formService->getBySlugType( $slug, $type );
-		$template	= $model->template;
 		$formFields	= $model->getFieldsMap();
  		$form		= new GenericForm( [ 'fields' => $formFields, 'ajax' => true ] );
 
@@ -80,7 +79,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 			$form->setScenario( 'captcha' );
 		}
 
-		if( $form->load( Yii::$app->request->post(), 'GenericForm' ) && $form->validate() ) {
+		if( $form->load( Yii::$app->request->post(), $form->getClassName() ) && $form->validate() ) {
 
 			// Save Model
 			if( $this->formService->processForm( $model, $form ) ) {
