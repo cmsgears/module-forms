@@ -12,8 +12,8 @@ $email	= Html::encode( $email );
 $siteName	= Html::encode( $coreProperties->getSiteName() );
 $siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
 $logoUrl	= "$siteUrl/images/" . $siteProperties->getMailAvatar();
-$siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
 $homeUrl	= $siteUrl;
+$siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
 
 $fields = $model->fields;
 ?>
