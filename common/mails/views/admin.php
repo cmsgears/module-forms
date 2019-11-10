@@ -33,10 +33,10 @@ $fields = $model->fields;
 	<?php
 		foreach( $fields as $field ) {
 
-			$fieldName = isset( $field->label ) ? $field->label :  $field->name;
-			$fieldName = strtolower( $fieldName );
+			$fieldName	= $field->name;
+			$fieldLabel	= isset( $field->label ) ? $field->label : $field->name;
 	?>
-		<tr><td><font face="Roboto, Arial, sans-serif"><?= ucfirst( $fieldName ) ?>: <?= Html::encode( $model->$fieldName ) ?></font></td></tr>
+		<tr><td><font face="Roboto, Arial, sans-serif"><?= ucfirst( $fieldLabel ) ?>: <?= Html::encode( $model->$fieldName ) ?></font></td></tr>
 	<?php } ?>
 	<tr><td height="40"></td></tr>
 </table>
