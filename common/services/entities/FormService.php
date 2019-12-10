@@ -76,7 +76,7 @@ class FormService extends \cmsgears\core\common\services\resources\FormService i
 
 		$notification					= isset( $config[ 'notification' ] ) ? $config[ 'notification' ] : [];
 		$notification[ 'template' ]		= isset( $notification[ 'template' ] ) ? $notification[ 'template' ] : FormsGlobal::TEMPLATE_NOTIFY_FORM_SUBMIT;
-		$notification[ 'adminLink' ]	= isset( $notification[ 'adminLink' ] ) ? $notification[ 'adminLink' ] : "/forms/form/submit/all?fid=$form->id";
+		$notification[ 'adminLink' ]	= isset( $notification[ 'adminLink' ] ) ? $notification[ 'adminLink' ] : "forms/form/submit/all?fid=$form->id";
 
 		$formSubmit = $formModel->processFormSubmit( $form );
 
