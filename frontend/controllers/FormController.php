@@ -39,8 +39,6 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 
 	// Protected --------------
 
-	protected $formService;
-
 	protected $templateService;
 
 	// Private ----------------
@@ -51,7 +49,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 
         parent::init();
 
-		$this->formService = Yii::$app->factory->get( 'formService' );
+		$this->modelService = Yii::$app->factory->get( 'formService' );
 
 		$this->templateService = Yii::$app->factory->get( 'templateService' );
 	}
@@ -108,7 +106,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 
     public function actionSingle( $slug ) {
 
-		$model = $this->formService->getBySlugType( $slug, CoreGlobal::TYPE_FORM );
+		$model = $this->modelService->getBySlugType( $slug, CoreGlobal::TYPE_FORM );
 
 		if( isset( $model ) ) {
 
@@ -149,7 +147,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 			if( $form->load( Yii::$app->request->post(), $form->getClassName() ) && $form->validate() ) {
 
 				// Save Model
-				if( $this->formService->processForm( $model, $form ) ) {
+				if( $this->modelService->processForm( $model, $form ) ) {
 
 					// Set success message
 					if( isset( $model->successMessage ) ) {
@@ -171,6 +169,8 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 			if( isset( $template ) ) {
 
 				return Yii::$app->templateManager->renderViewPublic( $template, [
+					'modelService' => $this->modelService,
+					'template' => $template,
 		        	'model' => $model,
 					'form' => $form
 		        ], [ 'page' => true ] );
