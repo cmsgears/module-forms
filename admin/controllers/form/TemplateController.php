@@ -45,13 +45,13 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		// Config
 		$this->type		= CoreGlobal::TYPE_FORM;
-		$this->apixBase	= 'core/template';
+		$this->apixBase	= 'forms/form/template';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-form', 'child' => 'template' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'templates' );
+		$this->returnUrl = Url::previous( 'form-templates' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/templates/all' ], true );
 
 		// Breadcrumbs
@@ -88,7 +88,7 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	public function actionAll( $config = [] ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'templates' );
+		Url::remember( Yii::$app->request->getUrl(), 'form-templates' );
 
 		return parent::actionAll( $config );
 	}

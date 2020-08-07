@@ -14,13 +14,14 @@ use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\core\common\models\interfaces\resources\IData;
 
-use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\resources\Form;
+
 use cmsgears\forms\common\models\base\FormTables;
 use cmsgears\forms\common\models\resources\FormSubmitField;
 
@@ -39,7 +40,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class FormSubmit extends Entity implements IData {
+class FormSubmit extends \cmsgears\core\common\models\base\Entity implements IData {
 
 	// Variables ---------------------------------------------------
 
@@ -153,12 +154,13 @@ class FormSubmit extends Entity implements IData {
 	 */
 	public function getFieldsMap() {
 
-		$formFields 	= $this->fields;
-		$formFieldsMap	= array();
+		$formFields = $this->fields;
 
-		foreach ( $formFields as $formField ) {
+		$formFieldsMap = [];
 
-			$formFieldsMap[ $formField->name ] =  $formField;
+		foreach( $formFields as $formField ) {
+
+			$formFieldsMap[ $formField->name ] = $formField;
 		}
 
     	return $formFieldsMap;
@@ -189,8 +191,9 @@ class FormSubmit extends Entity implements IData {
      */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form', 'user' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form', 'user' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -203,7 +206,7 @@ class FormSubmit extends Entity implements IData {
 	 */
 	public static function queryWithForm( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'form' ];
+		$config[ 'relations' ] = [ 'form' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -216,7 +219,7 @@ class FormSubmit extends Entity implements IData {
 	 */
 	public static function queryWithFieds( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'fields' ];
+		$config[ 'relations' ] = [ 'fields' ];
 
 		return parent::queryWithAll( $config );
 	}

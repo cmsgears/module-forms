@@ -9,15 +9,12 @@
 
 namespace cmsgears\forms\common\components;
 
-// CMG Imports
-use cmsgears\core\common\base\Component;
-
 /**
  * Form component initialize the module Form and it's properties.
  *
  * @since 1.0.0
  */
-class Form extends Component {
+class Form extends \cmsgears\core\common\base\Component {
 
 	// Global -----------------
 
@@ -28,11 +25,6 @@ class Form extends Component {
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
-
-	public function init() {
-
-		parent::init();
-	}
 
 	// Instance methods --------------------------------------------
 

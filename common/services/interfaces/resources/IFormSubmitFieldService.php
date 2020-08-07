@@ -42,6 +42,7 @@ interface IFormSubmitFieldService extends IResourceService {
 	// Delete -------------
 
 	public function deleteByFormSubmitId( $formSubmitId );
+
 	// Bulk ---------------
 
 	// Notifications ------

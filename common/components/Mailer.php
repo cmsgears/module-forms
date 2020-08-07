@@ -10,17 +10,14 @@
 namespace cmsgears\forms\common\components;
 
 // Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\base\Mailer as BaseMailer;
+use Yii;
 
 /**
  * Mailer triggers the mails provided by Forms Module.
  *
  * @since 1.0.0
  */
-class Mailer extends BaseMailer {
+class Mailer extends \cmsgears\core\common\base\Mailer {
 
 	// Variables ---------------------------------------------------
 
@@ -51,10 +48,10 @@ class Mailer extends BaseMailer {
 
     public function sendUserMail( $form, $model ) {
 
-		$mailProperties	= $this->mailProperties;
-		$fromEmail 		= $mailProperties->getContactEmail();
-		$fromName 		= $mailProperties->getContactName();
+		$mailProperties = $this->mailProperties;
 
+		$fromEmail 	= $mailProperties->getContactEmail();
+		$fromName 	= $mailProperties->getContactName();
 		$toEmail	= null;
 		$name		= null;
 		$subject	= '';
@@ -94,7 +91,7 @@ class Mailer extends BaseMailer {
 		if( !isset( $name ) && isset( $toEmail ) ) {
 
 			$name = preg_split( "/@", $toEmail );
-			$name = $name[0];
+			$name = $name[ 0 ];
 		}
 
 		// Subject
@@ -120,10 +117,10 @@ class Mailer extends BaseMailer {
 
     public function sendAdminMail( $form, $model ) {
 
-		$mailProperties	= $this->mailProperties;
-		$fromEmail 		= $mailProperties->getSenderEmail();
-		$fromName 		= $mailProperties->getSenderName();
+		$mailProperties = $this->mailProperties;
 
+		$fromEmail 	= $mailProperties->getSenderEmail();
+		$fromName 	= $mailProperties->getSenderName();
 		$adminName	= $mailProperties->getContactName();
 		$adminEmail	= $mailProperties->getContactEmail();
 		$subject	= '';

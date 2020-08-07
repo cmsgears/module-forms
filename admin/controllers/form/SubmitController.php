@@ -19,14 +19,12 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * SubmitController provides actions specific to form submit model.
  *
  * @since 1.0.0
  */
-class SubmitController extends Controller {
+class SubmitController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -124,16 +122,16 @@ class SubmitController extends Controller {
 		$this->redirect( [ 'all' ] );
 	}
 
-	public function actionAll( $fid ) {
+	public function actionAll( $pid ) {
 
-		$form	= $this->formService->getById( $fid );
+		$form = $this->formService->getById( $pid );
 
 		if( isset( $form ) ) {
 
 			// Remember return url for crud
-			Url::remember( [ "form/submit/all?fid=$fid" ], 'form-submits' );
+			Url::remember( [ "form/submit/all?pid=$pid" ], 'form-submits' );
 
-			$dataProvider = $this->modelService->getPageByFormId( $fid );
+			$dataProvider = $this->modelService->getPageByFormId( $pid );
 
 		    return $this->render( 'all', [
 		         'dataProvider' => $dataProvider,
@@ -148,7 +146,7 @@ class SubmitController extends Controller {
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
@@ -157,7 +155,7 @@ class SubmitController extends Controller {
 
 				$this->modelService->delete( $model );
 
-				$this->redirect( [ "all?fid=$model->formId" ] );
+				$this->redirect( [ "all?pid=$model->formId" ] );
 			}
 
 	    	return $this->render( 'delete', [

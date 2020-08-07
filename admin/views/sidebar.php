@@ -16,9 +16,9 @@ $user	= $core->getUser();
 		</div>
 		<div class="tab-content clear <?php if( strcmp( $parent, 'sidebar-form' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
-				<li class='form <?php if( strcmp( $child, 'form' ) == 0 ) echo 'active';?>'><?= Html::a( "Forms", ['/forms/form/all'] ) ?></li>
-				<li class='config <?php if( strcmp( $child, 'config' ) == 0 ) echo 'active';?>'><?= Html::a( "Configs", ['/forms/config/all'] ) ?></li>
-				<li class='template <?php if( strcmp( $child, 'template' ) == 0 ) echo 'active';?>'><?= Html::a( "Templates", ['/forms/form/template/all'] ) ?></li>
+				<li class='form <?php if( strcmp( $child, 'form' ) == 0 ) echo 'active';?>'><?= Html::a( "Forms", [ '/forms/form/all' ] ) ?></li>
+				<li class='config <?php if( strcmp( $child, 'config' ) == 0 ) echo 'active';?>'><?= Html::a( "Configs", [ '/forms/config/all' ] ) ?></li>
+				<li class='template <?php if( strcmp( $child, 'template' ) == 0 ) echo 'active';?>'><?= Html::a( "Templates", [ '/forms/form/template/all' ] ) ?></li>
 			</ul>
 		</div>
 	</div>

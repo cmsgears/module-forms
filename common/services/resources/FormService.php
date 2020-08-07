@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\forms\common\services\entities;
+namespace cmsgears\forms\common\services\resources;
 
 // Yii Imports
 use Yii;
@@ -15,7 +15,7 @@ use Yii;
 // CMG Imports
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\forms\common\services\interfaces\entities\IFormService;
+use cmsgears\forms\common\services\interfaces\resources\IFormService;
 
 /**
  * FormService provide service methods of form model.
@@ -74,8 +74,9 @@ class FormService extends \cmsgears\core\common\services\resources\FormService i
 
     public function processForm( $form, $formModel, $config = [] ) {
 
-		$notification					= isset( $config[ 'notification' ] ) ? $config[ 'notification' ] : [];
-		$notification[ 'template' ]		= isset( $notification[ 'template' ] ) ? $notification[ 'template' ] : FormsGlobal::TEMPLATE_NOTIFY_FORM_SUBMIT;
+		$notification = isset( $config[ 'notification' ] ) ? $config[ 'notification' ] : [];
+
+		$notification[ 'template' ]		= isset( $notification[ 'template' ] ) ? $notification[ 'template' ] : FormsGlobal::TPL_NOTIFY_FORM_SUBMIT;
 		$notification[ 'adminLink' ]	= isset( $notification[ 'adminLink' ] ) ? $notification[ 'adminLink' ] : "forms/form/submit/all?fid=$form->id";
 
 		$formSubmit = $formModel->processFormSubmit( $form );

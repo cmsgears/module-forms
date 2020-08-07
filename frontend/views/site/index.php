@@ -1,1 +1,0 @@
-<p>Please configure a valid Template having valid Layout and View from admin.</p>

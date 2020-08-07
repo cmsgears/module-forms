@@ -12,15 +12,12 @@ namespace cmsgears\forms\common\components;
 // Yii Imports
 use Yii;
 
-// CMG Imports
-use cmsgears\core\common\base\Component;
-
 /**
- * The Form Factory component initialise the services available in Form Module.
+ * The Form Factory component initialize the services available in Form Module.
  *
  * @since 1.0.0
  */
-class Factory extends Component {
+class Factory extends \cmsgears\core\common\base\Component {
 
 	// Global -----------------
 
@@ -54,13 +51,11 @@ class Factory extends Component {
 	public function registerServices() {
 
 		$this->registerResourceServices();
-		$this->registerEntityServices();
 	}
 
 	public function registerServiceAlias() {
 
 		$this->registerResourceAliases();
-		$this->registerEntityAliases();
 	}
 
 	/**
@@ -70,18 +65,10 @@ class Factory extends Component {
 
 		$factory = Yii::$app->factory->getContainer();
 
+		$factory->set( 'cmsgears\forms\common\services\interfaces\resources\IFormService', 'cmsgears\forms\common\services\resources\FormService' );
+
+		$factory->set( 'cmsgears\forms\common\services\interfaces\resources\IFormSubmitService', 'cmsgears\forms\common\services\resources\FormSubmitService' );
 		$factory->set( 'cmsgears\forms\common\services\interfaces\resources\IFormSubmitFieldService', 'cmsgears\forms\common\services\resources\FormSubmitFieldService' );
-	}
-
-	/**
-	 * Registers entity services.
-	 */
-	public function registerEntityServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		$factory->set( 'cmsgears\forms\common\services\interfaces\entities\IFormService', 'cmsgears\forms\common\services\entities\FormService' );
-		$factory->set( 'cmsgears\forms\common\services\interfaces\entities\IFormSubmitService', 'cmsgears\forms\common\services\entities\FormSubmitService' );
 	}
 
 	/**
@@ -91,18 +78,10 @@ class Factory extends Component {
 
 		$factory = Yii::$app->factory->getContainer();
 
+		$factory->set( 'formService', 'cmsgears\forms\common\services\resources\FormService' );
+
+		$factory->set( 'formSubmitService', 'cmsgears\forms\common\services\resources\FormSubmitService' );
 		$factory->set( 'formSubmitFieldService', 'cmsgears\forms\common\services\resources\FormSubmitFieldService' );
-	}
-
-	/**
-	 * Registers entity aliases.
-	 */
-	public function registerEntityAliases() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		$factory->set( 'formService', 'cmsgears\forms\common\services\entities\FormService' );
-		$factory->set( 'formSubmitService', 'cmsgears\forms\common\services\entities\FormSubmitService' );
 	}
 
 }

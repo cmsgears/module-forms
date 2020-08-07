@@ -10,20 +10,18 @@
 namespace cmsgears\forms\admin\controllers\form;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\forms\common\config\FormsGlobal;
-
-use cmsgears\core\admin\controllers\base\form\FieldController as BaseFieldController;
 
 /**
  * FieldController provides actions specific to form field model.
  *
  * @since 1.0.0
  */
-class FieldController extends BaseFieldController {
+class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldController {
 
 	// Variables ---------------------------------------------------
 

@@ -7,46 +7,52 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\forms\common\components;
+namespace cmsgears\forms\admin\controllers\apix\form;
 
 // CMG Imports
 use cmsgears\forms\common\config\FormsGlobal;
 
 /**
- * MessageSource stores and provide the messages and message templates available in
- * Cms Module.
+ * TemplateController provides actions specific to form templates.
  *
  * @since 1.0.0
  */
-class MessageSource extends \cmsgears\core\common\base\MessageSource {
+class TemplateController extends \cmsgears\core\admin\controllers\apix\base\TemplateController {
 
 	// Variables ---------------------------------------------------
 
-	// Global -----------------
+	// Globals ----------------
 
 	// Public -----------------
 
 	// Protected --------------
 
-	protected $messageDb = [
-		// Generic Errors
-		FormsGlobal::ERROR_RE_SUBMIT => 'The form is already submitted by you. It cannot be processed.',
-
-		// Generic Fields
-		// Field
-		FormsGlobal::FIELD_SUBMITTED_BY => 'Submitted By'
-	];
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
+	public function init() {
+
+		parent::init();
+
+		// Permissions
+		$this->crudPermission = FormsGlobal::PERM_FORM_ADMIN;
+	}
+
 	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
 
 	// Yii parent classes --------------------
 
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
 	// CMG parent classes --------------------
 
-	// MessageSource -------------------------
+	// TemplateController --------------------
 
 }

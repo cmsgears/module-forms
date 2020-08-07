@@ -7,23 +7,29 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\forms\common\services\interfaces\entities;
+namespace cmsgears\forms\common\services\interfaces\resources;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\resources\IFormService as IBaseFormService;
+use cmsgears\core\common\services\interfaces\base\IEntityService;
 
 /**
- * IFormService declares methods specific to form model.
+ * IFormSubmitService declares methods specific to form submit.
  *
  * @since 1.0.0
  */
-interface IFormService extends IBaseFormService {
+interface IFormSubmitService extends IEntityService {
 
 	// Data Provider ------
+
+	public function getPageByFormId( $formId );
 
 	// Read ---------------
 
     // Read - Models ---
+
+    public function findByFormIdSubmittedBy( $formId, $submittedBy );
+
+    public function findFirstByFormIdSubmittedBy( $formId, $submittedBy );
 
     // Read - Lists ----
 
@@ -32,8 +38,6 @@ interface IFormService extends IBaseFormService {
 	// Read - Others ---
 
 	// Create -------------
-
-	public function processForm( $form, $formModel );
 
 	// Update -------------
 

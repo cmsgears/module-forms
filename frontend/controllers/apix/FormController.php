@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\frontend\controllers\apix;
 
 // Yii Imports
@@ -12,7 +20,7 @@ use cmsgears\forms\common\models\forms\GenericForm;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class FormController extends \cmsgears\core\frontend\controllers\base\Controller {
+class FormController extends \cmsgears\core\frontend\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -22,8 +30,6 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 
 	// Protected --------------
 
-	protected $formService;
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -32,7 +38,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 
         parent::init();
 
-		$this->formService = Yii::$app->factory->get( 'formService' );
+		$this->modelService = Yii::$app->factory->get( 'formService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -70,9 +76,11 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 			$type = CoreGlobal::TYPE_FORM;
 		}
 
-		$model 		= $this->formService->getBySlugType( $slug, $type );
+		$model = $this->modelService->getBySlugType( $slug, $type );
+
 		$formFields	= $model->getFieldsMap();
- 		$form		= new GenericForm( [ 'fields' => $formFields, 'ajax' => true ] );
+
+		$form = new GenericForm( [ 'fields' => $formFields, 'ajax' => true ] );
 
 		if( $model->captcha ) {
 
@@ -82,7 +90,7 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
 		if( $form->load( Yii::$app->request->post(), $form->getClassName() ) && $form->validate() ) {
 
 			// Save Model
-			if( $this->formService->processForm( $model, $form ) ) {
+			if( $this->modelService->processForm( $model, $form ) ) {
 
 				$data = [];
 

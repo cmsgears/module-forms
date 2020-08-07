@@ -16,7 +16,6 @@ use yii\web\ForbiddenHttpException;
 // CMG Imports
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\core\common\models\forms\GenericForm as ParentGenericForm;
 use cmsgears\forms\common\models\entities\FormSubmit;
 use cmsgears\forms\common\models\resources\FormSubmitField;
 
@@ -25,7 +24,7 @@ use cmsgears\core\common\utilities\DateUtil;
 /**
  * The base class to be used by dynamic forms.
  */
-class GenericForm extends ParentGenericForm {
+class GenericForm extends \cmsgears\core\common\models\forms\GenericForm {
 
 	// Variables ---------------------------------------------------
 
@@ -76,13 +75,14 @@ class GenericForm extends ParentGenericForm {
 	 */
 	public function processFormSubmit( $form ) {
 
-		$date		= DateUtil::getDateTime();
+		$date = DateUtil::getDateTime();
 
 		$attributes	= parent::getFormAttributes();
 
 		$fields		= $attributes[ 'fields' ];
 		$attribs	= [];
-		$user		= Yii::$app->user->getIdentity();
+
+		$user = Yii::$app->core->getUser();
 
 		$formSubmit	= new FormSubmit();
 
@@ -95,7 +95,7 @@ class GenericForm extends ParentGenericForm {
 		}
 
 		// Collect fields to save in json format
-		foreach ( $fields as $field ) {
+		foreach( $fields as $field ) {
 
 			$fieldName = $field->name;
 
@@ -153,7 +153,7 @@ class GenericForm extends ParentGenericForm {
 		if( $formSubmit->id > 0 ) {
 
 			// Save Form Fields
-			foreach ( $fields as $field ) {
+			foreach( $fields as $field ) {
 
 				$fieldName = $field->name;
 
@@ -171,10 +171,13 @@ class GenericForm extends ParentGenericForm {
 
 						$formSubmitField = new FormSubmitField();
 
-						$formSubmitField->formSubmitId 	= $formSubmit->id;
-						$formSubmitField->name			= $field->name;
-						$fieldName						= $field->name;
-						$formSubmitField->value			= $this->$fieldName;
+						$formSubmitField->formSubmitId = $formSubmit->id;
+
+						$formSubmitField->name = $field->name;
+
+						$fieldName = $field->name;
+
+						$formSubmitField->value = $this->$fieldName;
 
 						$formSubmitField->save();
 					}

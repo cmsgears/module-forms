@@ -7,14 +7,13 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\forms\common\services\entities;
+namespace cmsgears\forms\common\services\resources;
 
 // Yii Imports
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\forms\common\services\interfaces\entities\IFormSubmitService;
-use cmsgears\forms\common\services\interfaces\resources\IFormSubmitFieldService;
+use cmsgears\forms\common\services\interfaces\resources\IFormSubmitService;
 
 /**
  * FormSubmitService provide service methods of form submit.
@@ -43,18 +42,9 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Private ----------------
 
-	private $formSubmitFieldService;
-
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
-
-    public function __construct( IFormSubmitFieldService $formSubmitFieldService, $config = [] ) {
-
-		$this->formSubmitFieldService = $formSubmitFieldService;
-
-        parent::__construct( $config );
-    }
 
 	// Instance methods --------------------------------------------
 
@@ -72,8 +62,15 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
+
+		// Sorting ----------
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -90,9 +87,7 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 	                'label' => 'sdate',
 	            ]
 	        ],
-	        'defaultOrder' => [
-	        	'sdate' => SORT_DESC
-	        ]
+			'defaultOrder' => $defaultSort
 	    ]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -100,10 +95,35 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 			$config[ 'sort' ] = $sort;
 		}
 
-		if( !isset( $config[ 'search-col' ] ) ) {
+		// Query ------------
 
-			$config[ 'search-col' ] = 'submittedAt';
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+
+		];
+
+		if( isset( $searchCol ) ) {
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'sdate' => "$modelTable.submittedAt"
+		];
+
+		// Result -----------
 
 		return parent::findPage( $config );
 	}
@@ -144,8 +164,6 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 	// Delete -------------
 
 	public function delete( $model, $config = [] ) {
-
-		$existingFormSubmit	= self::findById( $model->id );
 
 		// Delete Dependency
 		$this->formSubmitFieldService->deleteByFormSubmitId( $model->id );
