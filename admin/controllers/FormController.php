@@ -64,7 +64,11 @@ class FormController extends \cmsgears\core\admin\controllers\base\FormControlle
 			'create' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'fields' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Fields' ] ]
+			'fields' => [ [ 'label' => 'Form', 'url' => $this->returnUrl ], [ 'label' => 'Fields' ] ],
+			'data' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
+			'config' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 
@@ -76,7 +80,36 @@ class FormController extends \cmsgears\core\admin\controllers\base\FormControlle
 
 	// yii\base\Component -----
 
+	public function behaviors() {
+
+		$behaviors = parent::behaviors();
+
+		$behaviors[ 'rbac' ][ 'actions' ][ 'data' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'attributes' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'config' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
+
+		$behaviors[ 'verbs' ][ 'actions' ][ 'data' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'attributes' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'config' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
+
+		return $behaviors;
+	}
+
 	// yii\base\Controller ----
+
+	public function actions() {
+
+		$actions = parent::actions();
+
+		$actions[ 'data' ] = [ 'class' => 'cmsgears\core\common\actions\data\data\Form' ];
+		$actions[ 'attributes' ] = [ 'class' => 'cmsgears\core\common\actions\data\attributes\Form' ];
+		$actions[ 'config' ] = [ 'class' => 'cmsgears\core\common\actions\data\config\Form' ];
+		$actions[ 'settings' ] = [ 'class' => 'cmsgears\core\common\actions\data\setting\Form' ];
+
+		return $actions;
+	}
 
 	// CMG interfaces ------------------------
 
