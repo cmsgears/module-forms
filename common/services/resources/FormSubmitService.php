@@ -10,6 +10,7 @@
 namespace cmsgears\forms\common\services\resources;
 
 // Yii Imports
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -70,6 +71,8 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
+		$userTable = Yii::$app->factory->get( 'userService' )->getModelTable();
+
 		// Sorting ----------
 
 	    $sort = new Sort([
@@ -79,6 +82,18 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
+				],
+				'name' => [
+					'asc' => [ "$userTable.name" => SORT_ASC ],
+					'desc' => [ "$userTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+				'email' => [
+					'asc' => [ "$userTable.email" => SORT_ASC ],
+					'desc' => [ "$userTable.email" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
 				],
 	            'sdate' => [
 	                'asc' => [ "$modelTable.submittedAt" => SORT_ASC ],
@@ -105,7 +120,8 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
 
 		$search = [
-
+			'name' => "$userTable.name",
+			'email' => "$userTable.email"
 		];
 
 		if( isset( $searchCol ) ) {
@@ -120,6 +136,8 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
+			'name' => "$userTable.name",
+			'email' => "$userTable.email",
 			'sdate' => "$modelTable.submittedAt"
 		];
 
@@ -172,6 +190,27 @@ class FormSubmitService extends \cmsgears\core\common\services\base\EntityServic
 	}
 
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Notifications ------
 

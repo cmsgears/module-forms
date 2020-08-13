@@ -85,11 +85,11 @@ class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldCo
 
 	// FieldController -----------------------
 
-	public function actionAll( $fid ) {
+	public function actionAll( $pid ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'fields' );
 
-		return parent::actionAll( $fid );
+		return parent::actionAll( $pid );
 	}
 
 }

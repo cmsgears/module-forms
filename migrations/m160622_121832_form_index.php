@@ -51,4 +51,5 @@ class m160622_121832_form_index extends \cmsgears\core\common\base\Migration {
 		$this->dropIndex( 'idx_' . $this->prefix . 'submit_field_name', $this->prefix . 'form_submit_field' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'submit_field_value', $this->prefix . 'form_submit_field' );
 	}
+
 }

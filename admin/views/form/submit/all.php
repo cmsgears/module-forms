@@ -13,16 +13,17 @@ $moduleTemplates	= '@cmsgears/module-forms/admin/views/templates';
 $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [],
+	'dataProvider' => $dataProvider, 'add' => false, 'addUrl' => 'create', 'data' => [],
 	'title' => 'Form Submits', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'user' => 'User', 'email' => 'Email' ],
+	'searchColumns' => [
+		'name' => 'Name', 'email' => 'Email'
+	],
 	'sortColumns' => [
-		'user' => 'User', 'email' => 'Email',
-		'sdate' => 'Submitted At'
+		'name' => 'Name', 'email' => 'Email', 'sdate' => 'Submitted At'
 	],
 	'filters' => [],
 	'reportColumns' => [
-		'user' => [ 'title' => 'User', 'type' => 'text' ],
+		'name' => [ 'title' => 'Name', 'type' => 'text' ],
 		'email' => [ 'title' => 'Email', 'type' => 'text' ],
 		'sdate' => [ 'title' => 'Submitted At', 'type' => 'date' ]
 	],
@@ -47,7 +48,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 
 			$formFields	= $model->fields;
 
-			foreach (  $formFields as $formField ) {
+			foreach(  $formFields as $formField ) {
 
 				echo "<tr><td>$formField->name</td><td>$formField->value</td></tr>";
 			}
@@ -58,7 +59,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 
 			return $output;
 		}],
-		'user' => [ 'title' => 'User', 'generate' => function( $model ) {
+		'name' => [ 'title' => 'Name', 'generate' => function( $model ) {
 			return isset( $model->user ) ? $model->user->name : null;
 		}],
 		'email' => [ 'title' => 'Email', 'generate' => function( $model ) {
@@ -72,16 +73,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/submit",
 	//'cardView' => "$moduleTemplates/grid/cards/submit",
 	//'actionView' => "$moduleTemplates/grid/actions/submit"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'Form Submit', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Delete Form Submit', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'Form Submit', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+])?>

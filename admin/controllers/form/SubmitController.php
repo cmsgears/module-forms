@@ -71,11 +71,11 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
 				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
 				[ 'label' => 'Forms', 'url' =>  $allUrl ]
 			],
-			'all' => [ [ 'label' => 'Form Submit' ] ],
-			'create' => [ [ 'label' => 'Form Submit', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Form Submit', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Form Submit', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Form Submit', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+			'all' => [ [ 'label' => 'Form Submits' ] ],
+			'create' => [ [ 'label' => 'Form Submits', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Form Submits', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Form Submits', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Form Submits', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
 		];
 	}
 
@@ -93,16 +93,16 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
             'rbac' => [
                 'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => $this->crudPermission ],
-	                'all'    => [ 'permission' => $this->crudPermission ],
+	                'index' => [ 'permission' => $this->crudPermission ],
+	                'all' => [ 'permission' => $this->crudPermission ],
 	                'delete' => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-	                'index'  => [ 'get' ],
-	                'all'   => [ 'get' ],
+	                'index' => [ 'get' ],
+	                'all' => [ 'get' ],
 	                'delete' => [ 'get', 'post' ]
                 ]
             ]
