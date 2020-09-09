@@ -87,7 +87,7 @@ class FormSubmit extends \cmsgears\core\common\models\base\Entity implements IDa
         $rules = [
 			// Required, Safe
             [ 'formId', 'required' ],
-			[ [ 'id', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'content' ], 'safe' ],
 			// Other
 			[ [ 'formId', 'submittedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ 'submittedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
