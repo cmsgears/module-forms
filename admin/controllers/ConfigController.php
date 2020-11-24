@@ -44,7 +44,7 @@ class ConfigController extends \cmsgears\core\admin\controllers\base\FormControl
 		$this->setViewPath( '@cmsgears/module-core/admin/views/config' );
 
 		// Permission
-		$this->crudPermission = FormsGlobal::PERM_FORM_ADMIN;
+		$this->crudPermission = CoreGlobal::PERM_SETTINGS;
 
 		// Config
 		$this->type		= CoreGlobal::TYPE_SYSTEM;
