@@ -122,16 +122,16 @@ class SubmitController extends \cmsgears\core\admin\controllers\base\Controller 
 		$this->redirect( [ 'all' ] );
 	}
 
-	public function actionAll( $pid ) {
+	public function actionAll( $fid ) {
 
-		$form = $this->formService->getById( $pid );
+		$form = $this->formService->getById( $fid );
 
 		if( isset( $form ) ) {
 
 			// Remember return url for crud
-			Url::remember( [ "form/submit/all?pid=$pid" ], 'form-submits' );
+			Url::remember( [ "form/submit/all?pid=$fid" ], 'form-submits' );
 
-			$dataProvider = $this->modelService->getPageByFormId( $pid );
+			$dataProvider = $this->modelService->getPageByFormId( $fid );
 
 		    return $this->render( 'all', [
 		         'dataProvider' => $dataProvider,
