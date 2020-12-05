@@ -104,6 +104,16 @@ class FormController extends \cmsgears\core\frontend\controllers\base\Controller
             'ccaptcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+        	// Captcha for ajax forms - third
+            'dcaptcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+        	// Captcha for ajax forms - third
+            'ecaptcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ]
         ];
     }
