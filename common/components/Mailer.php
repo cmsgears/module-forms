@@ -104,6 +104,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 			$subject = $form->name;
 		}
 
+		if( empty( $toEmail ) ) {
+
+			return;
+		}
+
 		if( isset( $toEmail ) ) {
 
 	        $this->getMailer()->compose( self::MAIL_GENERIC_USER, [ 'coreProperties' => $this->coreProperties, 'form' => $form, 'model' => $model, 'name' => $name, 'email' => $toEmail ] )
@@ -133,6 +138,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		else {
 
 			$subject = $form->name;
+		}
+
+		if( empty( $adminEmail ) ) {
+
+			return;
 		}
 
 		// Admin Mail
