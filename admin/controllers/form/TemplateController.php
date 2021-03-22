@@ -17,14 +17,12 @@ use yii\helpers\Url;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\core\admin\controllers\base\TemplateController as BaseTemplateController;
-
 /**
  * TemplateController provide actions specific to form templates.
  *
  * @since 1.0.0
  */
-class TemplateController extends BaseTemplateController {
+class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
 
 	// Variables ---------------------------------------------------
 
@@ -47,13 +45,13 @@ class TemplateController extends BaseTemplateController {
 
 		// Config
 		$this->type		= CoreGlobal::TYPE_FORM;
-		$this->apixBase	= 'core/template';
+		$this->apixBase	= 'forms/form/template';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-form', 'child' => 'template' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'templates' );
+		$this->returnUrl = Url::previous( 'form-templates' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/form/templates/all' ], true );
 
 		// Breadcrumbs
@@ -64,7 +62,11 @@ class TemplateController extends BaseTemplateController {
 			'all' => [ [ 'label' => 'Form Templates' ] ],
 			'create' => [ [ 'label' => 'Form Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Form Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Form Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'delete' => [ [ 'label' => 'Form Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'data' => [ [ 'label' => 'Form Templates', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Form Templates', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
+			'config' => [ [ 'label' => 'Form Templates', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Form Templates', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 
@@ -86,7 +88,7 @@ class TemplateController extends BaseTemplateController {
 
 	public function actionAll( $config = [] ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'templates' );
+		Url::remember( Yii::$app->request->getUrl(), 'form-templates' );
 
 		return parent::actionAll( $config );
 	}

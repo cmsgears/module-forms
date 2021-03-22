@@ -16,14 +16,12 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
- * FormController provides actions specific to form model.
+ * SubmitController provides actions specific to form submit.
  *
  * @since 1.0.0
  */
-class SubmitController extends Controller {
+class SubmitController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -81,7 +79,7 @@ class SubmitController extends Controller {
 	public function actions() {
 
 		return [
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}
@@ -90,6 +88,6 @@ class SubmitController extends Controller {
 
 	// CMG parent classes --------------------
 
-	// FormController ------------------------
+	// SubmitController ----------------------
 
 }

@@ -7,9 +7,6 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-// CMG Imports
-use cmsgears\core\common\base\Migration;
-
 /**
  * The form index migration inserts the recommended indexes for better performance. It
  * also list down other possible index commented out. These indexes can be created using
@@ -17,7 +14,7 @@ use cmsgears\core\common\base\Migration;
  *
  * @since 1.0.0
  */
-class m160622_121832_form_index extends Migration {
+class m160622_121832_form_index extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -54,4 +51,5 @@ class m160622_121832_form_index extends Migration {
 		$this->dropIndex( 'idx_' . $this->prefix . 'submit_field_name', $this->prefix . 'form_submit_field' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'submit_field_value', $this->prefix . 'form_submit_field' );
 	}
+
 }

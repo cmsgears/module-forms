@@ -17,13 +17,11 @@ use yii\helpers\ArrayHelper;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\core\common\models\base\Resource;
-
 use cmsgears\forms\common\models\base\FormTables;
 use cmsgears\forms\common\models\entities\FormSubmit;
 
 /**
- * FormSubmitField Entity
+ * FormSubmitField
  *
  * @property integer $id
  * @property integer $formSubmitId
@@ -32,7 +30,7 @@ use cmsgears\forms\common\models\entities\FormSubmit;
  *
  * @since 1.0.0
  */
-class FormSubmitField extends Resource {
+class FormSubmitField extends \cmsgears\core\common\models\base\Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -148,8 +146,9 @@ class FormSubmitField extends Resource {
      */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'formSubmit' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'formSubmit' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -166,7 +165,7 @@ class FormSubmitField extends Resource {
 
 		$frmSubmitTable	= FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT );
 
-		$query	= static::find()->joinWith( 'formSubmit' )->where( "$frmSubmitTable.id=:id", [ ':id' => $formSubmitId ] );
+		$query = static::find()->joinWith( 'formSubmit' )->where( "$frmSubmitTable.id=:id", [ ':id' => $formSubmitId ] );
 
 		return $query->all();
 	}
@@ -183,7 +182,7 @@ class FormSubmitField extends Resource {
 		$frmSubmitTable			= FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT );
 		$frmSubmitFieldTable	= FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT_FIELD );
 
-		$query	= static::find()->joinWith( 'formSubmit' )->where( "$frmSubmitTable.id=:id AND $frmSubmitFieldTable.name=:name", [ ':id' => $formSubmitId, ':name' => $name ] );
+		$query = static::find()->joinWith( 'formSubmit' )->where( "$frmSubmitTable.id=:id AND $frmSubmitFieldTable.name=:name", [ ':id' => $formSubmitId, ':name' => $name ] );
 
 		return $query->one();
 	}
@@ -204,4 +203,5 @@ class FormSubmitField extends Resource {
 
 		return self::deleteAll( 'formSubmitId=:id', [ ':id' => $formSubmitId ] );
 	}
+
 }

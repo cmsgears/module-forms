@@ -10,7 +10,7 @@
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Migration;
+use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\User;
@@ -24,7 +24,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class m160622_120639_form_data extends Migration {
+class m160622_120639_form_data extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -39,7 +39,7 @@ class m160622_120639_form_data extends Migration {
 	public function init() {
 
 		// Table prefix
-		$this->prefix	= Yii::$app->migration->cmgPrefix;
+		$this->prefix = Yii::$app->migration->cmgPrefix;
 
 		$this->site		= Site::findBySlug( CoreGlobal::SITE_MAIN );
 		$this->master	= User::findByUsername( Yii::$app->migration->getSiteMaster() );
@@ -54,6 +54,8 @@ class m160622_120639_form_data extends Migration {
 
 		// Create form permission groups and CRUD permissions
 		$this->insertFormPermissions();
+
+		$this->insertNotificationTemplates();
     }
 
 	private function insertRolePermission() {
@@ -63,28 +65,28 @@ class m160622_120639_form_data extends Migration {
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$roles = [
-			[ $this->master->id, $this->master->id, 'Form Admin', 'form-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role Form Admin is limited to manage forms from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'Form Admin', FormsGlobal::ROLE_FORM_ADMIN, 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role Form Admin is limited to manage forms from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
 
-		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
-		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$formAdminRole		= Role::findBySlugType( 'form-admin', CoreGlobal::TYPE_SYSTEM );
+		$superAdminRole	= Role::findBySlugType( CoreGlobal::ROLE_SUPER_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$adminRole		= Role::findBySlugType( CoreGlobal::ROLE_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$formAdminRole	= Role::findBySlugType( FormsGlobal::ROLE_FORM_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
 
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$permissions = [
-			[ $this->master->id, $this->master->id, 'Admin Forms', 'admin-forms', CoreGlobal::TYPE_SYSTEM, null, 'The permission admin forms is to manage forms from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'Admin Forms', FormsGlobal::PERM_FORM_ADMIN, CoreGlobal::TYPE_SYSTEM, null, 'The permission admin forms is to manage forms from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
-		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$formAdminPerm		= Permission::findBySlugType( 'admin-forms', CoreGlobal::TYPE_SYSTEM );
+		$adminPerm		= Permission::findBySlugType( CoreGlobal::PERM_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$userPerm		= Permission::findBySlugType( CoreGlobal::PERM_USER, CoreGlobal::TYPE_SYSTEM );
+		$formAdminPerm	= Permission::findBySlugType( FormsGlobal::PERM_FORM_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
 
@@ -106,35 +108,35 @@ class m160622_120639_form_data extends Migration {
 
 		$permissions = [
 			// Permission Groups - Default - Website - Individual, Organization
-			[ $this->master->id, $this->master->id, 'Manage Forms', 'manage-forms', CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission manage forms allows user to manage forms from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Form Author', 'form-author', CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission form author allows user to perform crud operations of form belonging to respective author from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Manage Forms', FormsGlobal::PERM_FORM_MANAGE, CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission manage forms allows user to manage forms from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Form Author', FormsGlobal::PERM_FORM_AUTHOR, CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission form author allows user to perform crud operations of form belonging to respective author from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
 
 			// Form Permissions - Hard Coded - Website - Individual, Organization
-			[ $this->master->id, $this->master->id, 'View Forms', 'view-forms', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission view forms allows users to view their forms from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Add Form', 'add-form', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission add form allows users to create form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Update Form', 'update-form', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission update form allows users to update form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Delete Form', 'delete-form', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission delete form allows users to delete form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Approve Form', 'approve-form', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission approve form allows user to approve, freeze or block form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Print Form', 'print-form', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission print form allows user to print form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Import Forms', 'import-forms', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission import forms allows user to import forms from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Export Forms', 'export-forms', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission export forms allows user to export forms from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'View Forms', FormsGlobal::PERM_FORM_VIEW, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission view forms allows users to view their forms from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Add Form', FormsGlobal::PERM_FORM_ADD, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission add form allows users to create form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Update Form', FormsGlobal::PERM_FORM_UPDATE, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission update form allows users to update form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Delete Form', FormsGlobal::PERM_FORM_DELETE, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission delete form allows users to delete form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Approve Form', FormsGlobal::PERM_FORM_APPROVE, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission approve form allows user to approve, freeze or block form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Print Form', FormsGlobal::PERM_FORM_PRINT, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission print form allows user to print form from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Import Forms', FormsGlobal::PERM_FORM_IMPORT, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission import forms allows user to import forms from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Export Forms', FormsGlobal::PERM_FORM_EXPORT, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission export forms allows user to export forms from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
 		// Permission Groups
-		$formManagerPerm	= Permission::findBySlugType( 'manage-forms', CoreGlobal::TYPE_SYSTEM );
-		$formAuthorPerm		= Permission::findBySlugType( 'form-author', CoreGlobal::TYPE_SYSTEM );
+		$formManagerPerm	= Permission::findBySlugType( FormsGlobal::PERM_FORM_MANAGE, CoreGlobal::TYPE_SYSTEM );
+		$formAuthorPerm		= Permission::findBySlugType( FormsGlobal::PERM_FORM_AUTHOR, CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
-		$vFormsPerm		= Permission::findBySlugType( 'view-forms', CoreGlobal::TYPE_SYSTEM );
-		$aFormPerm		= Permission::findBySlugType( 'add-form', CoreGlobal::TYPE_SYSTEM );
-		$uFormPerm		= Permission::findBySlugType( 'update-form', CoreGlobal::TYPE_SYSTEM );
-		$dFormPerm		= Permission::findBySlugType( 'delete-form', CoreGlobal::TYPE_SYSTEM );
-		$apFormPerm		= Permission::findBySlugType( 'approve-form', CoreGlobal::TYPE_SYSTEM );
-		$pFormPerm		= Permission::findBySlugType( 'print-form', CoreGlobal::TYPE_SYSTEM );
-		$iFormsPerm		= Permission::findBySlugType( 'import-forms', CoreGlobal::TYPE_SYSTEM );
-		$eFormsPerm		= Permission::findBySlugType( 'export-forms', CoreGlobal::TYPE_SYSTEM );
+		$vFormsPerm		= Permission::findBySlugType( FormsGlobal::PERM_FORM_VIEW, CoreGlobal::TYPE_SYSTEM );
+		$aFormPerm		= Permission::findBySlugType( FormsGlobal::PERM_FORM_ADD, CoreGlobal::TYPE_SYSTEM );
+		$uFormPerm		= Permission::findBySlugType( FormsGlobal::PERM_FORM_UPDATE, CoreGlobal::TYPE_SYSTEM );
+		$dFormPerm		= Permission::findBySlugType( FormsGlobal::PERM_FORM_DELETE, CoreGlobal::TYPE_SYSTEM );
+		$apFormPerm		= Permission::findBySlugType( FormsGlobal::PERM_FORM_APPROVE, CoreGlobal::TYPE_SYSTEM );
+		$pFormPerm		= Permission::findBySlugType( FormsGlobal::PERM_FORM_PRINT, CoreGlobal::TYPE_SYSTEM );
+		$iFormsPerm		= Permission::findBySlugType( FormsGlobal::PERM_FORM_IMPORT, CoreGlobal::TYPE_SYSTEM );
+		$eFormsPerm		= Permission::findBySlugType( FormsGlobal::PERM_FORM_EXPORT, CoreGlobal::TYPE_SYSTEM );
 
 		//Hierarchy
 
@@ -164,6 +166,17 @@ class m160622_120639_form_data extends Migration {
 		];
 
 		$this->batchInsert( $this->prefix . 'core_model_hierarchy', $columns, $hierarchy );
+	}
+
+	private function insertNotificationTemplates() {
+
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'icon', 'type', 'description', 'active', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'createdAt', 'modifiedAt', 'message', 'content', 'data' ];
+
+		$templates = [
+			[ $this->master->id, $this->master->id, 'Form Submit', FormsGlobal::TPL_NOTIFY_FORM_SUBMIT, null, 'notification', 'Trigger notification to Site Admin when new form has been submitted.', true, 'twig', 0, null, false, null, DateUtil::getDateTime(), DateUtil::getDateTime(), 'Form submitted - <b>{{model.displayName}}</b>', 'A new form - <b>{{model.displayName}}</b> has been submitted.', '{"config":{"admin":"1","user":"0","direct":"0","adminEmail":"0","userEmail":"0","directEmail":"0"}}' ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_template', $columns, $templates );
 	}
 
     public function down() {

@@ -7,16 +7,13 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-// CMG Imports
-use cmsgears\core\common\base\Migration;
-
 /**
  * The form migration inserts the database tables of form module. It also insert the foreign
  * keys if FK flag of migration component is true.
  *
  * @since 1.0.0
  */
-class m160622_120632_form extends Migration {
+class m160622_120632_form extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -30,11 +27,11 @@ class m160622_120632_form extends Migration {
 	public function init() {
 
 		// Table prefix
-		$this->prefix		= Yii::$app->migration->cmgPrefix;
+		$this->prefix = Yii::$app->migration->cmgPrefix;
 
 		// Get the values via config
-		$this->fk			= Yii::$app->migration->isFk();
-		$this->options		= Yii::$app->migration->getTableOptions();
+		$this->fk		= Yii::$app->migration->isFk();
+		$this->options	= Yii::$app->migration->getTableOptions();
 
 		// Default collation
 		if( $this->db->driverName === 'mysql' ) {
@@ -114,4 +111,5 @@ class m160622_120632_form extends Migration {
 		// Form Submit Field
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'submit_field_parent', $this->prefix . 'form_submit_field' );
 	}
+
 }

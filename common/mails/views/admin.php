@@ -12,8 +12,8 @@ $email	= Html::encode( $email );
 $siteName	= Html::encode( $coreProperties->getSiteName() );
 $siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
 $logoUrl	= "$siteUrl/images/" . $siteProperties->getMailAvatar();
-$siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
 $homeUrl	= $siteUrl;
+$siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
 
 $fields = $model->fields;
 ?>
@@ -33,10 +33,10 @@ $fields = $model->fields;
 	<?php
 		foreach( $fields as $field ) {
 
-			$fieldName = isset( $field->label ) ? $field->label :  $field->name;
-			$fieldName = strtolower( $fieldName );
+			$fieldName	= $field->name;
+			$fieldLabel	= isset( $field->label ) ? $field->label : $field->name;
 	?>
-		<tr><td><font face="Roboto, Arial, sans-serif"><?= ucfirst( $fieldName ) ?>: <?= Html::encode( $model->$fieldName ) ?></font></td></tr>
+		<tr><td><font face="Roboto, Arial, sans-serif"><?= ucfirst( $fieldLabel ) ?>: <?= Html::encode( $model->$fieldName ) ?></font></td></tr>
 	<?php } ?>
 	<tr><td height="40"></td></tr>
 </table>

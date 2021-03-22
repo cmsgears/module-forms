@@ -19,11 +19,8 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
-use cmsgears\forms\common\config\FormsGlobal;
 
 use cmsgears\forms\common\models\forms\GenericForm;
-
-use cmsgears\core\frontend\controllers\base\Controller;
 
 // TODO: Automate the form submission and mail triggers using mail template.
 
@@ -32,7 +29,7 @@ use cmsgears\core\frontend\controllers\base\Controller;
  *
  * @since 1.0.0
  */
-class FormController extends Controller {
+class FormController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -41,8 +38,6 @@ class FormController extends Controller {
 	// Public -----------------
 
 	// Protected --------------
-
-	protected $formService;
 
 	protected $templateService;
 
@@ -54,9 +49,9 @@ class FormController extends Controller {
 
         parent::init();
 
-		$this->formService = Yii::$app->factory->get( 'formService' );
+		$this->modelService = Yii::$app->factory->get( 'formService' );
 
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->templateService = Yii::$app->factory->get( 'templateService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -95,8 +90,28 @@ class FormController extends Controller {
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
-        	// Captcha for ajax forms
+        	// Captcha for ajax forms - first
             'acaptcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+        	// Captcha for ajax forms - second
+            'bcaptcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+        	// Captcha for ajax forms - third
+            'ccaptcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+        	// Captcha for ajax forms - third
+            'dcaptcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+        	// Captcha for ajax forms - third
+            'ecaptcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ]
@@ -111,7 +126,7 @@ class FormController extends Controller {
 
     public function actionSingle( $slug ) {
 
-		$model = $this->formService->getBySlugType( $slug, CoreGlobal::TYPE_FORM );
+		$model = $this->modelService->getBySlugType( $slug, CoreGlobal::TYPE_FORM );
 
 		if( isset( $model ) ) {
 
@@ -119,7 +134,7 @@ class FormController extends Controller {
 			$formFields	= $model->getFieldsMap();
 
 	 		$form	= new GenericForm( [ 'fields' => $formFields ] );
-			$user	= Yii::$app->user->getIdentity();
+			$user	= Yii::$app->core->getUser();
 
 			$this->view->params[ 'model' ] = $model;
 
@@ -149,22 +164,10 @@ class FormController extends Controller {
 				$form->setScenario( 'captcha' );
 			}
 
-			if( $form->load( Yii::$app->request->post(), 'GenericForm' ) && $form->validate() ) {
+			if( $form->load( Yii::$app->request->post(), $form->getClassName() ) && $form->validate() ) {
 
 				// Save Model
-				if( $this->formService->processForm( $model, $form ) ) {
-
-					// Trigger User Mail
-					if( $model->userMail ) {
-
-						Yii::$app->formsMailer->sendUserMail( $model, $form );
-					}
-
-					// Trigger Admin Mail
-					if( $model->adminMail ) {
-
-						Yii::$app->formsMailer->sendAdminMail( $model, $form );
-					}
+				if( $this->modelService->processForm( $model, $form ) ) {
 
 					// Set success message
 					if( isset( $model->successMessage ) ) {
@@ -180,12 +183,14 @@ class FormController extends Controller {
 			// Fallback to default template
 			if( empty( $template ) ) {
 
-				$template = $this->templateService->getGlobalBySlugType( FormsGlobal::TEMPLATE_FORM, CoreGlobal::TYPE_FORM );
+				$template = $this->templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, CoreGlobal::TYPE_FORM );
 			}
 
 			if( isset( $template ) ) {
 
 				return Yii::$app->templateManager->renderViewPublic( $template, [
+					'modelService' => $this->modelService,
+					'template' => $template,
 		        	'model' => $model,
 					'form' => $form
 		        ], [ 'page' => true ] );

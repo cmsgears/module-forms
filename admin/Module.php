@@ -1,11 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\admin;
 
 // Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use Yii;
 
 class Module extends \cmsgears\core\common\base\Module {
 
@@ -46,8 +51,7 @@ class Module extends \cmsgears\core\common\base\Module {
 
 	public function getSidebarHtml() {
 
-		$path	= Yii::getAlias( '@cmsgears' ) . '/module-forms/admin/views/sidebar.php';
-
-		return $path;
+		return Yii::getAlias( '@cmsgears' ) . '/module-forms/admin/views/sidebar.php';
 	}
+
 }

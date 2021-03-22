@@ -7,23 +7,21 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\forms\common\services\entities;
+namespace cmsgears\forms\common\services\resources;
 
 // Yii Imports
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\forms\common\services\interfaces\entities\IFormSubmitService;
-use cmsgears\forms\common\services\interfaces\resources\IFormSubmitFieldService;
-
-use cmsgears\core\common\services\base\EntityService;
+use cmsgears\forms\common\services\interfaces\resources\IFormSubmitService;
 
 /**
  * FormSubmitService provide service methods of form submit.
  *
  * @since 1.0.0
  */
-class FormSubmitService extends EntityService implements IFormSubmitService {
+class FormSubmitService extends \cmsgears\core\common\services\base\EntityService implements IFormSubmitService {
 
 	// Variables ---------------------------------------------------
 
@@ -45,18 +43,9 @@ class FormSubmitService extends EntityService implements IFormSubmitService {
 
 	// Private ----------------
 
-	private $formSubmitFieldService;
-
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
-
-    public function __construct( IFormSubmitFieldService $formSubmitFieldService, $config = [] ) {
-
-		$this->formSubmitFieldService = $formSubmitFieldService;
-
-        parent::__construct( $config );
-    }
 
 	// Instance methods --------------------------------------------
 
@@ -74,8 +63,17 @@ class FormSubmitService extends EntityService implements IFormSubmitService {
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
+
+		$userTable = Yii::$app->factory->get( 'userService' )->getModelTable();
+
+		// Sorting ----------
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -85,6 +83,18 @@ class FormSubmitService extends EntityService implements IFormSubmitService {
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
+				'name' => [
+					'asc' => [ "$userTable.name" => SORT_ASC ],
+					'desc' => [ "$userTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+				'email' => [
+					'asc' => [ "$userTable.email" => SORT_ASC ],
+					'desc' => [ "$userTable.email" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
 	            'sdate' => [
 	                'asc' => [ "$modelTable.submittedAt" => SORT_ASC ],
 	                'desc' => [ "$modelTable.submittedAt" => SORT_DESC ],
@@ -92,9 +102,7 @@ class FormSubmitService extends EntityService implements IFormSubmitService {
 	                'label' => 'sdate',
 	            ]
 	        ],
-	        'defaultOrder' => [
-	        	'sdate' => SORT_DESC
-	        ]
+			'defaultOrder' => $defaultSort
 	    ]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -102,10 +110,38 @@ class FormSubmitService extends EntityService implements IFormSubmitService {
 			$config[ 'sort' ] = $sort;
 		}
 
-		if( !isset( $config[ 'search-col' ] ) ) {
+		// Query ------------
 
-			$config[ 'search-col' ] = 'submittedAt';
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$userTable.name",
+			'email' => "$userTable.email"
+		];
+
+		if( isset( $searchCol ) ) {
+
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
 		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
+			'name' => "$userTable.name",
+			'email' => "$userTable.email",
+			'sdate' => "$modelTable.submittedAt"
+		];
+
+		// Result -----------
 
 		return parent::findPage( $config );
 	}
@@ -147,8 +183,6 @@ class FormSubmitService extends EntityService implements IFormSubmitService {
 
 	public function delete( $model, $config = [] ) {
 
-		$existingFormSubmit	= self::findById( $model->id );
-
 		// Delete Dependency
 		$this->formSubmitFieldService->deleteByFormSubmitId( $model->id );
 
@@ -156,6 +190,27 @@ class FormSubmitService extends EntityService implements IFormSubmitService {
 	}
 
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Notifications ------
 

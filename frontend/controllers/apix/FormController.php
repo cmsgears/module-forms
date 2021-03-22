@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\forms\frontend\controllers\apix;
 
 // Yii Imports
@@ -10,11 +18,9 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\forms\common\models\forms\GenericForm;
 
-use cmsgears\core\frontend\controllers\base\Controller;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class FormController extends Controller {
+class FormController extends \cmsgears\core\frontend\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -24,8 +30,6 @@ class FormController extends Controller {
 
 	// Protected --------------
 
-	protected $formService;
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -34,7 +38,7 @@ class FormController extends Controller {
 
         parent::init();
 
-		$this->formService	= Yii::$app->factory->get( 'formService' );
+		$this->modelService = Yii::$app->factory->get( 'formService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -72,32 +76,21 @@ class FormController extends Controller {
 			$type = CoreGlobal::TYPE_FORM;
 		}
 
-		$model 		= $this->formService->getBySlugType( $slug, $type );
-		$template	= $model->template;
+		$model = $this->modelService->getBySlugType( $slug, $type );
+
 		$formFields	= $model->getFieldsMap();
- 		$form		= new GenericForm( [ 'fields' => $formFields, 'ajax' => true ] );
+
+		$form = new GenericForm( [ 'fields' => $formFields, 'ajax' => true ] );
 
 		if( $model->captcha ) {
 
 			$form->setScenario( 'captcha' );
 		}
 
-		if( $form->load( Yii::$app->request->post(), 'GenericForm' ) && $form->validate() ) {
+		if( $form->load( Yii::$app->request->post(), $form->getClassName() ) && $form->validate() ) {
 
 			// Save Model
-			if( $this->formService->processForm( $model, $form ) ) {
-
-				// Trigger User Mail
-				if( $model->userMail ) {
-
-					Yii::$app->formsMailer->sendUserMail( $model, $form );
-				}
-
-				// Trigger Admin Mail
-				if( $model->adminMail ) {
-
-					Yii::$app->formsMailer->sendAdminMail( $model, $form );
-				}
+			if( $this->modelService->processForm( $model, $form ) ) {
 
 				$data = [];
 

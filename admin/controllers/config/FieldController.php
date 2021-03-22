@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\core\admin\controllers\base\form\FieldController as BaseFieldController;
-
 /**
  * FieldController provides actions specific to form field model.
  *
  * @since 1.0.0
  */
-class FieldController extends BaseFieldController {
+class FieldController extends \cmsgears\core\admin\controllers\base\form\FieldController {
 
 	// Variables ---------------------------------------------------
 
@@ -87,11 +85,11 @@ class FieldController extends BaseFieldController {
 
 	// FieldController -----------------------
 
-	public function actionAll( $fid ) {
+	public function actionAll( $pid ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'cfields' );
 
-		return parent::actionAll( $fid );
+		return parent::actionAll( $pid );
 	}
 
 }

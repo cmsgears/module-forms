@@ -12,14 +12,12 @@ namespace cmsgears\forms\common\services\resources;
 // CMG Imports
 use cmsgears\forms\common\services\interfaces\resources\IFormSubmitFieldService;
 
-use cmsgears\core\common\services\base\ResourceService;
-
 /**
- * FormSubmitFieldService provide service methods of forum submit field.
+ * FormSubmitFieldService provide service methods of form submit field.
  *
  * @since 1.0.0
  */
-class FormSubmitFieldService extends ResourceService implements IFormSubmitFieldService {
+class FormSubmitFieldService extends \cmsgears\core\common\services\base\ResourceService implements IFormSubmitFieldService {
 
 	// Variables ---------------------------------------------------
 
@@ -61,6 +59,11 @@ class FormSubmitFieldService extends ResourceService implements IFormSubmitField
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -88,6 +91,36 @@ class FormSubmitFieldService extends ResourceService implements IFormSubmitField
 
 			$config[ 'sort' ] = $sort;
 		}
+
+		// Query ------------
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name"
+		];
+
+		if( isset( $searchCol ) ) {
+
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
+			'name' => "$modelTable.name"
+		];
+
+		// Result -----------
 
 		return parent::findPage( $config );
 	}
@@ -132,6 +165,27 @@ class FormSubmitFieldService extends ResourceService implements IFormSubmitField
 	}
 
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Notifications ------
 
