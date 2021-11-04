@@ -8,7 +8,9 @@
  */
 
 // CMG Imports
-use cmsgears\core\common\models\resources\Stats;
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\resources\ModelStats;
 use cmsgears\forms\common\models\base\FormTables;
 
 /**
@@ -39,20 +41,20 @@ class m160622_121912_form_stats extends \cmsgears\core\common\base\Migration {
 
 	private function insertTables() {
 
-		$columns = [ 'tableName', 'type', 'count' ];
+		$columns = [ 'parentId', 'parentType', 'name', 'type', 'count' ];
 
 		$tableData = [
-			[ $this->prefix . 'form_submit', 'rows', 0 ],
-			[ $this->prefix . 'form_submit_field', 'rows', 0 ]
+			[ 1, CoreGlobal::TYPE_SITE, $this->prefix . 'form_submit', 'rows', 0 ],
+			[ 1, CoreGlobal::TYPE_SITE, $this->prefix . 'form_submit_field', 'rows', 0 ]
 		];
 
-		$this->batchInsert( $this->prefix . 'core_stats', $columns, $tableData );
+		$this->batchInsert( $this->prefix . 'core_model_stats', $columns, $tableData );
 	}
 
 	public function down() {
 
-		Stats::deleteByTableName( FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT ) );
-		Stats::deleteByTableName( FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT_FIELD ) );
+		ModelStats::deleteByTable( FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT ) );
+		ModelStats::deleteByTable( FormTables::getTableName( FormTables::TABLE_FORM_SUBMIT_FIELD ) );
 	}
 
 }
